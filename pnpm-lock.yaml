@@ -20,7 +20,6 @@ devDependencies:
   cross-env: 7.0.3
   eslint: 7.19.0
   markdown-it-prism: 2.1.4
-  pnpm: 5.16.0
   postcss: 8.2.4
   postcss-nested: 5.0.3_postcss@8.2.4
   tailwindcss: 2.0.2_90874d0ac9c8f3b30e7bed02cb9a0d41
@@ -4106,13 +4105,6 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==
-  /pnpm/5.16.0:
-    dev: true
-    engines:
-      node: '>=10.16'
-    hasBin: true
-    resolution:
-      integrity: sha512-f7bNVvYGK24eiZ5gYX4wKOSohg6kIybEhrprHqUtFsP3TfttGSLqid1OTzLvVzwVp58QBj9ifOVwRQ+RiSmE0A==
   /postcss-functions/3.0.0:
     dependencies:
       glob: 7.1.6
@@ -4467,7 +4459,7 @@ packages:
       request-promise-core: 1.1.4_request@2.88.2
       stealthy-require: 1.1.1
       tough-cookie: 2.5.0
-    deprecated: 'request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142'
+    deprecated: request-promise-native has been deprecated because it extends the now deprecated request package, see https://github.com/request/request/issues/3142
     dev: true
     engines:
       node: '>=0.12.0'
@@ -4497,7 +4489,7 @@ packages:
       tough-cookie: 2.5.0
       tunnel-agent: 0.6.0
       uuid: 3.4.0
-    deprecated: 'request has been deprecated, see https://github.com/request/request/issues/3142'
+    deprecated: request has been deprecated, see https://github.com/request/request/issues/3142
     dev: true
     engines:
       node: '>= 6'
@@ -5638,7 +5630,6 @@ specifiers:
   eslint: ^7.19.0
   markdown-it-prism: ^2.1.4
   nprogress: ^0.2.0
-  pnpm: ^5.16.0
   postcss: ^8.2.4
   postcss-nested: ^5.0.3
   prism-theme-vars: ^0.1.4

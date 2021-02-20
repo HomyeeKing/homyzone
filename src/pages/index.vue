@@ -12,6 +12,7 @@ const go = () => {
 }
 
 const { t } = useI18n()
+const navLists = ['blogs', 'movies', 'dramas']
 </script>
 
 <template>
@@ -21,35 +22,18 @@ const { t } = useI18n()
     </p>
     <p>
       <a rel="noreferrer" href="https://github.com/antfu/vitesse" target="_blank">
-        Vitesse
+        HOMYZONE
       </a>
     </p>
     <p>
       <em class="text-sm opacity-75">{{ t('intro.desc') }}</em>
+      <br>
+      <template v-for="item in navLists" :index="item">
+        <router-link class="text-sm opacity-75 hover:underline" :to="`/${item}`">
+          <span>{{ t(`cd.${item}`) }} 👉</span>
+        </router-link>
+        <br>
+      </template>
     </p>
-
-    <div class="py-4" />
-
-    <input
-      id="input"
-      v-model="name"
-      :placeholder="t('intro.whats-your-name')"
-      type="text"
-      autocomplete="false"
-      class="px-4 py-2 text-sm text-center bg-transparent border border-gray-200 rounded outline-none active:outline-none dark:border-gray-700"
-      style="width: 250px"
-      @keydown.enter="go"
-    >
-    <label class="hidden" for="input">{{ t('intro.whats-your-name') }}</label>
-
-    <div>
-      <button
-        class="m-3 text-sm btn"
-        :disabled="!name"
-        @click="go"
-      >
-        {{ t('button.go') }}
-      </button>
-    </div>
   </div>
 </template>

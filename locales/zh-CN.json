@@ -8,10 +8,15 @@
     "toggle_langs": "切换语言"
   },
   "intro": {
-    "desc": "固执己见的 Vite 项目模板",
+    "desc": "拥抱每一种生活",
     "dynamic-route": "动态路由演示",
     "hi": "你好，{name}！",
     "whats-your-name": "输入你的名字"
+  },
+  "cd":{
+    "blogs":"进入博客",
+    "movies":"进入电影区",
+    "dramas":"进入电视剧区"
   },
   "not-found": "未找到页面"
 }

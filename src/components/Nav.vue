@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useI18n } from 'vue-i18n'
-import { isDark } from '/~/logics'
+import { isDark } from '@/logics'
 
 const { t, availableLocales, locale } = useI18n()
 
@@ -12,7 +12,7 @@ const toggleLocales = () => {
 </script>
 
 <template>
-  <nav class="text-xl mt-6">
+  <nav class="text-xl mt-6 text-right">
     <router-link class="icon-btn mx-2" to="/" :title="t('button.home')">
       <carbon-campsite />
     </router-link>
@@ -30,7 +30,10 @@ const toggleLocales = () => {
       <carbon-dicom-overlay />
     </router-link>
 
-    <a class="icon-btn mx-2" rel="noreferrer" href="https://github.com/antfu/vitesse" target="_blank" title="GitHub">
+    <a class="icon-btn mx-2" rel="noreferrer" href="https://twitter.com/unclehomy30" target="_blank" title="Twitter">
+      <carbon-logo-twitter />
+    </a>
+    <a class="icon-btn mx-2" rel="noreferrer" href="https://github.com/HomyeeKing" target="_blank" title="GitHub">
       <carbon-logo-github />
     </a>
   </nav>

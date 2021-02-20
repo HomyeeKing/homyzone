@@ -4,5 +4,7 @@
   "i18n-ally.sortKeys": true,
   "cSpell.words": [
     "Vitesse"
-  ]
+],
+"volar.tsPlugin": true,
+"i18n-ally.sourceLanguage": "zh-CN"
 }

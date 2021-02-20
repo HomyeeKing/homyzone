@@ -8,10 +8,15 @@
     "toggle_langs": "Change languages"
   },
   "intro": {
-    "desc": "Opinionated Vite Starter Template",
+    "desc": "story of my life",
     "dynamic-route": "Demo of dynamic route",
     "hi": "Hi, {name}!",
     "whats-your-name": "What's your name?"
+  },
+  "cd":{
+    "blogs":"cd blogs",
+    "movies":"cd movies",
+    "dramas":"cd dramas"
   },
   "not-found": "Not found"
 }

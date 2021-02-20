@@ -11,7 +11,7 @@ import Prism from 'markdown-it-prism'
 
 const config: UserConfig = {
   alias: {
-    '/~/': `${path.resolve(__dirname, 'src')}/`,
+    '@': path.resolve(__dirname, 'src'),
   },
   plugins: [
     Vue({
