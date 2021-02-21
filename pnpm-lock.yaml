@@ -20,7 +20,6 @@ devDependencies:
   cross-env: 7.0.3
   eslint: 7.19.0
   markdown-it-prism: 2.1.4
-  pnpm: 5.17.2
   postcss: 8.2.4
   postcss-nested: 5.0.3_postcss@8.2.4
   tailwindcss: 2.0.2_90874d0ac9c8f3b30e7bed02cb9a0d41
@@ -4106,13 +4105,6 @@ packages:
       node: '>=4'
     resolution:
       integrity: sha512-Nc3IT5yHzflTfbjgqWcCPpo7DaKy4FnpB0l/zCAW0Tc7jxAiuqSxHasntB3D7887LSrA93kDJ9IXovxJYxyLCA==
-  /pnpm/5.17.2:
-    dev: true
-    engines:
-      node: '>=10.16'
-    hasBin: true
-    resolution:
-      integrity: sha512-X0WEumozKhlYZObL1E+Nmi67f+ZMS+fbpE6vAymlazT2lx0B+Agw9iJsdd//tjAqIzxcsxxgZScx0EIPc42Ulw==
   /postcss-functions/3.0.0:
     dependencies:
       glob: 7.1.6
@@ -5638,7 +5630,6 @@ specifiers:
   eslint: ^7.19.0
   markdown-it-prism: ^2.1.4
   nprogress: ^0.2.0
-  pnpm: ^5.17.2
   postcss: ^8.2.4
   postcss-nested: ^5.0.3
   prism-theme-vars: ^0.1.4
