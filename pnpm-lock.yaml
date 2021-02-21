@@ -19,6 +19,7 @@ devDependencies:
   autoprefixer: 10.2.4_postcss@8.2.4
   cross-env: 7.0.3
   eslint: 7.19.0
+  gray-matter: 4.0.2
   markdown-it-prism: 2.1.4
   postcss: 8.2.4
   postcss-nested: 5.0.3_postcss@8.2.4
@@ -5628,6 +5629,7 @@ specifiers:
   autoprefixer: ^10.2.4
   cross-env: ^7.0.3
   eslint: ^7.19.0
+  gray-matter: ^4.0.2
   markdown-it-prism: ^2.1.4
   nprogress: ^0.2.0
   postcss: ^8.2.4
