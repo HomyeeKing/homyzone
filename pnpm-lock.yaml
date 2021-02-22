@@ -20,6 +20,7 @@ devDependencies:
   cross-env: 7.0.3
   eslint: 7.20.0
   gray-matter: 4.0.2
+  markdown-it-anchor: 7.0.2
   markdown-it-prism: 2.1.4
   postcss: 8.2.6
   postcss-nested: 5.0.3_postcss@8.2.6
@@ -3749,6 +3750,12 @@ packages:
     dev: true
     resolution:
       integrity: sha512-4CrMT5DOHTDk4HYDlzmwu4FVCcIYI8gauveasrdCu2IKIFOJ3f0v/8MDGJCDL9oD2ppz/Av1b0Nj345H9M+XIA==
+  /markdown-it-anchor/7.0.2:
+    dev: true
+    peerDependencies:
+      markdown-it: '*'
+    resolution:
+      integrity: sha512-UtYFAkce16mJlixXUMXUf14ZmOWK2YHLGKUpkZUn98w3qP8nVhb7k5sCBZmVHGMq3SpYtrxQ5XOdHQHRuLR40Q==
   /markdown-it-prism/2.1.4:
     dependencies:
       prismjs: 1.23.0
@@ -5785,6 +5792,7 @@ specifiers:
   cross-env: ^7.0.3
   eslint: ^7.20.0
   gray-matter: ^4.0.2
+  markdown-it-anchor: ^7.0.2
   markdown-it-prism: ^2.1.4
   nprogress: ^0.2.0
   postcss: ^8.2.6

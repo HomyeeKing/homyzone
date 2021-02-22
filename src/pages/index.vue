@@ -16,8 +16,8 @@ const navLists = ['blogs', 'movies', 'dramas']
 </script>
 
 <template>
-  <div>
-    <p class="text-4xl">
+  <div class="text-center">
+    <p class="text-4xl ">
       <carbon-campsite class="inline-block" />
     </p>
     <p>
@@ -25,15 +25,19 @@ const navLists = ['blogs', 'movies', 'dramas']
         HOMYZONE
       </a>
     </p>
-    <p>
-      <em class="text-sm opacity-75">{{ t('intro.desc') }}</em>
+    <div>
+      <p class="text-sm opacity-75  my-2 underline">
+        {{ t('intro.desc') }}
+      </p>
       <br>
-      <template v-for="item in navLists" :index="item">
-        <router-link class="text-sm opacity-75 hover:underline" :to="`/${item}`">
-          <span>{{ t(`cd.${item}`) }} 👉</span>
+      <div v-for="nav in navLists" :key="nav">
+        <router-link class="text-sm opacity-75 hover:underline" :to="`/${nav}`">
+          <p class="transition duration-150 transform hover:scale-150">
+            {{ t(`cd.${nav}`) }} 👉
+          </p>
         </router-link>
         <br>
-      </template>
-    </p>
+      </div>
+    </div>
   </div>
 </template>

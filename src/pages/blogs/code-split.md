@@ -1,23 +1,21 @@
 ---
-title: code split
+title: code split——代码分片
 date: 2021-02-22 15:40:12
 hero_image: ''
 lang: zh
 duration: 25min
 ---
 
-# code split 【代码分片】
-
 > 参考链接
 - [webpack---code-split](https://webpack.js.org/guides/code-splitting/)
 - [import()](https://webpack.js.org/api/module-methods/#import-1)
-### 什么是代码分片？ 有什么用？
+# 什么是代码分片？ 有什么用？
 简单来说，代码分片就是把资源分割成独立的模块
 
 在不做任何处理的情况下，项目打包后，所有的文件都会集中到**1个bundle文件**中，对于浏览器来说，只能一股脑全部加载，这极大的影响了首屏时间，也浪费带宽；
 如果我们可以将这一整个资源分割成不同的小块，每次只加载一小部分，那么资源就可以得到很好的利用，并且我们可以决定资源加载的优先级来提高我们的页面性能，所以，这就是代码分片的意义
 
-### 如何进行代码分片
+# 如何进行代码分片
 
 以 `webpack` 为例，结合下面三种方法 来实现
 - 结合入口文件
@@ -71,7 +69,7 @@ import(
 ```
 
 
-## preload && prefetch
+# preload && prefetch
 
 简单来说 preload适用于当前页面可能需要用到的资源，prefetch适用于可能未来需要的但**未被访问**的路由下的资源
 

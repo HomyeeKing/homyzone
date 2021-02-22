@@ -22,6 +22,7 @@ module.exports = {
     borderColor: ['dark', 'active', 'focus', 'disabled'],
     textColor: ['dark', 'hover', 'active', 'disabled'],
     opacity: ['dark', 'hover', 'active', 'focus', 'disabled'],
+    animation: ['motion-safe'],
   },
   darkMode: 'class',
   plugins: [typography],
