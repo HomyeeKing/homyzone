@@ -1,14 +1,15 @@
 ---
 title: 在mac上配置gitlab和github两个账户
-date: 2021-07-06 22:54:38
+date: 2021-07-06 22:56:30
 hero_image: ""
 lang: zh
 duration: 5min
 ---
 
-首先要生成各自的秘钥：
-```sh
 
+首先要生成各自的秘钥：
+
+```sh
 # gitlab
 ssh-keygen -t rsa -C "gitlab email address"
 随后的生成目录设置为 **/id_rsa_gitlab
@@ -23,6 +24,7 @@ ssh-keygen -t rsa -C "github email address"
 
 这个配置文件的意义在于：
 - 根据repo 的hostname找到对应的Host，然后可以得到相应的用户以及配置信息
+
 ```sh
 # default  
 Host github.com #必须跟repo 的hostname保持一致
@@ -43,6 +45,7 @@ gitlab再 Profile处， GitHub在setting处
 #注意
 看秘钥的读写权限是否过于宽泛
 解决办法就是执行以下命令：
+
 ```sh
 > cd ~/.ssh
 > sudo chmod -R 700 config id_rsa_*
