@@ -41,3 +41,28 @@ nvm ls # 查看所有版本
 nvm use xxx 指定版本
 
 ```
+
+
+### 常见问题
+
+mac下：如果你遇到EACCES: permission denied, symlink ‘../lib/node_modules........这种问题，这个就是权限问题，而且是你在全局安装的时候会遇到
+
+依据下面的流程进行即可：
+
+```
+1. 创建global安装任务的目录
+
+mkdir ~/.npm-global
+
+2. 配置npm使用新的目录
+npm config set prefix '~/.npm-global'
+
+3. 在~/.bashrc文件中增加配置 （任意一个终端配置文件中）
+source ~/.bashrc
+
+4. 配置文件立即生效
+source ~/.bashrc
+
+
+5. 然后重新npm i -g xxx 就可以了
+```
