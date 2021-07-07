@@ -1,12 +1,12 @@
 ---
-title: 我的git alias
+title: git alias
 date: 2021-07-06 23:27:22
 hero_image: ''
 lang: zh
 duration: 5min
 ---
 
-
+## 别名篇
 记录我的 ~/.zshrc文件 
 
 ```sh
@@ -26,3 +26,5 @@ alias	lp=log  --all --decorate --oneline --graph
 alias    g=git
 
 ```
+
+

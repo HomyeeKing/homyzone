@@ -41,6 +41,8 @@ IdentityFile ~/.ssh/id_rsa_gitlab
 最后 在github gitlab上把对应的公钥粘贴进去
 gitlab再 Profile处， GitHub在setting处
 
+## 常见问题解决
+
 如果完成以上步骤还是不行，遇到类似于Permissions 0644 for '/Users/liuml/.ssh/id_rsa_tz' are too open.’这种错误
 #注意
 看秘钥的读写权限是否过于宽泛
@@ -50,4 +52,15 @@ gitlab再 Profile处， GitHub在setting处
 > cd ~/.ssh
 > sudo chmod -R 700 config id_rsa_*
 
+```
+
+#### Git fatal: Could not read from remote repository Solution
+
+> 参考链接： https://careerkarma.com/blog/git-fatal-could-not-read-from-remote-repository/
+
+- ssh连接方式
+当你git clone之后 发现出现上面的错误，这是个认证错误，这时候我们首先要做的就是把秘钥添加到SSH keychain中（首先已经确保你通过ssh-keygen 已经生成了秘钥），
+
+```sh
+ssh-add <your key path like: ~/.ssh/id_rsa>
 ```

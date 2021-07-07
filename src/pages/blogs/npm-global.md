@@ -50,9 +50,11 @@ mac下：如果你遇到EACCES: permission denied, symlink ‘../lib/node_module
 依据下面的流程进行即可：
 
 ```
-1. 创建global安装任务的目录
+1. 创建global安装任务的目录 并把目录添加到环境变量
 
 mkdir ~/.npm-global
+
+export PATH=~/.npm-global/bin:$PATH
 
 2. 配置npm使用新的目录
 npm config set prefix '~/.npm-global'
@@ -62,6 +64,7 @@ source ~/.bashrc
 
 4. 配置文件立即生效
 source ~/.bashrc
+
 
 
 5. 然后重新npm i -g xxx 就可以了
