@@ -64,3 +64,12 @@ gitlab再 Profile处， GitHub在setting处
 ```sh
 ssh-add <your key path like: ~/.ssh/id_rsa>
 ```
+
+#### authenticity of host 'github.com can't be established
+
+run this command
+```
+ssh-keyscan github.com >> ~/.ssh/known_hosts
+```
+
+同理 gitlab的问题也可以通过上面的解决
