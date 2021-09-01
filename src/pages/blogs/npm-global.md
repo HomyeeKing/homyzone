@@ -49,6 +49,20 @@ mac下：如果你遇到EACCES: permission denied, symlink ‘../lib/node_module
 
 依据下面的流程进行即可：
 
+两种方式
+1. 推荐 无需创建新的承载全局包的文件夹
+```
+# 看看 npm 全局目录的路径
+$ npm prefix -g
+
+# 把 npm 的全局目录权限 owner 改为当前用户
+$ sudo chown -R `whoami` `npm prefix -g`
+
+# 还不行的话，删除大法
+$ sudo rm -rf `npm prefix -g`
+$ sudo rm -rf ~/.npminstall_tarball
+```
+2. 1不行的话  就用这个 也挺好用的
 ```
 1. 创建global安装任务的目录 并把目录添加到环境变量
 
