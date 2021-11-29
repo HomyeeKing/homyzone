@@ -1,5 +1,5 @@
 ---
-title: git alias
+title: git 操作记录
 date: 2021-07-06 23:27:22
 hero_image: ''
 lang: zh
@@ -28,3 +28,10 @@ alias    g=git
 ```
 
 
+
+## git 将一个分支完全覆盖另一个分支
+
+
+`git reset --hard xxx` 用xxx分支覆盖当前分支
+
+`git push -f ` 推上去
