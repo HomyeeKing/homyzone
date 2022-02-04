@@ -37,6 +37,8 @@ project
 
 ### package 有 peer 而且 peer 的版本不同
 
+foo 有 peer bar + baz ， 但是不同版本
+
 ```
 node_modules
 └── .pnpm
