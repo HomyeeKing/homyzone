@@ -40,6 +40,8 @@ In this case, just do `rm -rf "$NVM_DIR"` to uninstall nvm manually then install
 
 ## git manage
 
+### install
+
 Normally, mac has `Git` internaly, let's use `Homebrew` to take care of it.
 
 so type:
@@ -63,6 +65,22 @@ which git # check again, it should be the brew install location
 
 ```
 
+### alias
+
+put this into `~/.gitconfig`
+
+```sh
+alias cmm=commit -m #必须key=value 紧挨着等号
+alias  st=status
+alias  pl=pull
+alias  ps=push
+alias   sw=switch
+alias   swc=switch -c
+alias   br= branch
+alias   l=log --stat
+alias	lp=log  --all --decorate --oneline --graph
+alias    g=git
+```
 
 ## locale
 
