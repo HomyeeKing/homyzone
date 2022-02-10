@@ -78,3 +78,9 @@ locale
 LANG="en_US.UTF-8"
 
 ```
+
+For permanently use, you need set it in `~/.bashrc`, if you have installed git, it should have an option like below, just remove the comment, if not, you can type it by hand.
+```sh
+# You may need to manually set your language environment
+export LANG=en_US.UTF-8
+```
