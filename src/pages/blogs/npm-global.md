@@ -83,3 +83,8 @@ source ~/.bashrc
 
 5. 然后重新npm i -g xxx 就可以了
 ```
+
+#### 为什么nvm不允许我们设置prefix，需要我们每次切换node版本的时候重新安装全局依赖呢？
+可以参考这个issue https://github.com/nvm-sh/nvm/issues/2753
+
+主要原因就是 全局依赖不要跨node版本共享，有些时候他们会被编译过，也就意味着需要重新为每个node版本都Build一下

@@ -44,3 +44,6 @@ git rm -r  --cached <文件/文件夹名称>
 
 ### 目录结构 
 使用 git submodule后，当前项目下会生成一个`.gitsubmodule` .git下也有对应的submodule， 如果删除的话 也要git rm <submodule>
+
+### 参考链接
+https://www.philosophicalhacker.com/post/using-git-submodules-effectively/#:~:text=Its%20more%20accurate%20to%20say,options%20for%20sharing%20your%20code.
