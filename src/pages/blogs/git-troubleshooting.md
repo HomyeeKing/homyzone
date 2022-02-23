@@ -33,3 +33,14 @@ git rm -r  --cached <文件/文件夹名称>
 ```
 
 然后正常提交即可
+
+
+## git submodule
+
+为什么采用git submodule 而不是npm包呢？ 我觉得下边这段描述会更精确一些：
+> Its more accurate to say that git submodules are useful when you want to share code that you also need change along with the consumer of that code. If you’re not trying to change the shared code along with the consumer of that code, there are better options for sharing your code.
+
+就是当我们想依赖一段代码而且又有可能在使用过程中修改它（比如发现bug 进行pr，亦或是官网说的 you're really working on the code in the submodule at the same time）的时候，我们可能会需要git submodule
+
+### 目录结构 
+使用 git submodule后，当前项目下会生成一个`.gitsubmodule` .git下也有对应的submodule， 如果删除的话 也要git rm <submodule>
