@@ -47,3 +47,11 @@ git rm -r  --cached <文件/文件夹名称>
 
 ### 参考链接
 https://www.philosophicalhacker.com/post/using-git-submodules-effectively/#:~:text=Its%20more%20accurate%20to%20say,options%20for%20sharing%20your%20code.
+
+
+## fast-forward
+
+只有当源分支和目标分支是线性的， 也就是你当前分支初始状态和源分支是同样的时候 git 就会执行fast-forward, 即把指针直接指向当前提交
+
+### 参考链接
+https://www.tutorialspoint.com/what-is-a-fast-forward-merge-in-git
