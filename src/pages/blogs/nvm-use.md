@@ -1,6 +1,6 @@
 ---
 title: 通过nvm 管理node、 npm（包管理工具）
-date: 2021-03-29 12:18:14
+date: 2022-03-17 20:23:43
 hero_image: ''
 lang: zh
 duration: 5min
