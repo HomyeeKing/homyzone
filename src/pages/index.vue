@@ -12,7 +12,7 @@ const go = () => {
 }
 
 const { t } = useI18n()
-const navLists = ['blogs', 'movies', 'dramas']
+const navLists = ['blogs', 'movies', 'dramas', 'reading']
 </script>
 
 <template>

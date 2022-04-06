@@ -16,7 +16,8 @@
   "cd":{
     "blogs":"cd blogs",
     "movies":"cd movies",
-    "dramas":"cd dramas"
+    "dramas":"cd dramas",
+    "reading":"cd reading"
   },
   "not-found": "Not found"
 }

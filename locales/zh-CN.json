@@ -16,7 +16,8 @@
   "cd":{
     "blogs":"进入博客",
     "movies":"进入电影区",
-    "dramas":"进入电视剧区"
+    "dramas":"进入电视剧区",
+    "reading":"进入阅读区"
   },
   "not-found": "未找到页面"
 }
