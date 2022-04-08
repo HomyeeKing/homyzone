@@ -1,113 +1,170 @@
-import path from 'path'
-import fs from 'fs'
-import { UserConfig } from 'vite'
-import Vue from '@vitejs/plugin-vue'
+import { resolve } from 'path'
+import type { UserConfig } from 'vite'
+import fs from 'fs-extra'
 import Pages from 'vite-plugin-pages'
-import Layout from 'vite-plugin-vue-layouts'
-import ViteIcons, { ViteIconsResolver } from 'vite-plugin-icons'
-import ViteComponents from 'vite-plugin-components'
+import Inspect from 'vite-plugin-inspect'
+import Icons from 'unplugin-icons/vite'
+import IconsResolver from 'unplugin-icons/resolver'
+import Components from 'unplugin-vue-components/vite'
 import Markdown from 'vite-plugin-md'
-import matter from 'gray-matter'
-import { VitePWA } from 'vite-plugin-pwa'
-import VueI18n from '@intlify/vite-plugin-vue-i18n'
+import Vue from '@vitejs/plugin-vue'
 import Prism from 'markdown-it-prism'
+import matter from 'gray-matter'
+import AutoImport from 'unplugin-auto-import/vite'
 import anchor from 'markdown-it-anchor'
+import LinkAttributes from 'markdown-it-link-attributes'
+import UnoCSS from 'unocss/vite'
+import SVG from 'vite-svg-loader'
+import { presetAttributify, presetIcons, presetUno } from 'unocss'
+// @ts-expect-error missing types
+import TOC from 'markdown-it-table-of-contents'
+import { slugify } from './scripts/slugify'
+
+import 'prismjs/components/prism-regex'
+import 'prismjs/components/prism-javascript'
+import 'prismjs/components/prism-typescript'
+import 'prismjs/components/prism-xml-doc'
+import 'prismjs/components/prism-yaml'
+import 'prismjs/components/prism-json'
+import 'prismjs/components/prism-markdown'
+import 'prismjs/components/prism-java'
+import 'prismjs/components/prism-javadoclike'
+import 'prismjs/components/prism-javadoc'
+import 'prismjs/components/prism-jsdoc'
 
 const config: UserConfig = {
   resolve: {
-    alias: {
-      '@': path.resolve(__dirname, 'src'),
-    },
+    alias: [
+      { find: '@/', replacement: `${resolve(__dirname, 'src')}/` },
+    ],
   },
-  server: {
-    open: true,
+  optimizeDeps: {
+    include: [
+      'vue',
+      'vue-router',
+      '@vueuse/core',
+      'dayjs',
+      'dayjs/plugin/localizedFormat',
+    ],
   },
   plugins: [
+    UnoCSS({
+      theme: {
+        fontFamily: {
+          sans: '"Inter", Inter var,system-ui,-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Helvetica Neue,Arial,Noto Sans,sans-serif,Apple Color Emoji,Segoe UI Emoji,Segoe UI Symbol,Noto Color Emoji',
+        },
+      },
+      presets: [
+        presetIcons({
+          extraProperties: {
+            'display': 'inline-block',
+            'height': '1.2em',
+            'width': '1.2em',
+            'vertical-align': 'text-bottom',
+          },
+        }),
+        presetAttributify(),
+        presetUno(),
+      ],
+    }),
+
     Vue({
       include: [/\.vue$/, /\.md$/],
     }),
 
-    // https://github.com/hannoeru/vite-plugin-pages
     Pages({
       extensions: ['vue', 'md'],
+      pagesDir: 'pages',
       extendRoute(route) {
-        const routePath = path.resolve(__dirname, route.component.slice(1))
-        if (routePath.endsWith('.md')) {
-          const md = fs.readFileSync(routePath, 'utf-8')
+        const path = resolve(__dirname, route.component.slice(1))
+
+        if (!path.includes('projects.md')) {
+          const md = fs.readFileSync(path, 'utf-8')
           const { data } = matter(md)
           route.meta = Object.assign(route.meta || {}, { frontmatter: data })
-          return route
         }
+
+        return route
       },
     }),
 
-    // https://github.com/JohnCampionJr/vite-plugin-vue-layouts
-    Layout(),
-
-    // https://github.com/antfu/vite-plugin-md
     Markdown({
-      wrapperComponent: 'blog',
-      wrapperClasses: 'prose prose-sm m-auto',
+      wrapperComponent: 'post',
+      wrapperClasses: 'prose m-auto',
       headEnabled: true,
+      markdownItOptions: {
+        quotes: '""\'\'',
+      },
       markdownItSetup(md) {
-        // https://prismjs.com/
         md.use(Prism)
         md.use(anchor, {
-          permalink: true,
-          permalinkBefore: true,
-          permalinkSymbol: '#',
-          permalinkAttrs: () => ({ 'aria-hidden': true }),
+          slugify,
+          permalink: anchor.permalink.linkInsideHeader({
+            symbol: '#',
+            renderAttrs: () => ({ 'aria-hidden': 'true' }),
+          }),
+        })
+
+        md.use(LinkAttributes, {
+          matcher: (link: string) => /^https?:\/\//.test(link),
+          attrs: {
+            target: '_blank',
+            rel: 'noopener',
+          },
+        })
+
+        md.use(TOC, {
+          includeLevel: [1, 2, 3],
+          slugify,
         })
       },
     }),
 
-    // https://github.com/antfu/vite-plugin-components
-    ViteComponents({
-      // allow auto load markdown components under `./src/components/`
+    AutoImport({
+      imports: [
+        'vue',
+        'vue-router',
+        '@vueuse/core',
+        '@vueuse/head',
+      ],
+    }),
+
+    Components({
       extensions: ['vue', 'md'],
-
-      // allow auto import and register components used in markdown
-      customLoaderMatcher: id => id.endsWith('.md'),
-
-      // auto import icons
-      customComponentResolvers: [
-        // https://github.com/antfu/vite-plugin-icons
-        ViteIconsResolver({
+      dts: true,
+      include: [/\.vue$/, /\.vue\?vue/, /\.md$/],
+      resolvers: [
+        IconsResolver({
           componentPrefix: '',
-          // enabledCollections: ['carbon']
         }),
       ],
     }),
 
-    // https://github.com/antfu/vite-plugin-icons
-    ViteIcons(),
+    Inspect(),
 
-    // https://github.com/antfu/vite-plugin-pwa
-    VitePWA({
-      manifest: {
-        name: 'Vitesse',
-        short_name: 'Vitesse',
-        theme_color: '#ffffff',
-        icons: [
-          {
-            src: '/pwa-192x192.png',
-            sizes: '192x192',
-            type: 'image/png',
-          },
-          {
-            src: '/pwa-512x512.png',
-            sizes: '512x512',
-            type: 'image/png',
-          },
-        ],
-      },
+    Icons({
+      defaultClass: 'inline',
+      defaultStyle: 'vertical-align: sub;',
     }),
 
-    // https://github.com/intlify/vite-plugin-vue-i18n
-    VueI18n({
-      include: [path.resolve(__dirname, 'locales/**')],
+    SVG({
+      svgo: false,
     }),
   ],
+
+  build: {
+    rollupOptions: {
+      onwarn(warning, next) {
+        if (warning.code !== 'UNUSED_EXTERNAL_IMPORT')
+          next(warning)
+      },
+    },
+  },
+
+  ssgOptions: {
+    formatting: 'minify',
+    format: 'cjs',
+  },
 }
 
 export default config
