@@ -20,6 +20,7 @@ import { presetAttributify, presetIcons, presetUno } from 'unocss'
 import TOC from 'markdown-it-table-of-contents'
 import { slugify } from './scripts/slugify'
 
+// 代码高亮
 import 'prismjs/components/prism-regex'
 import 'prismjs/components/prism-javascript'
 import 'prismjs/components/prism-typescript'
@@ -74,10 +75,8 @@ const config: UserConfig = {
 
     Pages({
       extensions: ['vue', 'md'],
-      pagesDir: 'pages',
       extendRoute(route) {
         const path = resolve(__dirname, route.component.slice(1))
-
         if (!path.includes('projects.md')) {
           const md = fs.readFileSync(path, 'utf-8')
           const { data } = matter(md)

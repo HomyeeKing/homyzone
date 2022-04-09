@@ -1,3 +1,10 @@
-export * from './dark'
-export * from './store'
+import dayjs from 'dayjs'
+export const isDark = useDark()
 export * from './data'
+
+export function formatDate(d: string | Date) {
+  const date = dayjs(d)
+  if (date.year() === dayjs().year())
+    return date.format('MMM D')
+  return date.format('MMM D, YYYY')
+}
