@@ -14,7 +14,7 @@ duration: 5min
 `curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.1/install.sh | bash`
 
 #### 版本切换
-```sh
+```bash
 nvm install xxx # install xxx version of node
 nvm use xxx # 在当前session中使用xxx版本
 nvm alias default xxx # 将xxx 设为默认版本
@@ -22,7 +22,7 @@ nvm alias default xxx # 将xxx 设为默认版本
 
 #### 将系统版本跟随nvm
 创建软链 指向当前nvm版本的node npm npx，这样做的好处可以实时更新system版本，也避免的操作system版本的权限问题
-```sh
+```bash
 sudo ln -sf "$NVM_DIR/versions/node/$(nvm version)/bin/node" "/usr/local/bin/node"
 sudo ln -sf "$NVM_DIR/versions/node/$(nvm version)/bin/npm" "/usr/local/bin/npm"
 sudo ln -sf "$NVM_DIR/versions/node/$(nvm version)/bin/npx" "/usr/local/bin/npx"
@@ -34,7 +34,7 @@ sudo ln -sf "$NVM_DIR/versions/node/$(nvm version)/bin/npx" "/usr/local/bin/npx"
 主要原因就是 全局依赖不要跨node版本共享，有些时候他们会被编译过，也就意味着需要重新为每个node版本都Build一下
 
 
-```sh
+```bash
 # 比如当前版本是 yyy， 如果要切换到xxx，我们需要执行以下操作
 nvm install xxx  --reinstall-packages-from=yyy --latest-npm # --latest-npm 是将npm升级到最新版本
 #or 

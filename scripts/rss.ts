@@ -7,10 +7,10 @@ import type { FeedOptions, Item } from 'feed'
 import { Feed } from 'feed'
 import { slugify } from './slugify'
 
-const DOMAIN = 'https://antfu.me'
+const DOMAIN = 'https://homyzone.netlify.app/'
 const AUTHOR = {
-  name: 'Anthony Fu',
-  email: 'hi@antfu.me',
+  name: 'Homyee King',
+  email: 'HomyeeKing@gmail.com',
   link: DOMAIN,
 }
 const markdown = MarkdownIt({
@@ -25,35 +25,32 @@ async function run() {
 }
 
 async function buildBlogRSS() {
-  const files = await fg('pages/posts/*.md')
-
+  const files = await fg('src/pages/blogs/**/*.md')
   const options = {
-    title: 'Anthony Fu',
-    description: 'Anthony Fu\' Blog',
-    id: 'https://antfu.me/',
-    link: 'https://antfu.me/',
-    copyright: 'CC BY-NC-SA 4.0 2021 © Anthony Fu',
+    title: 'Homyee King',
+    description: 'Homyee King\' Blog',
+    id: DOMAIN,
+    link: DOMAIN,
+    copyright: 'CC BY-NC-SA 4.0 2021 © Homyee King',
     feedLinks: {
-      json: 'https://antfu.me/feed.json',
-      atom: 'https://antfu.me/feed.atom',
-      rss: 'https://antfu.me/feed.xml',
+      json: `${DOMAIN}feed.json`,
+      atom: `${DOMAIN}feed.atom`,
+      rss: `${DOMAIN}feed.xml`,
     },
   }
   const posts: any[] = (
     await Promise.all(
-      files.filter(i => !i.includes('index'))
+      files
+        .filter(i => !i.includes('index'))
         .map(async(i) => {
           const raw = await fs.readFile(i, 'utf-8')
           const { data, content } = matter(raw)
 
-          if (data.lang !== 'en')
-            return
-
-          const html = markdown.render(content)
+          const html = markdown
+            .render(content)
             .replace('src="/', `src="${DOMAIN}/`)
 
-          if (data.image?.startsWith('/'))
-            data.image = DOMAIN + data.image
+          if (data.image?.startsWith('/')) data.image = DOMAIN + data.image
 
           return {
             ...data,
@@ -63,8 +60,8 @@ async function buildBlogRSS() {
             link: DOMAIN + i.replace(/^pages(.+)\.md$/, '$1'),
           }
         }),
-    ))
-    .filter(Boolean)
+    )
+  ).filter(Boolean)
 
   posts.sort((a, b) => +new Date(b.date) - +new Date(a.date))
 
@@ -75,15 +72,15 @@ async function buildNotesRSS() {
   const raw = await fs.readFile('pages/notes.md', 'utf-8')
 
   const options = {
-    title: 'Anthony Fu\'s Notes',
-    description: 'Anthony Fu\'s Notes',
-    id: 'https://antfu.me/notes',
-    link: 'https://antfu.me/notes',
-    copyright: 'CC BY-NC-SA 4.0 2021 © Anthony Fu',
+    title: 'Homyee King\'s Notes',
+    description: 'Homyee King\'s Notes',
+    id: `${DOMAIN}notes`,
+    link: `${DOMAIN}notes`,
+    copyright: 'CC BY-NC-SA 4.0 2021 © Homyee King',
     feedLinks: {
-      json: 'https://antfu.me/notes/feed.json',
-      atom: 'https://antfu.me/notes/feed.atom',
-      rss: 'https://antfu.me/notes/feed.xml',
+      json: `${DOMAIN}notes/feed.json`,
+      atom: `${DOMAIN}notes/feed.atom`,
+      rss: `${DOMAIN}notes/feed.xml`,
     },
   }
   const noteMatches = raw.matchAll(/<article>(.*?)<\/article>/gms)
@@ -96,8 +93,13 @@ async function buildNotesRSS() {
     const title = titleMatch[1]
     const date = new Date(dateMatch[1])
     const anchor = slugify(title)
-    const rawContent = rawNote.slice(dateMatch.index).replace(/.*\n/, '').trim()
-    const content = markdown.render(rawContent).replace('src="/', `src="${DOMAIN}/`)
+    const rawContent = rawNote
+      .slice(dateMatch.index)
+      .replace(/.*\n/, '')
+      .trim()
+    const content = markdown
+      .render(rawContent)
+      .replace('src="/', `src="${DOMAIN}/`)
 
     notes.push({
       title,
@@ -114,8 +116,8 @@ async function buildNotesRSS() {
 
 async function writeFeed(name: string, options: FeedOptions, items: Item[]) {
   options.author = AUTHOR
-  options.image = 'https://antfu.me/avatar.png'
-  options.favicon = 'https://antfu.me/logo.png'
+  options.image = `${DOMAIN}avatar.png`
+  options.favicon = `${DOMAIN}logo.png`
 
   const feed = new Feed(options)
 

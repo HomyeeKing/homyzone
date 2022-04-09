@@ -9,7 +9,7 @@ duration: 5min
 
 首先要生成各自的秘钥：
 
-```sh
+```bash
 # gitlab
 ssh-keygen -t rsa -C "gitlab email address"
 随后的生成目录设置为 **/id_rsa_gitlab
@@ -25,7 +25,7 @@ ssh-keygen -t rsa -C "github email address"
 这个配置文件的意义在于：
 - 根据repo 的hostname找到对应的Host，然后可以得到相应的用户以及配置信息
 
-```sh
+```bash
 # default  
 Host github.com #必须跟repo 的hostname保持一致
 HostName github.com
@@ -48,7 +48,7 @@ gitlab再 Profile处， GitHub在setting处
 看秘钥的读写权限是否过于宽泛
 解决办法就是执行以下命令：
 
-```sh
+```bash
 > cd ~/.ssh
 > sudo chmod -R 700 config id_rsa_*
 
@@ -61,7 +61,7 @@ gitlab再 Profile处， GitHub在setting处
 - ssh连接方式
 当你git clone之后 发现出现上面的错误，这是个认证错误，这时候我们首先要做的就是把秘钥添加到SSH keychain中（首先已经确保你通过ssh-keygen 已经生成了秘钥），
 
-```sh
+```bash
 ssh-add <your key path like: ~/.ssh/id_rsa>
 ```
 

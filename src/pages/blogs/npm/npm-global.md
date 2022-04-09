@@ -8,7 +8,7 @@ duration: 5min
 
 首先归根到底是环境变量中有没有`npm`的路径
 ### 指令相关
-```sh 
+```bash 
  npm -g bin  # 查看npm全局安装路径
 # or
 which npm 
@@ -25,7 +25,7 @@ npm -g list --depth=0
 ```
 
 ### 使用nrm(npm registry manage)来管理npm镜像源
-```sh
+```bash
  npm i -g nrm
 
  nrm add [name] [registry url]
@@ -36,7 +36,7 @@ npm -g list --depth=0
 
 ### 使用nvm 来管理node 版本
 
-```sh  
+```bash  
 nvm ls # 查看所有版本
 nvm use xxx 指定版本
 

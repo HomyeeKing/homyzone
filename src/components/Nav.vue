@@ -35,5 +35,8 @@ import { isDark } from '@/logics'
     >
       <carbon-logo-github />
     </a>
+    <a href="/feed.xml" target="_blank" title="RSS" class="lt-md:hidden">
+      <jam:rss-feed />
+    </a>
   </nav>
 </template>

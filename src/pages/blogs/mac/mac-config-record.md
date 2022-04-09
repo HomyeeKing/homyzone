@@ -46,7 +46,7 @@ Normally, mac has `Git` internaly, let's use `Homebrew` to take care of it.
 
 so type:
 
-```sh
+```bash
 # check if there's git already installed by brew firstly
 brew info git
 
@@ -69,7 +69,7 @@ which git # check again, it should be the brew install location
 
 put this into `~/.gitconfig`
 
-```sh
+```bash
 alias cmm=commit -m #必须key=value 紧挨着等号
 alias  st=status
 alias  pl=pull
@@ -86,7 +86,7 @@ alias    g=git
 
 After install git from brew, I found that the message are changed to Chinese where I live'in, so after I search, I know how it works now.
 
-```sh
+```bash
 
 # check locale, the language of terminal output will be the LANG
 locale
@@ -98,7 +98,7 @@ LANG="en_US.UTF-8"
 ```
 
 For permanently use, you need set it in `~/.bashrc`, if you have installed git, it should have an option like below, just remove the comment, if not, you can type it by hand.
-```sh
+```bash
 # You may need to manually set your language environment
 export LANG=en_US.UTF-8
 ```

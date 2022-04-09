@@ -10,7 +10,7 @@ duration: 5min
 ## rsync篇
 
 ### 同步两个文件夹内容
-```sh
+```bash
 
 rsync -av --delete source/ destination/ 
  # -a 除了可以递归同步以外，还可以同步元信息（比如修改时间、权限等）

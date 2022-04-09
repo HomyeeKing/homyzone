@@ -23,7 +23,7 @@ Osx文件系统是对文件大小写不敏感的，所以在你更改文件名�
 
 同时也要删除不需要的那个文件，否则会有不同大小写相同文件、目录的两个提交，如果已经提交过了，也一样，步骤如下：
 
-```sh
+```bash
 # 加上 -n 这个参数，执行命令时，是不会删除任何文件，而是展示此命令要删除的文件列表预览。
 
 git rm -r -n --cached <文件/文件夹名称>
@@ -43,7 +43,7 @@ git rm -r  --cached <文件/文件夹名称>
 就是当我们想依赖一段代码而且又有可能在使用过程中修改它（比如发现bug 进行pr，亦或是官网说的 you're really working on the code in the submodule at the same time）的时候，我们可能会需要git submodule
 
 ### 目录结构 
-使用 git submodule后，当前项目下会生成一个`.gitsubmodule` .git下也有对应的submodule， 如果删除的话 也要git rm <submodule>
+使用 git submodule后，当前项目下会生成一个`.gitsubmodule` .git下也有对应的submodule， 如果删除的话 也要`git rm <submodule>`
 
 ### 参考链接
 https://www.philosophicalhacker.com/post/using-git-submodules-effectively/#:~:text=Its%20more%20accurate%20to%20say,options%20for%20sharing%20your%20code.

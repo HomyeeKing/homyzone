@@ -48,7 +48,7 @@ To let the Linux system know that the file is a shell script, the file needs to 
 
 # shebang
 this `#!` is called shebang or hashbang, it's used to specify the interpreter 
-```sh
+```bash
 #!/bin/bash 
 OR
 #!/bin/sh

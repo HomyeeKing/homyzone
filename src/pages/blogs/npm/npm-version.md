@@ -13,20 +13,20 @@ You cannot set `0.2.1-alpha` automatically, but `0.2.1-alpha.0` is possible.
 npm supports `--preid` option to specify the prefix of prereleases. It's available in combination with `pre*` versions.
 
 **Example 1.** Make the alpha of next major version:
-```sh
+```bash
 # 1.2.3 => 2.0.0-alpha.0
 npm version premajor --preid alpha
 ```
 
 **Example 2.** Bump alpha to beta:
-```sh
+```bash
 # 2.0.0-alpha.0 => 2.0.0-beta.0
 npm version prerelease --preid beta
 ```
 
 Once you create a prerelease, you can increment the number using `prerelease` argument.
 
-```sh
+```bash
 # 2.0.0-beta.0 => 2.0.0-beta.1
 npm version prerelease
 ```

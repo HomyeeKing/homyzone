@@ -5,7 +5,7 @@ hero_image: ""
 lang: zh
 duration: 1min
 ---
-```sh
+```bash
 # 1. 进入theme 目录
 cd ~/.oh-my-zsh/themes
 

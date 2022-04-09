@@ -8,7 +8,7 @@ duration: 5min
 
 
 npm link 其实就是以下一个命令的集合
-```sh
+```bash
 npm i -g xxx
 
 cd your-own-project
