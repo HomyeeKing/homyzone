@@ -15,7 +15,7 @@ const allRoutes = router
 const blogTags = Array.from(new Set(allRoutes.map(i => i.path.slice(prefix.length, i.path.lastIndexOf('/'))))).filter(Boolean)
 
 const routes = computed(() => allRoutes.filter(i => i.path.includes(routePathFilter.value)
-  || i.meta.frontmatter?.tags.includes(routePathFilter.value)))
+  || i.meta.frontmatter?.tags?.includes(routePathFilter.value)))
 
 </script>
 
@@ -32,12 +32,18 @@ const routes = computed(() => allRoutes.filter(i => i.path.includes(routePathFil
     </section>
 
     <!-- tags -->
-    <ul class="fixed right-0 cursor-pointer">
-      <li v-for="tag in blogTags" :key="tag" @click="routePathFilter = tag">
+    <ul class="fixed right-0 top-1/5 cursor-pointer">
+      <li
+        v-for="tag in blogTags"
+        :key="tag"
+        class="opacity-60"
+        hover="opacity-100"
+        @click="routePathFilter = tag"
+      >
         {{ tag }}
       </li>
 
-      <li @click="routePathFilter = '/'">
+      <li class="opacity-60" hover="opacity-100" @click="routePathFilter = '/'">
         查看所有
       </li>
     </ul>
