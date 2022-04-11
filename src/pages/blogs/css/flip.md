@@ -38,10 +38,13 @@ Frist 和 Last 分别是动画前后的两种状态，获取到动画执行前�
 [Taking advantage of user perception](https://aerotwist.com/static/blog/flip-your-animations/window.jpg)
 
 
+
 所以我们可以利用这宝贵的100ms来提前预计算动画变化的状态，然后将变化的部分尽量用`transform` `opacity`重新编写， 从而做到立即响应式的动画。
 
 
 
 ### 如何把握100ms的窗口期
+
+> 注： 100ms并不是技术上的浏览器的行为，而是用户的反应时间 haha
 
 首先计算出position\scale\opacity的变化，然后用transform\opacity替代，然后用will-change来告诉浏览器要发生变化的属性，最后用requestAnimationFrame（在下次重绘前更新动画）来请求执行动画
