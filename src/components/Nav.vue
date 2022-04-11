@@ -3,7 +3,7 @@ import { isDark } from '@/logics'
 </script>
 
 <template>
-  <nav class="grid gap-5 grid-flow-col float-right text-xl mt-6 text-gray-700 dark:text-gray-200">
+  <nav class="grid gap-5 grid-flow-col float-right text-xl mt-6 text-gray-700 dark:text-green-600">
     <router-link class="lt-md:hidden" to="/" title="首页">
       <carbon-campsite />
     </router-link>
