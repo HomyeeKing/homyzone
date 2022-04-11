@@ -88,8 +88,8 @@ const config: UserConfig = {
     }),
 
     Markdown({
-      wrapperComponent: 'post',
-      wrapperClasses: 'prose m-auto',
+      wrapperComponent: 'blog',
+      wrapperClasses: 'prose prose-sm m-auto',
       headEnabled: true,
       markdownItOptions: {
         quotes: '""\'\'',

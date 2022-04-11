@@ -6,4 +6,3 @@ lang: zh
 duration: 1min
 ---
 
-你好
