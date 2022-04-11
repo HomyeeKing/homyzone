@@ -86,7 +86,8 @@ const config: UserConfig = {
           const tmp = route.path.split('/')
           const tag = tmp.splice(2, 1)[0]
           route.path = tmp.join('/')
-          ; (route.tags = route.tags ?? []).push(tag)
+          route.meta.frontmatter.tags ??= []
+          route.meta.frontmatter.tags.push(tag)
         }
         return route
       },

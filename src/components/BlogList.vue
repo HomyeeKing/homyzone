@@ -12,19 +12,12 @@ const allRoutes = router
       +new Date(b.meta.frontmatter?.date) - +new Date(a.meta.frontmatter?.date),
   ).filter(i => !i.path.endsWith('.html'))
 
-console.log('allRoutes', allRoutes)
 const blogTags = Array.from(new Set(allRoutes.reduce(
   (prev, cur) => {
-    return prev.concat(cur?.tags)
-  }, []))).filter(Boolean)
-
-const test = allRoutes.reduce(
-  (prev, cur) => {
-    return prev.concat(cur?.tags)
+    return prev.concat(cur?.meta?.frontmatter?.tags)
   },
   [],
-)
-console.log(test)
+)))
 
 const routes = computed(() => allRoutes.filter(i => i.path.includes(routePathFilter.value)
   || i.meta.frontmatter?.tags?.includes(routePathFilter.value)))
