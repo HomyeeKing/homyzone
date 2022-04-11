@@ -1,6 +1,6 @@
 import { resolve } from 'path'
 import type { UserConfig } from 'vite'
-import fs from 'fs-extra'
+import { readFileSync } from 'fs-extra'
 import Pages from 'vite-plugin-pages'
 import Inspect from 'vite-plugin-inspect'
 import Icons from 'unplugin-icons/vite'
@@ -32,12 +32,11 @@ import 'prismjs/components/prism-java'
 import 'prismjs/components/prism-javadoclike'
 import 'prismjs/components/prism-javadoc'
 import 'prismjs/components/prism-jsdoc'
+import type { Route } from '@/types'
 
 const config: UserConfig = {
   resolve: {
-    alias: [
-      { find: '@/', replacement: `${resolve(__dirname, 'src')}/` },
-    ],
+    alias: [{ find: '@/', replacement: `${resolve(__dirname, 'src')}/` }],
   },
   optimizeDeps: {
     include: [
@@ -75,14 +74,20 @@ const config: UserConfig = {
 
     Pages({
       extensions: ['vue', 'md'],
-      extendRoute(route) {
+      extendRoute(route: Route) {
         const path = resolve(__dirname, route.component.slice(1))
-        if (!path.includes('projects.md')) {
-          const md = fs.readFileSync(path, 'utf-8')
-          const { data } = matter(md)
-          route.meta = Object.assign(route.meta || {}, { frontmatter: data })
-        }
 
+        const md = readFileSync(path, 'utf-8')
+        const { data } = matter(md)
+        route.meta = Object.assign(route.meta || {}, { frontmatter: data })
+
+        // ignore tags
+        if (route.path.startsWith('/blogs/')) {
+          const tmp = route.path.split('/')
+          const tag = tmp.splice(2, 1)[0]
+          route.path = tmp.join('/')
+          ; (route.tags = route.tags ?? []).push(tag)
+        }
         return route
       },
     }),
@@ -120,12 +125,7 @@ const config: UserConfig = {
     }),
 
     AutoImport({
-      imports: [
-        'vue',
-        'vue-router',
-        '@vueuse/core',
-        '@vueuse/head',
-      ],
+      imports: ['vue', 'vue-router', '@vueuse/core', '@vueuse/head'],
     }),
 
     Components({
@@ -154,8 +154,7 @@ const config: UserConfig = {
   build: {
     rollupOptions: {
       onwarn(warning, next) {
-        if (warning.code !== 'UNUSED_EXTERNAL_IMPORT')
-          next(warning)
+        if (warning.code !== 'UNUSED_EXTERNAL_IMPORT') next(warning)
       },
     },
   },

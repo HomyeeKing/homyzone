@@ -20,6 +20,8 @@ const routes = autoRoutes.map((i) => {
   }
 })
 
+console.log('routes', routes)
+
 const scrollBehavior = (to: any, from: any, savedPosition: any) => {
   if (savedPosition)
     return savedPosition

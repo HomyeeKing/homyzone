@@ -1,5 +1,4 @@
-<script setup>
-import { defineProps } from "vue";
+<script setup lang="ts">
 
 const props = defineProps({
   title: {
@@ -8,13 +7,15 @@ const props = defineProps({
   },
   type: {
     type: Array,
-    default: [],
+    default: () => [],
   },
-});
+})
 </script>
 <template>
   <div>
     <h1>我看过的{{ title }}</h1>
-    <p class="mt-8 text-left">一些我喜欢的类型:{{ type.join("/") }}</p>
+    <p class="mt-8 text-left">
+      一些我喜欢的类型:{{ type.join("/") }}
+    </p>
   </div>
 </template>

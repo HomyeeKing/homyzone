@@ -12,7 +12,19 @@ const allRoutes = router
       +new Date(b.meta.frontmatter?.date) - +new Date(a.meta.frontmatter?.date),
   ).filter(i => !i.path.endsWith('.html'))
 
-const blogTags = Array.from(new Set(allRoutes.map(i => i.path.slice(prefix.length, i.path.lastIndexOf('/'))))).filter(Boolean)
+console.log('allRoutes', allRoutes)
+const blogTags = Array.from(new Set(allRoutes.reduce(
+  (prev, cur) => {
+    return prev.concat(cur?.tags)
+  }, []))).filter(Boolean)
+
+const test = allRoutes.reduce(
+  (prev, cur) => {
+    return prev.concat(cur?.tags)
+  },
+  [],
+)
+console.log(test)
 
 const routes = computed(() => allRoutes.filter(i => i.path.includes(routePathFilter.value)
   || i.meta.frontmatter?.tags?.includes(routePathFilter.value)))
@@ -33,13 +45,7 @@ const routes = computed(() => allRoutes.filter(i => i.path.includes(routePathFil
 
     <!-- tags -->
     <ul class="fixed right-0 top-1/5 cursor-pointer">
-      <li
-        v-for="tag in blogTags"
-        :key="tag"
-        class="opacity-60"
-        hover="opacity-100"
-        @click="routePathFilter = tag"
-      >
+      <li v-for="tag in blogTags" :key="tag" class="opacity-60" hover="opacity-100" @click="routePathFilter = tag">
         {{ tag }}
       </li>
 

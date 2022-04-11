@@ -1,5 +1,4 @@
 <script lang='ts' setup>
-import { defineProps } from 'vue'
 import { useRoute } from 'vue-router'
 import { isClient, useEventListener } from '@vueuse/core'
 import { fromDateString } from '@/logics'
