@@ -6,7 +6,7 @@ lang: zh
 duration: 5min
 ---
 
-
+主要记录下不容易记住但偶尔会用到的命令
 ## rsync篇
 
 ### 同步两个文件夹内容
@@ -23,4 +23,25 @@ rsync -av --delete source/ destination/
 rsync -av --delete /a/src/mobile/  /b/src/
 
 ```
+
+
+## head & tail
+
+> https://www.geeksforgeeks.org/head-command-linux-examples/
+
+参数包括：
+![head&tail options](https://media.geeksforgeeks.org/wp-content/uploads/head.png)
+
+head是展示前n行内容，默认n=10，tail反之， 多个文件的话 会以文件名分割
+
+-c 前n个byte的内容
+
+-n num  都可以简写成 -num
+
+`tail +n file_name`, 将会读取从第n行到结尾的数据
+## ls
+
+`ls -t` : 展示最近修改的文件
+
+
 
