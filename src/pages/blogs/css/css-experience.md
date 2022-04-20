@@ -5,7 +5,7 @@ hero_image: "https://upload.wikimedia.org/wikipedia/commons/3/32/Subscript_super
 lang: zh
 duration: 1min
 ---
-
+[[toc]]
 ## 正确使用 margin: 0 auto
 >https://stackoverflow.com/questions/4955122/what-exactly-is-needed-for-margin-0-auto-to-work
 

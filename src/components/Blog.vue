@@ -29,8 +29,8 @@ useEventListener(window, 'hashchange', navigate)
     alt="hero_image"
     width="900"
     height="500"
-    class="h-100 mb-5"
-    object="contain"
+    class="h-70 w-1/1 mb-5"
+    object="fill"
   >
 
   <slot />
