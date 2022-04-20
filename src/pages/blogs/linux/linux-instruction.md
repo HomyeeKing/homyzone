@@ -5,7 +5,7 @@ hero_image: ''
 lang: zh
 duration: 5min
 ---
-
+[[toc]]
 主要记录下不容易记住但偶尔会用到的命令
 ## rsync篇
 
@@ -44,4 +44,8 @@ head是展示前n行内容，默认n=10，tail反之， 多个文件的话 会�
 `ls -t` : 展示最近修改的文件
 
 
+## 查看端口占用
+> https://www.runoob.com/w3cnote/linux-check-port-usage.html
+lsof -i:端口号
+netstat -tunlp | grep 端口号
 
