@@ -23,6 +23,16 @@ useEventListener(window, 'hashchange', navigate)
       {{ `${fromDateString(frontmatter.date)} · ${frontmatter.duration} ` }}
     </p>
   </div>
+  <img
+    v-if="frontmatter.hero_image"
+    :src="frontmatter.hero_image"
+    alt="hero_image"
+    width="900"
+    height="500"
+    class="h-100 mb-5"
+    object="contain"
+  >
+
   <slot />
 
   <div v-if="route.path !== '/'" class="prose m-auto my-8">

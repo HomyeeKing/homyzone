@@ -6,5 +6,6 @@
     "Vitesse"
 ],
 "volar.tsPlugin": true,
-"i18n-ally.sourceLanguage": "zh-CN"
+"i18n-ally.sourceLanguage": "zh-CN",
+"liveServer.settings.port": 5501
 }
