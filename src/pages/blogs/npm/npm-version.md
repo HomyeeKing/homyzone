@@ -32,3 +32,6 @@ npm version prerelease
 ```
 
 > https://stackoverflow.com/a/63112599
+
+## caret w/ prerelease version
+`^1.2.3-beta.2`  := `>=1.2.3-beta.2 <2.0.0`  1.2.3的prerelease版本且大于等于beta.2 可以允许 
