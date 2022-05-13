@@ -9,7 +9,7 @@ duration: 25min
 vite 的 ssr怎么开发呢？
 
 通常的目录结构如下
-```js
+```
 - index.html
 - src/
     - main.js // 暴露环境无关的app的代码
