@@ -7,11 +7,13 @@ duration: 10min
 ---
 
 # 前情提要
-node支持两种模块方案——`CommonJS`（cjs） 和 `ECMAScript modules ` (esm)。
+在node中支持两种模块方案——`CommonJS`（cjs） 和 `ECMAScript modules ` (esm)。
 
-在esm出现之前，各个库基本是commonjs格式的，esm出现之后，相比于require的运行时执行，我们可以做一些静态代码分析如tree shaking来减小代码体积，不过由于commonjs已有庞大的用户基础，所以我们当前不能完全一刀切只用esmodule，所以最合理的方式就是“鱼和熊掌兼得”，即**使用esmoudle编写库代码，然后通过typescript、babel等工具辅助生成对应的cjs格式的代码**。
 
-有了两种版本的代码，我们下一步就需要手动指定下入口文件，根据模块引用方式来指向对应格式的代码（即import引用的时候指向esmodule的代码，require引入则指向CommonJS的代码），本篇文章就来介绍下如何正确的配置入口文件。
+随着ESModule的广泛使用，社区生态也在逐渐转向ESModule，ESModule相比于require的运行时执行，可以用来做一些静态代码分析如tree shaking等来减小代码体积，但是由于CommonJS已有庞大的用户基础，对于第三方库作者来说，不能完全一刀切只用ESModule，还要兼容CommonJS场景的使用，所以最合理的方式就是“鱼和熊掌兼得”，即**使用ESModule编写库代码，然后通过TypeScript、Babel等工具辅助生成对应的CommonJS格式的代码**，然后根据开发者的引用方式来动态替换为指定格式的代码。
+
+有了两种版本的代码，第三方库作者就需要编写相应的入口文件，来达到“动态”引入的目的（即import引用的时候指向ESModule的代码，require引入则指向CommonJS的代码），同时也方便于打包工具对于无用代码的剔除，减少代码体积，本篇文章主要聚焦于如何正确的配置入口文件。
+
 
 > 注： 本篇文章以node规范为准，对于打包工具额外支持的配置方式会进行额外标注
 > 本文的涉及的示例代码可以通过 https://github.com/HomyeeKing/test-entry 进行查看、测试
