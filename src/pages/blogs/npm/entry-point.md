@@ -6,7 +6,7 @@ lang: zh
 duration: 10min
 ---
 
-# 前情提要
+# 写在前面
 在node中支持两种模块方案——`CommonJS`（cjs） 和 `ECMAScript modules ` (esm)。
 
 
@@ -41,11 +41,17 @@ const pkg = require('@homy/test-entry')
 - cjs ---> `.cjs`
 - esm ---> `.mjs`
 
-在显示标注后缀名的情况下，如果你`require`了一个mjs的文件则会抛出异常，同时`import`一个`.cjs`则不支持具名导入，但是可以通过default export的形式（即import pkg from './pkg.cjs')导入
-```js
-// ❌ Error
+那么不同模块格式的文件如何相互引用呢？解释规则大致如下
+- import了CJS格式的文件，module.exports会等同于export default, 具名导入会根据静态分析来兼容，但是一般推荐在ESM中使用defaultExport格式来引入CJS文件
+- 在CJS中，如果想要引入ESM文件，因为ESM模块异步执行的机制，必须使用Dynamic Import即`import()`来引用
 
-import { someVar } from './index.cjs'  const pkg = require('./index.mjs') //  ❌ Error
+```js
+// index.cjs
+// ✅
+
+// index.mjs
+import { someVar } from './index.cjs'  const pkg = require('./index.mjs')  // ❌ Error
+const pkg = await import('./index.mjs') //  ⚠️ it dependens 推荐下边方式引入
 import pkg from './index.cjs' //  ✅
 ```
 
@@ -81,17 +87,17 @@ package.json 里也提供了一个type字段 用于标注用什么格式来执�
   "exports":{
     "import":"./index.mjs",
     "require":"./index.cjs",
-    "default": "./index.mjs"  // 兜底使用 
+    "default": "./index.mjs" // 兜底使用
   },
+}
 ```
 而且还有效限制了入口文件的范围，即如果你引入指定入口文件范围之外的文件，则会报错
 ```js
 const pkg = require('@homy/test-entry/test.js')
 // 报错！ Package subpath './test.js' is not defined by "exports"
 ```
-如果想指定`submodule`, 我们可以
+如果想指定`submodule`, 我们可以这样编写
 
-另外我们还可以这个指定submodule
 ```json
 "exports": {
     "." : "./index.mjs",
@@ -128,13 +134,37 @@ import pkg from 'pkg/mobile'
 
 ![](https://ata2-img.oss-cn-zhangjiakou.aliyuncs.com/neweditor/582e902c-797b-41c5-b8e8-915423af19dc.png)
 
-另外，Typescript已经成为前端的主流开发方式，同时Typescript也有自己的一套入口解析方式，只不过解析的是**类型**的入口文件，有效辅助开发者进行类型检查和代码提示，来提高我们编码的效率和准确性，下面我们继续了解下Typescript是怎么解析类型文件的
+另外，TypeScript已经成为前端的主流开发方式，同时TypeScript也有自己的一套入口解析方式，只不过解析的是**类型**的入口文件，有效辅助开发者进行类型检查和代码提示，来提高我们编码的效率和准确性，下面我们继续了解下TypeScript是怎么解析类型文件的
 
-# typescript的module resolution
+# TypeScript的类型入口文件
+TypeScript有着对Node的原生支持，所以会先检查`main`字段，然后找对应文件是否存在类型声明文件，比如main指向的是`lib/index.js`, TypeScript就会查找有没有`lib/index.d.ts`文件
+另外一种方式，开发者可以在package.json中通过`types`字段来指定类型文件，`exports`中同理
+```json
+{
+  "name": "my-package",
+    "type": "module",
+    "exports": {
+        ".": {
+            // Entry-point for TypeScript resolution - must occur first!
+            "types": "./types/index.d.ts",
+            // Entry-point for `import "my-package"` in ESM
+            "import": "./esm/index.js",
+            // Entry-point for `require("my-package") in CJS
+            "require": "./commonjs/index.cjs",
+        },
+    },
+    // CJS fall-back for older versions of Node.js
+    "main": "./commonjs/index.cjs",
+    // Fall-back for older versions of TypeScript
+    "types": "./types/index.d.ts"
+}
+```
+
+## TypeScript模块解析策略
 tsconfig.json包含一个`moduleResolution`字段，支持classic（默认）和node两种解析策略，主要针对**相对路径**引入和**非相对路径**引入两种方式，我们可以通过示例来理解下
 
 ## classic
-查找目标以`.ts` 或`.d.ts`结尾的文件
+查找以`.ts` 或`.d.ts`结尾的文件
 ### relative import
 ```ts
 //  /root/src/folder/A.ts
@@ -165,6 +195,8 @@ import { b } from 'moduleB'
 
 
 ## node
+以类似于node的解析策略来查找，但是相应的查找的范围是以`.ts` `.tsx` `.d.ts`为后缀的文件，而且会读取package.json中对应的`types`（或`typings`）字段
+
 ### relative
 ```js
 /root/src/moduleA
@@ -177,7 +209,7 @@ const pkg = require('./moduleB')
 ```
 在node环境下，会依次解析`.js`  当前package.json中`main`字段指向的文件以及是否存在对应的`index.js`文件
 
- typescript解析的时候则是把后缀名替换成ts专属的后缀`.ts` `.tsx` `.d.ts`，而且ts这时候会读取`types`字段 而非main
+ TypeScript解析的时候则是把后缀名替换成ts专属的后缀`.ts` `.tsx` `.d.ts`，而且ts这时候会读取`types`字段 而非main
 ```
 /root/src/moduleB.ts
 /root/src/moduleB.tsx
@@ -207,7 +239,7 @@ const pkg = require('moduleB')
 /node_modules/moduleB/package.json (if it specifies a "main" property)
 /node_modules/moduleB/index.js
 ```
-类似的 typescript也会替换对应后缀名，而且多了`@types`下类型的查找
+类似的 TypeScript也会替换对应后缀名，而且多了`@types`下类型的查找
 ```
 /root/src/node_modules/moduleB.ts
 /root/src/node_modules/moduleB.tsx
@@ -220,15 +252,17 @@ const pkg = require('moduleB')
 ....
 ```
 
-
+另外TypeScript支持版本选择来映射不同的文件，感兴趣的可以阅读[version-selection-with-typesversions](https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html#version-selection-with-typesversions)
 
 # 总结
 - node中可以通过`main` 和  `type: module | commonjs` 来指定入口文件及其模块类型， `exports` 则是更强大的替代品，拥有更灵活的配置方式
 - 主流打包工具如webpack rollup esbuild 则在此基础上增加了对top-level `module`的支持
-- typescript 查找的是 `.ts` `.tsx` `.d.ts`, 对应查看的是top-level `types`字段
+- TypeScript 则会先查看package.json中有没有`types`字段，否则查看main字段指定的文件有没有对应的类型声明文件
 
 # 参考
 https://webpack.js.org/guides/package-exports/
 https://nodejs.org/api/packages.html#packages_package_entry_points
 https://esbuild.github.io/api/#main-fields
 https://www.typescriptlang.org/docs/handbook/module-resolution.html#relative-vs-non-relative-module-imports
+https://www.typescriptlang.org/docs/handbook/declaration-files/publishing.html#version-selection-with-typesversions
+https://www.typescriptlang.org/docs/handbook/esm-node.html#type-in-packagejson-and-new-extensions
