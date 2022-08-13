@@ -23,4 +23,16 @@ duration: 1min
 
 ### style-loader
 
-在DOM中注入CSS，一般和css-loader搭配使用
+将css通过link标签在DOM中注入，一般和css-loader搭配使用
+一般适用于`import 'xxx.css'`这种side effect引入
+
+### css-loader
+用来解析导入为以.css为后缀的文件，用来解释@import、url()引入的资源
+
+`modules:true`(modules: local 可以达到同样的效果) 可以开启`CSS modules`模式，可以实现如下效果
+- 当前css文件会导出一个Object, key是类名，value是对应的hash值
+- 可以通过`local` `:global`声明哈希类名或是全局类名
+- 可以通过`composes` 来继承类名，不过被继承的类名要在当前类名之前，也可以通过import导入，支持多个导入
+
+### stylesheet-loader
+内联，导入jsx flavor的css
