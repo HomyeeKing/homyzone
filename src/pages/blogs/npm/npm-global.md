@@ -9,7 +9,12 @@ duration: 5min
 首先归根到底是环境变量中有没有`npm`的路径
 ### 指令相关
 ```bash 
- npm -g bin  # 查看npm全局安装路径
+ npm -g bin  # 查看npm全局安装路径  好像9.x不行了
+ npm prefix -g # 可以看到 prefix 然后按照下边的规则找一下
+#  packages are installed into the {prefix}/lib/node_modules folder, instead of the current working directory.
+# bin files are linked to {prefix}/bin
+# man pages are linked to {prefix}/share/man
+
 # or
 which npm 
 
