@@ -138,6 +138,121 @@ let a = [3; 5]; // [3, 3, 3, 3, 3]
 
 ```
 
+## 函数
+
+关键字是`fn`, 这里也有箭头函数，不必显式地声明返回值，但必须在`->`声明返回值类型
+
+```rs
+fn five() -> i32 {
+    5 // 注意这里没有分号 代表这是一个表达式，不是一个语句
+}
+
+fn main() {
+    let x = five();
+
+    println!("The value of x is: {x}");
+}
+
+```
+
+## if
+
+```rs
+fn main() {
+    let number = 3;
+
+    if number < 5 {  // 不用加()
+        println!("condition was true");
+    } else {
+        println!("condition was false");
+    }
+}
+
+```
+
+if 后面跟的 condition 必须是`bool`类型，不会像 js 存在隐式转换
+
+```rs
+if 3 {
+  println("true") // error!
+}
+```
+
+另外`if`可以搭配`let`使用, 但是必须要保证 if else 返回的值类型相同
+
+```rs
+fn main() {
+      let condition = true;
+    let number = if condition { 5 } else { 6 };
+
+    println!("The value of number is: {number}");
+}
+```
+
+## 循环
+有三种方式`loop` `while` `for`
+
+### loop
+```rs
+fn main() {
+    loop { // 死循环
+        println!("again!");
+    }
+// 退出循环
+    let mut counter = 0;
+
+    let result = loop {
+        counter += 1;
+
+        if counter == 10 {
+            break counter * 2;  // 通过break退出 后边还可以跟一些操作
+        }
+    };
+
+    println!("The result is {result}"); // 20
+
+    //  给循环打标
+    let mut count = 0;
+    'counting_up: loop {  // 必须是单引号开头 可以跟在break 和 continue后边
+        println!("count = {count}");
+        let mut remaining = 10;
+
+        loop {
+            println!("remaining = {remaining}");
+            if remaining == 9 {
+                break;
+            }
+            if count == 2 {
+                break 'counting_up;  //  
+            }
+            remaining -= 1;
+        }
+
+        count += 1;
+    }
+    println!("End count = {count}");
+}
+```
+while 书写方式类似if 不再赘述
+### for
+
+```rs
+fn main() {
+    let a = [10, 20, 30, 40, 50];
+
+    for element in a {
+        println!("the value is: {element}");
+    }
+
+    // 还可以搭配range使用
+    for number in (1..4).rev() {
+        println!("{number}!");
+    }
+    println!("LIFTOFF!!!");
+}
+
+```
+
 ## 生命周期
 
 > [官方文档地址](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#validating-references-with-lifetimes)
