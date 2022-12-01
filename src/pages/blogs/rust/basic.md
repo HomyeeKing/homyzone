@@ -253,6 +253,120 @@ fn main() {
 
 ```
 
+## keyword
+https://doc.rust-lang.org/book/appendix-01-keywords.html?highlight=use#keywords-currently-in-use
+
+其实学rust最想搞清楚的是这些关键字，比js要丰富很多, 这里做一些类比
+
+首先我们需要了解下模块系统，毕竟最终的场景是一个高复杂度的场景，模块化必不可少，我们来看下如何组织一个模块吧。
+
+## 模块系统
+> https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html#modules-cheat-sheet
+
+写过js知道，我们通过import export 来连接各个模块，js里叫每个模块也会有一些不被导出的变量、方法，rust也是一样的，只不过写法会有不同，我们通过编译流程从入口文件开始看，
+
+
+### 入口文件
+我们知道一个npm包的入口文件是通过`package.json`的`main`/`module`/`exports`等字段指定的，对于rust，有个专属名词叫`crate root`
+- `src/lib.rs` for library crate
+- `src/main.rs` for binary crate
+
+### 声明模块
+这里通过`mod` 关键字引入
+```rs
+mod garden; // 引入一个叫garden的模块
+
+// 查找方式如下：
+//  - inline  可以直接后边跟garden的代码  mod garden {} 不跟分号
+//  - src/garden.rs
+//  - src/garden/mod.rs
+```
+我们看到 相比于node默认查找`index.js`, rust默认查找`mod.rs`
+### 声明子模块
+除了`crate root`之外，在其他模块里我们都可以声明子模块, 其实也就是在上边提到的模块里再声明模块，这个模块就是子模块，接着刚才的例子：
+```rs
+// src/garden.rs
+mod vegetables;
+
+// 查找方式如下：
+// - inline mod vegetables {} 不跟分号
+// - src/garden/vegetable.rs
+// - src/garden/vegetables/mod.rs
+```
+
+### path to code
+顾名思义就是通过路径的方式来使用某个特定方法、类型，只不过通过`::`来作为分隔符，比如`vegetables`里声明了一个type`Asparagus`, 且在同一个crate也就是包里，那么我们可以这样引用
+`crate::garden::vegetable::Asparagus`
+
+同样这里也有相对路径和绝对路径，`crate::`就相当于根目录，我们同样可以使用相对路径来引入模块比如
+```rs
+mod front_of_house {
+    mod hosting {
+        fn add_to_waitlist() {}
+    }
+}
+
+pub fn eat_at_restaurant() {
+    // Absolute path
+    crate::front_of_house::hosting::add_to_waitlist();
+
+    // Relative path
+    front_of_house::hosting::add_to_waitlist();
+}
+
+```
+
+### **use** 关键字
+上边那个path to code有点长了，在一个作用域内，可以使用**use** 来创建一个简写，比如`use crate::garden::vegetables::Asparagus;`, 以后直接用 `Asparagus`就行了
+
+也就是把path to code简化成对应的目标类型(最后一个单词)
+`::` 也就相当于解引用、具名引用 
+然后也可以通过`as`来进行别名
+```rs
+use std::fmt::Result;
+use std::io::Result as IoResult;
+
+fn function1() -> Result {
+    // --snip--
+    Ok(())
+}
+
+fn function2() -> IoResult<()> {
+    // --snip--
+    Ok(())
+}
+```
+
+也可以re-exporting, 就是通过`pub use`
+
+上边说的都是crate内部的引用，如何引入外部的包呢，首先也得通过`cargo add xxx`添加依赖
+
+```rs
+// 比如这个依赖叫rand
+use rand::Rng;
+
+fn main() {
+   let secret_number = rand::thread_rng().gen_range(1..=100);
+}
+
+```
+
+如果想引用多个可以, 包括自身，然后里边可以继续进行path to code 
+```rs
+use rand::{Rng,thread_rng, self};
+// 还可以引入全部 public的内容
+use rand::*；
+```
+
+### publich vs private
+公有私有mod，这两个关键字很常见了，`private`的mod则不能被外部访问，默认是`private`的
+
+
+| rust 关键字| js对应的关键字| 含义|
+|--- | ---| ---|
+|use | import | 导入|
+|use | import | 导入|
+
 ## 生命周期
 
 > [官方文档地址](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#validating-references-with-lifetimes)
