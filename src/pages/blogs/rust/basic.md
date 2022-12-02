@@ -362,10 +362,62 @@ use rand::*；
 公有私有mod，这两个关键字很常见了，`private`的mod则不能被外部访问，默认是`private`的
 
 
-| rust 关键字| js对应的关键字| 含义|
-|--- | ---| ---|
-|use | import | 导入|
-|use | import | 导入|
+
+## struct 结构体
+之前接触过c的同学应该对结构体不是很陌生，用来组织相关属性，类似于java和ts的interface，同样可以通过`.`操作符进行访问
+
+```rs
+struct User {
+    active: bool,
+    username: String,
+    email: String,
+    sign_in_count: u64,
+}
+
+fn main() {
+   let mut user1 = User {
+        email: String::from("someone@example.com"),
+        username: String::from("someusername123"),
+        active: true,
+        sign_in_count: 1,
+    };
+
+    user1.email = String::from("anotheremail@example.com");
+}
+
+```
+
+类似于js的对象一样，可以省略操作符, 比如`email:email` 可以简写成`email`,
+同样还有`...email` 来简写剩余属性
+
+还有一种不跟任何属性的struct, 
+```rs
+struct AlwaysEqual;
+
+fn main() {
+    let subject = AlwaysEqual;
+}
+```
+
+### 如何打印struct
+需要一个宏
+```rs
+#[derive(Debug)] // 只能跟着struct用
+struct Rectangle {
+    width: u32,
+    height: u32,
+}
+
+fn main() {
+    let rect1 = Rectangle {
+        width: 30,
+        height: 50,
+    };
+
+    println!("rect1 is {:?}", rect1);
+}
+
+```
 
 ## 生命周期
 
