@@ -419,6 +419,67 @@ fn main() {
 
 ```
 
+## Traits
+> https://doc.rust-lang.org/book/ch10-02-traits.html
+
+抽象类
+这个名词在看文档的时候见到过很多次，同时`trait`也是一个关键字，文档也专门有一章来介绍，类似于其他语言的interface，用来定义一组通用行为，目前看来好像是分工处理了，`trait` 用来定义方法 `struct` 用来定义字段属性，不像`interface`那样都可以定义，类似于java里的抽象类
+
+可以为某个`struct`实现一个`trait`, 但是必须要注意**trait 和 struct 必须有一个和 aggregator处于同一个作用域**
+```rs
+pub trait Summary {
+    fn summarize(&self) -> String;
+}
+
+pub struct NewsArticle {
+    pub headline: String,
+    pub location: String,
+    pub author: String,
+    pub content: String,
+}
+
+impl Summary for NewsArticle {
+    fn summarize(&self) -> String {
+        format!("{}, by {} ({})", self.headline, self.author, self.location)
+    }
+}
+
+pub struct Tweet {
+    pub username: String,
+    pub content: String,
+    pub reply: bool,
+    pub retweet: bool,
+}
+
+impl Summary for Tweet {
+    fn summarize(&self) -> String {
+        format!("{}: {}", self.username, self.content)
+    }
+}
+```
+
+现在`Tweet` 和 `NewsArticle` 都实现了 `Summary`这个trait，但是我们在使用的时候，还是需要把trait引入到当前scope的， 这里需要一个聚合器`aggregator`
+
+```rs
+use aggregator::{Summary, Tweet};
+
+fn main() {
+    let tweet = Tweet {
+        username: String::from("horse_ebooks"),
+        content: String::from(
+            "of course, as you probably already know, people",
+        ),
+        reply: false,
+        retweet: false,
+    };
+
+    println!("1 new tweet: {}", tweet.summarize());
+}
+```
+
+另外trait还可以提供默认的implementation, 这样可以缺省, 填入空的impl块 `impl Summary for NewsArticle {}`，当然struct里也可以进行override覆盖
+
+
 ## 生命周期
 
 > [官方文档地址](https://doc.rust-lang.org/book/ch10-03-lifetime-syntax.html#validating-references-with-lifetimes)
@@ -485,3 +546,9 @@ fn longest(x: &str, y: &str) -> &str {
 ```
 
 虽说字符串的生命周期是静态的，但是作为参数借用后，参数的生命周期是动态的，多个参数之间的动态声明周期也是无法固定的，在上面这段代码中，可能返回`x`or`y`, 对应的是两个不同的生命周期，此时需要我们手动打标，
+
+
+## 心智负担
+一些学习时候的心智负担 
+
+- 什么时候用分号 什么时候用逗号 什么时候缺省
