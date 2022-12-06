@@ -5,6 +5,7 @@ hero_image: ''
 lang: zh
 duration: 10min
 ---
+[[toc]]
 
 ## 变量
 
