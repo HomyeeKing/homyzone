@@ -5,6 +5,7 @@ hero_image: ''
 lang: zh
 duration: 10min
 ---
+
 [[toc]]
 
 ## 变量
@@ -191,9 +192,11 @@ fn main() {
 ```
 
 ## 循环
+
 有三种方式`loop` `while` `for`
 
 ### loop
+
 ```rs
 fn main() {
     loop { // 死循环
@@ -224,7 +227,7 @@ fn main() {
                 break;
             }
             if count == 2 {
-                break 'counting_up;  //  
+                break 'counting_up;  //
             }
             remaining -= 1;
         }
@@ -234,7 +237,9 @@ fn main() {
     println!("End count = {count}");
 }
 ```
-while 书写方式类似if 不再赘述
+
+while 书写方式类似 if 不再赘述
+
 ### for
 
 ```rs
@@ -255,25 +260,30 @@ fn main() {
 ```
 
 ## keyword
+
 https://doc.rust-lang.org/book/appendix-01-keywords.html?highlight=use#keywords-currently-in-use
 
-其实学rust最想搞清楚的是这些关键字，比js要丰富很多, 这里做一些类比
+其实学 rust 最想搞清楚的是这些关键字，比 js 要丰富很多, 这里做一些类比
 
 首先我们需要了解下模块系统，毕竟最终的场景是一个高复杂度的场景，模块化必不可少，我们来看下如何组织一个模块吧。
 
 ## 模块系统
+
 > https://doc.rust-lang.org/book/ch07-02-defining-modules-to-control-scope-and-privacy.html#modules-cheat-sheet
 
-写过js知道，我们通过import export 来连接各个模块，js里叫每个模块也会有一些不被导出的变量、方法，rust也是一样的，只不过写法会有不同，我们通过编译流程从入口文件开始看，
-
+写过 js 知道，我们通过 import export 来连接各个模块，js 里叫每个模块也会有一些不被导出的变量、方法，rust 也是一样的，只不过写法会有不同，我们通过编译流程从入口文件开始看，
 
 ### 入口文件
-我们知道一个npm包的入口文件是通过`package.json`的`main`/`module`/`exports`等字段指定的，对于rust，有个专属名词叫`crate root`
+
+我们知道一个 npm 包的入口文件是通过`package.json`的`main`/`module`/`exports`等字段指定的，对于 rust，有个专属名词叫`crate root`
+
 - `src/lib.rs` for library crate
 - `src/main.rs` for binary crate
 
 ### 声明模块
+
 这里通过`mod` 关键字引入
+
 ```rs
 mod garden; // 引入一个叫garden的模块
 
@@ -282,9 +292,13 @@ mod garden; // 引入一个叫garden的模块
 //  - src/garden.rs
 //  - src/garden/mod.rs
 ```
-我们看到 相比于node默认查找`index.js`, rust默认查找`mod.rs`
+
+我们看到 相比于 node 默认查找`index.js`, rust 默认查找`mod.rs`
+
 ### 声明子模块
+
 除了`crate root`之外，在其他模块里我们都可以声明子模块, 其实也就是在上边提到的模块里再声明模块，这个模块就是子模块，接着刚才的例子：
+
 ```rs
 // src/garden.rs
 mod vegetables;
@@ -296,10 +310,12 @@ mod vegetables;
 ```
 
 ### path to code
-顾名思义就是通过路径的方式来使用某个特定方法、类型，只不过通过`::`来作为分隔符，比如`vegetables`里声明了一个type`Asparagus`, 且在同一个crate也就是包里，那么我们可以这样引用
+
+顾名思义就是通过路径的方式来使用某个特定方法、类型，只不过通过`::`来作为分隔符，比如`vegetables`里声明了一个 type`Asparagus`, 且在同一个 crate 也就是包里，那么我们可以这样引用
 `crate::garden::vegetable::Asparagus`
 
 同样这里也有相对路径和绝对路径，`crate::`就相当于根目录，我们同样可以使用相对路径来引入模块比如
+
 ```rs
 mod front_of_house {
     mod hosting {
@@ -318,11 +334,13 @@ pub fn eat_at_restaurant() {
 ```
 
 ### **use** 关键字
-上边那个path to code有点长了，在一个作用域内，可以使用**use** 来创建一个简写，比如`use crate::garden::vegetables::Asparagus;`, 以后直接用 `Asparagus`就行了
 
-也就是把path to code简化成对应的目标类型(最后一个单词)
-`::` 也就相当于解引用、具名引用 
+上边那个 path to code 有点长了，在一个作用域内，可以使用**use** 来创建一个简写，比如`use crate::garden::vegetables::Asparagus;`, 以后直接用 `Asparagus`就行了
+
+也就是把 path to code 简化成对应的目标类型(最后一个单词)
+`::` 也就相当于解引用、具名引用
 然后也可以通过`as`来进行别名
+
 ```rs
 use std::fmt::Result;
 use std::io::Result as IoResult;
@@ -338,9 +356,9 @@ fn function2() -> IoResult<()> {
 }
 ```
 
-也可以re-exporting, 就是通过`pub use`
+也可以 re-exporting, 就是通过`pub use`
 
-上边说的都是crate内部的引用，如何引入外部的包呢，首先也得通过`cargo add xxx`添加依赖
+上边说的都是 crate 内部的引用，如何引入外部的包呢，首先也得通过`cargo add xxx`添加依赖
 
 ```rs
 // 比如这个依赖叫rand
@@ -352,7 +370,8 @@ fn main() {
 
 ```
 
-如果想引用多个可以, 包括自身，然后里边可以继续进行path to code 
+如果想引用多个可以, 包括自身，然后里边可以继续进行 path to code
+
 ```rs
 use rand::{Rng,thread_rng, self};
 // 还可以引入全部 public的内容
@@ -360,12 +379,12 @@ use rand::*；
 ```
 
 ### publich vs private
-公有私有mod，这两个关键字很常见了，`private`的mod则不能被外部访问，默认是`private`的
 
-
+公有私有 mod，这两个关键字很常见了，`private`的 mod 则不能被外部访问，默认是`private`的
 
 ## struct 结构体
-之前接触过c的同学应该对结构体不是很陌生，用来组织相关属性，类似于java和ts的interface，同样可以通过`.`操作符进行访问
+
+之前接触过 c 的同学应该对结构体不是很陌生，用来组织相关属性，类似于 java 和 ts 的 interface，同样可以通过`.`操作符进行访问
 
 ```rs
 struct User {
@@ -388,10 +407,11 @@ fn main() {
 
 ```
 
-类似于js的对象一样，可以省略操作符, 比如`email:email` 可以简写成`email`,
+类似于 js 的对象一样，可以省略操作符, 比如`email:email` 可以简写成`email`,
 同样还有`...email` 来简写剩余属性
 
-还有一种不跟任何属性的struct, 
+还有一种不跟任何属性的 struct,
+
 ```rs
 struct AlwaysEqual;
 
@@ -400,8 +420,10 @@ fn main() {
 }
 ```
 
-### 如何打印struct
+### 如何打印 struct
+
 需要一个宏
+
 ```rs
 #[derive(Debug)] // 只能跟着struct用
 struct Rectangle {
@@ -421,12 +443,14 @@ fn main() {
 ```
 
 ## Traits
+
 > https://doc.rust-lang.org/book/ch10-02-traits.html
 
 抽象类
-这个名词在看文档的时候见到过很多次，同时`trait`也是一个关键字，文档也专门有一章来介绍，类似于其他语言的interface，用来定义一组通用行为，目前看来好像是分工处理了，`trait` 用来定义方法 `struct` 用来定义字段属性，不像`interface`那样都可以定义，类似于java里的抽象类
+这个名词在看文档的时候见到过很多次，同时`trait`也是一个关键字，文档也专门有一章来介绍，类似于其他语言的 interface，用来定义一组通用行为，目前看来好像是分工处理了，`trait` 用来定义方法 `struct` 用来定义字段属性，不像`interface`那样都可以定义，类似于 java 里的抽象类
 
-可以为某个`struct`实现一个`trait`, 但是必须要注意**trait 和 struct 必须有一个和 aggregator处于同一个作用域**
+可以为某个`struct`实现一个`trait`, 但是必须要注意**trait 和 struct 必须有一个和 aggregator 处于同一个作用域**
+
 ```rs
 pub trait Summary {
     fn summarize(&self) -> String;
@@ -459,7 +483,7 @@ impl Summary for Tweet {
 }
 ```
 
-现在`Tweet` 和 `NewsArticle` 都实现了 `Summary`这个trait，但是我们在使用的时候，还是需要把trait引入到当前scope的， 这里需要一个聚合器`aggregator`
+现在`Tweet` 和 `NewsArticle` 都实现了 `Summary`这个 trait，但是我们在使用的时候，还是需要把 trait 引入到当前 scope 的， 这里需要一个聚合器`aggregator`
 
 ```rs
 use aggregator::{Summary, Tweet};
@@ -478,8 +502,7 @@ fn main() {
 }
 ```
 
-另外trait还可以提供默认的implementation, 这样可以缺省, 填入空的impl块 `impl Summary for NewsArticle {}`，当然struct里也可以进行override覆盖
-
+另外 trait 还可以提供默认的 implementation, 这样可以缺省, 填入空的 impl 块 `impl Summary for NewsArticle {}`，当然 struct 里也可以进行 override 覆盖
 
 ## 生命周期
 
@@ -548,23 +571,59 @@ fn longest(x: &str, y: &str) -> &str {
 
 虽说字符串的生命周期是静态的，但是作为参数借用后，参数的生命周期是动态的，多个参数之间的动态声明周期也是无法固定的，在上面这段代码中，可能返回`x`or`y`, 对应的是两个不同的生命周期，此时需要我们手动打标，
 
-
 ## macro 宏
-宏命令，上学的时候就听过这个名词，一直没搞懂这是干啥的，C里也有这个功能，简单来说，宏就是一组功能的集合。
+
+宏命令，上学的时候就听过这个名词，一直没搞懂这是干啥的，C 里也有这个功能，简单来说，宏就是一组功能的集合。
 分为以下三种：
-- 自定义宏 `#[derive]` 在structs 和 enums上使用
-- 类属性的宏，看起来像属性，用在任意item上
+
+- 自定义宏 `#[derive]` 在 structs 和 enums 上使用
+- 类属性的宏，看起来像属性，用在任意 item 上
 - 类函数的宏，看起来像函数调用，
 
 ### 宏和函数的区别
-- 函数签名必须声明参数及其对应的类型，是固定的， 宏的话可以接受一组可变的参数， 像`println!()` 可以接收1或2个参数
-- 另外宏命令属于元编程，实际生产出来的代码会比我们写的要多，在编译器开始解释代码的时候，宏命令就会被展开，所以一个宏可以在某个type上实现一个trait；函数就不行了，函数在运行时被调用，trait必须在编译期间就已经被开发好
+
+- 函数签名必须声明参数及其对应的类型，是固定的， 宏的话可以接受一组可变的参数， 像`println!()` 可以接收 1 或 2 个参数
+- 另外宏命令属于元编程，实际生产出来的代码会比我们写的要多，在编译器开始解释代码的时候，宏命令就会被展开，所以一个宏可以在某个 type 上实现一个 trait；函数就不行了，函数在运行时被调用，trait 必须在编译期间就已经被开发好
 
 宏的缺点就是开发起来要复杂的多，很难读且难维护，而且使用的时候必须要引入到当前作用域中，不像函数可以到处被调用、声明
 
+## derive
 
+`derive`会自动给指定数据结构添加新的 item，可以列出一组 traits 来自动 impl,比如
+
+```rs
+#![allow(unused)]
+fn main() {
+#[derive(PartialEq, Clone)]
+struct Foo<T> {
+    a: i32,
+    b: T,
+}
+}
+
+```
+
+等同于
+
+```rs
+#![allow(unused)]
+fn main() {
+struct Foo<T> { a: i32, b: T }
+impl<T: PartialEq> PartialEq for Foo<T> {
+    fn eq(&self, other: &Foo<T>) -> bool {
+        self.a == other.a && self.b == other.b
+    }
+
+    fn ne(&self, other: &Foo<T>) -> bool {
+        self.a != other.a || self.b != other.b
+    }
+}
+}
+
+```
 
 ## 心智负担
-一些学习时候的心智负担 
+
+一些学习时候的心智负担
 
 - 什么时候用分号 什么时候用逗号 什么时候缺省
