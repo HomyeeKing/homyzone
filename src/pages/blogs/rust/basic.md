@@ -622,6 +622,24 @@ impl<T: PartialEq> PartialEq for Foo<T> {
 
 ```
 
+## error handle
+> 参考文档 https://rust-cli.github.io/book/tutorial/errors.html
+
+针对于[Result](https://doc.rust-lang.org/1.39.0/std/result/index.html)类型
+### unwrapping
+
+看文档的时候经常会看到有些方法调用的时候会跟着`.unwrap`, 这个是用来处理 error case 的，
+比如我们读取某个文件，当文件不存在的时候我们想让程序直接退出，
+以往是通过`match`语句的`Err`分支上使用`panic!`处理， 这样比较繁琐，也可以用`.unwrap`来简单处理。 
+`let content = std::fs::read_to_string("test.txt").unwrap();`
+
+### 使用return来处理错误
+我们也可以使用return来返回错误，但是前提要保证返回值类型满足函数签名的类型以及`match`各个分支的返回值类型相同
+### ?
+正如`.unwrap`是 `match + panic!`的简写
+`?`是 `match + return`的简写
+`let content = std::fs::read_to_string("test.txt")?;`
+
 ## 心智负担
 
 一些学习时候的心智负担
