@@ -47,9 +47,9 @@ https://beta.nextjs.org/docs/rendering/server-and-client-components#when-to-use-
 
 SSR是返回一整个文档(DOM)然后让客户端hydrate去渲染，服务端组件返回的则是类似于vdom的信息，里面包含对应组件渲染所需的所有上下文
 
-SSR最主要是用在初始渲染的，我们把复杂的渲染逻辑放到服务端处理然后返回客户端进行hydrate，`Server component`就是运行时是服务端的组件，不一定是首屏出现的，也可以懒加载出现
+SSR最主要是用在初始渲染的，我们把复杂的渲染逻辑放到服务端处理然后返回客户端进行hydrate，`Server component`就是运行时是服务端的组件，不一定是首屏出现的，也可以懒加载出现, 即我们可以多次refetch多次
 
-server component 和 SSR 不是对立关系，是可以相辅相成的, 在服务端组件中可以使用客户端组件，这些客户端组件可以通过SSR来渲染
+server component 和 SSR 不是对立关系，是可以相辅相成的, 因为server component是被渲染成一种中转格式生成server tree，然后和client tree进行合并, 不会导致客户端状态丢失。所以二者一起使用的时候，server component会生成vdom, 然后SSR再将其生成HTML进行下发，但是js bundle会显著减少
 
 
 
