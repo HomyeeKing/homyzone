@@ -56,10 +56,5 @@
   },
   "eslintConfig": {
     "extends": "@antfu"
-  },
-  "pnpm": {
-    "overrides": {
-      "@vueuse/head": "0.7.0"
-    }
   }
 }
