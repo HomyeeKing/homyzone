@@ -15,12 +15,12 @@ const allRoutes = router
 
 const blogTags = Array.from(new Set(allRoutes.reduce(
   (prev, cur) => {
-    return prev.concat(cur?.meta?.frontmatter?.tags)
+    return prev.concat(cur?.meta?.frontmatter?.tags ?? [])
   },
   [],
 )))
 const routes = allRoutes.filter(i=>i.path.startsWith(`${router.currentRoute.value.path}/`))
-console.log('routes', routes)
+
 
 </script>
 
