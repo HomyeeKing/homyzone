@@ -82,9 +82,17 @@ const config: UserConfig = {
         route.meta = Object.assign(route.meta || {}, { frontmatter: data });
 
         if (route.path.startsWith('/blogs/')) {
-          // generate tags
           const tmp = route.path.split('/');
-          (route.meta.frontmatter.tags ??= []).push(tmp[2]);
+          const tag = tmp[2] as string;
+          // recognize group
+          if (route.path === `/blogs/${tag}`) {
+            route.meta.frontmatter.isCategory = true;
+            route.meta.frontmatter.title = tag;
+            console.log('route', route);
+          } else {
+            // generate tags
+            (route.meta.frontmatter.tags ??= []).push(tag);
+          }
         }
         return route;
       },

@@ -19,8 +19,8 @@ const blogTags = Array.from(new Set(allRoutes.reduce(
   },
   [],
 )))
-const routes = allRoutes.filter(i=>i.path.startsWith(router.currentRoute.value.path))
-
+const routes = allRoutes.filter(i=>i.path.startsWith(`${router.currentRoute.value.path}/`))
+console.log('routes', routes)
 
 </script>
 
@@ -40,10 +40,6 @@ const routes = allRoutes.filter(i=>i.path.startsWith(router.currentRoute.value.p
     <ul class="fixed right-0 top-1/5 cursor-pointer">
       <li v-for="tag in blogTags" :key="tag" class="opacity-60" hover="opacity-100" @click="router.push(`${prefix}${tag}`)">
         {{ tag }}
-      </li>
-
-      <li class="opacity-60" hover="opacity-100" @click="router.push(prefix)">
-        查看所有
       </li>
     </ul>
   </div>
