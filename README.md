@@ -1,7 +1,5 @@
 # HOMYZONE
 
-I will record my self-learning anything here, record my life including front-end tech, moives I like and so on...
+# Credits
 
-I will try to make this more funny and cool...
-
-I will be great...
+most of icons come from https://iconify.design/
