@@ -1,38 +1,38 @@
-import { resolve } from 'path'
-import type { UserConfig } from 'vite'
-import { readFileSync } from 'fs-extra'
-import Pages from 'vite-plugin-pages'
-import Inspect from 'vite-plugin-inspect'
-import Icons from 'unplugin-icons/vite'
-import IconsResolver from 'unplugin-icons/resolver'
-import Components from 'unplugin-vue-components/vite'
-import Markdown from 'vite-plugin-md'
-import Vue from '@vitejs/plugin-vue'
-import Prism from 'markdown-it-prism'
-import matter from 'gray-matter'
-import AutoImport from 'unplugin-auto-import/vite'
-import anchor from 'markdown-it-anchor'
-import LinkAttributes from 'markdown-it-link-attributes'
-import UnoCSS from 'unocss/vite'
-import SVG from 'vite-svg-loader'
-import { presetAttributify, presetIcons, presetUno } from 'unocss'
+import { resolve } from 'path';
+import type { UserConfig } from 'vite';
+import { readFileSync } from 'fs-extra';
+import Pages from 'vite-plugin-pages';
+import Inspect from 'vite-plugin-inspect';
+import Icons from 'unplugin-icons/vite';
+import IconsResolver from 'unplugin-icons/resolver';
+import Components from 'unplugin-vue-components/vite';
+import Markdown from 'vite-plugin-md';
+import Vue from '@vitejs/plugin-vue';
+import Prism from 'markdown-it-prism';
+import matter from 'gray-matter';
+import AutoImport from 'unplugin-auto-import/vite';
+import anchor from 'markdown-it-anchor';
+import LinkAttributes from 'markdown-it-link-attributes';
+import UnoCSS from 'unocss/vite';
+import SVG from 'vite-svg-loader';
+import { presetAttributify, presetIcons, presetUno } from 'unocss';
 // @ts-expect-error missing types
-import TOC from 'markdown-it-table-of-contents'
-import { slugify } from './scripts/slugify'
+import TOC from 'markdown-it-table-of-contents';
+import { slugify } from './scripts/slugify';
 
 // 代码高亮
-import 'prismjs/components/prism-regex'
-import 'prismjs/components/prism-javascript'
-import 'prismjs/components/prism-typescript'
-import 'prismjs/components/prism-xml-doc'
-import 'prismjs/components/prism-yaml'
-import 'prismjs/components/prism-json'
-import 'prismjs/components/prism-markdown'
-import 'prismjs/components/prism-java'
-import 'prismjs/components/prism-javadoclike'
-import 'prismjs/components/prism-javadoc'
-import 'prismjs/components/prism-jsdoc'
-import type { Route } from '@/types'
+import 'prismjs/components/prism-regex';
+import 'prismjs/components/prism-javascript';
+import 'prismjs/components/prism-typescript';
+import 'prismjs/components/prism-xml-doc';
+import 'prismjs/components/prism-yaml';
+import 'prismjs/components/prism-json';
+import 'prismjs/components/prism-markdown';
+import 'prismjs/components/prism-java';
+import 'prismjs/components/prism-javadoclike';
+import 'prismjs/components/prism-javadoc';
+import 'prismjs/components/prism-jsdoc';
+import type { Route } from '@/types';
 
 const config: UserConfig = {
   resolve: {
@@ -57,9 +57,9 @@ const config: UserConfig = {
       presets: [
         presetIcons({
           extraProperties: {
-            'display': 'inline-block',
-            'height': '1.2em',
-            'width': '1.2em',
+            display: 'inline-block',
+            height: '1.2em',
+            width: '1.2em',
             'vertical-align': 'text-bottom',
           },
         }),
@@ -75,21 +75,18 @@ const config: UserConfig = {
     Pages({
       extensions: ['vue', 'md'],
       extendRoute(route: Route) {
-        const path = resolve(__dirname, route.component.slice(1))
+        const path = resolve(__dirname, route.component.slice(1));
 
-        const md = readFileSync(path, 'utf-8')
-        const { data } = matter(md)
-        route.meta = Object.assign(route.meta || {}, { frontmatter: data })
+        const md = readFileSync(path, 'utf-8');
+        const { data } = matter(md);
+        route.meta = Object.assign(route.meta || {}, { frontmatter: data });
 
-        // ignore tags
         if (route.path.startsWith('/blogs/')) {
-          const tmp = route.path.split('/')
-          const tag = tmp.splice(2, 1)[0]
-          route.path = tmp.join('/')
-          route.meta.frontmatter.tags ??= []
-          route.meta.frontmatter.tags.push(tag)
+          // generate tags
+          const tmp = route.path.split('/');
+          (route.meta.frontmatter.tags ??= []).push(tmp[2]);
         }
-        return route
+        return route;
       },
     }),
 
@@ -101,14 +98,14 @@ const config: UserConfig = {
         quotes: '""\'\'',
       },
       markdownItSetup(md) {
-        md.use(Prism)
+        md.use(Prism);
         md.use(anchor, {
           slugify,
           permalink: anchor.permalink.linkInsideHeader({
             symbol: '#',
             renderAttrs: () => ({ 'aria-hidden': 'true' }),
           }),
-        })
+        });
 
         md.use(LinkAttributes, {
           matcher: (link: string) => /^https?:\/\//.test(link),
@@ -116,12 +113,12 @@ const config: UserConfig = {
             target: '_blank',
             rel: 'noopener',
           },
-        })
+        });
 
         md.use(TOC, {
           includeLevel: [1, 2, 3],
           slugify,
-        })
+        });
       },
     }),
 
@@ -155,7 +152,7 @@ const config: UserConfig = {
   build: {
     rollupOptions: {
       onwarn(warning, next) {
-        if (warning.code !== 'UNUSED_EXTERNAL_IMPORT') next(warning)
+        if (warning.code !== 'UNUSED_EXTERNAL_IMPORT') next(warning);
       },
     },
   },
@@ -164,6 +161,6 @@ const config: UserConfig = {
     formatting: 'minify',
     format: 'cjs',
   },
-}
+};
 
-export default config
+export default config;

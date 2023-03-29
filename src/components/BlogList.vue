@@ -1,9 +1,10 @@
 <script lang='ts' setup>
 import { useRouter } from 'vue-router'
 import { fromDateString } from '@/logics'
-const prefix = '/blogs/'
 const router = useRouter()
-const routePathFilter = ref('/')
+const prefix = '/blogs/'
+
+
 const allRoutes = router
   .getRoutes()
   .filter(i => i.path.startsWith(prefix))
@@ -18,9 +19,8 @@ const blogTags = Array.from(new Set(allRoutes.reduce(
   },
   [],
 )))
+const routes = allRoutes.filter(i=>i.path.startsWith(router.currentRoute.value.path))
 
-const routes = computed(() => allRoutes.filter(i => i.path.includes(routePathFilter.value)
-  || i.meta.frontmatter?.tags?.includes(routePathFilter.value)))
 
 </script>
 
@@ -38,11 +38,11 @@ const routes = computed(() => allRoutes.filter(i => i.path.includes(routePathFil
 
     <!-- tags -->
     <ul class="fixed right-0 top-1/5 cursor-pointer">
-      <li v-for="tag in blogTags" :key="tag" class="opacity-60" hover="opacity-100" @click="routePathFilter = tag">
+      <li v-for="tag in blogTags" :key="tag" class="opacity-60" hover="opacity-100" @click="router.push(`${prefix}${tag}`)">
         {{ tag }}
       </li>
 
-      <li class="opacity-60" hover="opacity-100" @click="routePathFilter = '/'">
+      <li class="opacity-60" hover="opacity-100" @click="router.push(prefix)">
         查看所有
       </li>
     </ul>
