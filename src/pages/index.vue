@@ -10,19 +10,16 @@ const router = useRouter()
 </script>
 
 <template>
-  <div class="flex flex-col items-center mt-10">
-    <p class="text-4xl">
-      <carbon-campsite class="inline-block" />
+  <div class="flex flex-col items-center mt-30">
+    <img src="https://avatars.githubusercontent.com/u/49113249?v=4" width="144" height="144" alt="avatar"
+      class="rounded-full">
+    <p class="text-5xl font-bold text-center text-gradient from-red-500 to-yellow-500">
+      Homyee King</p>
+    <p class="mt-5 text-3xl ">
+      A programmer, like playing 🏀, crazy fan of
+      @StephenCurry30
+      and a underdog
     </p>
-    <p>
-      <a rel="noreferrer" href="https://github.com/antfu/vitesse" target="_blank">HOMYZONE</a>
-    </p>
-    <div class="self-center">
-      <p class="text-sm opacity-75 my-2 underline">
-        WAY TO GREAT
-      </p>
-      <br>
-     
-    </div>
+    <hr class="w-full my-5 opacity-10">
   </div>
 </template>
