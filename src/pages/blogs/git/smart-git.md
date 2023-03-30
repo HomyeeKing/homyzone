@@ -1,15 +1,15 @@
 ---
 title: 根据不同git仓库来动态切换user信息
 date: 2021-04-12 11:31:59
-hero_image: ""
+hero_image: ''
 lang: zh
 duration: 1min
 ---
 
->原理： 通过git-hooks 的post-checkout，在切换分支的时候执行我们的脚本，脚本的内容就是通过git仓库地址，来判断gitLab/github 来分发相应作者信息
-
+> 原理： 通过 git-hooks 的 post-checkout，在切换分支的时候执行我们的脚本，脚本的内容就是通过 git 仓库地址，来判断 gitLab/github 来分发相应作者信息
 
 目录结构如下：
+
 ```
 - root
  * .git-clone-init(file)
@@ -18,27 +18,11 @@ duration: 1min
   + hooks
    + post-checkout
 ```
+
 首先在`~/.gitconfig`里引入模板
 
 ```bash
-[user]
-# default info
-	name = wanghongye
-	email = wanghongye@kuaishou.com
-# Please adapt and uncomment the following lines:
-#	name =  Homyee King
-#	email = 1224125412@qq.com
-[alias]
-    cmm = commit -m
-    st = status
-    pl = pull
-    ps = push
-    sw = switch
-    swc = switch -c
-    br  = branch
-    l  = log --stat
-	lp = log  --all --decorate --oneline --graph
-    g = git
+# ....
 
 [init]
 	templatedir = /Users/wanghongye/.git-templates
@@ -92,15 +76,15 @@ echo -e "\nIdentity set to $name <$email>"
 ```
 
 `post-check`脚本中包含`.git-clone-init`脚本，内容如下
-里面就是条件分支语句，如果是github用户信息是啥，其他的是啥，当然根据你的需要可以修改
+里面就是条件分支语句，如果是 github 用户信息是啥，其他的是啥，当然根据你的需要可以修改
 
 ```bash
 case "$url" in
-  *@github.com:*    ) email="HomyeeKing@gmail.com";
+  *@github.com:* )
+  email="HomyeeKing@gmail.com";
   name="HomyeeKing";;
-  *) email="wanghongye@kuaishou.com"; name="wanghongye";;
+  *)
+  email="foo@mail.com"; name="foo";;
 esac
 
 ```
-
-

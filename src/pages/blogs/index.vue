@@ -7,7 +7,7 @@ const allRoutes = router
   .filter((i) => i.meta.frontmatter?.isCategory)
   .filter((i) => !i.path.endsWith('.html'));
 
-
+console.log('allRoutes', allRoutes)
 </script>
 
 <template>
