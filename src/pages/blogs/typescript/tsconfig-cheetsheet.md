@@ -41,11 +41,13 @@ node16和nodenext因为支持了esm，所以较之前解析策略有了更新，
 所以如果你是这么导出文件的 那么就会需要改造下，所以一定程度上来说还是有点麻烦的，因为不会默认识别`index`，必须是正确的路径名 + 后缀名
 ![image.png](https://intranetproxy.alipay.com/skylark/lark/0/2023/png/24957178/1679542904291-8a8e0285-3d4b-4ce2-9b96-9e227f757527.png#clientId=u78322627-1e12-4&from=paste&height=201&id=u5c8db550&name=image.png&originHeight=402&originWidth=1708&originalType=binary&ratio=2&rotation=0&showTitle=false&size=298890&status=done&style=none&taskId=u4c8c1d25-650b-41e4-b460-b80238056e4&title=&width=854)
 据我目前开发体验来看，很少会需要用到项目自己使用自己的exports的情况，也就是编写组件文档demo时，为了保证渲染和给开发者示例一致，这种情况建议使用paths设置别名来解决，避免改造过多，而且node的默认解析策略大家基本上已经养成习惯了
-# 
+
+还有一个注意点是，ts项目在IDE里，它是判断有没有对应的类型声明文件来决定要不要飘红报错，但是不一定会影响项目启动，也就是如果你设置了解析策略为`node`, 但是你所有的声明都写在了exports里，IDE不会查找exports就会飘红报错，但是本地启动(node版本要支持exports)则依然能正常启动
+
 # 总结
 
 - 最容易被忽略的就是node16/nodenext下模块解析策略是不同的，比如要显示添加文件名，不识别index等
-- exports是一个很好的功能，但是要想用self-reference就得配合模块解析策略改造下代码，不过通过设置paths成本会更低一点
+- exports是一个很好的功能，但是要想用就得需要修改模块解析策略为`nodenext | node16`,配合模块解析策略改造下代码，不过通过设置paths成本会更低一点
 - module配置项的一切也就是关乎于模块格式（ESM CMD AMD...）的选择，其中包括像top-level await 和pjson的exports这种，都属于module范畴
 - moduleResolution配置项决定的是引入一个（非）相对路径的模块，编译器应该怎么正确查找，这里核心只要注意node16/nodenext对于esm和cjs策略不同和相应的限制
 # 参考
