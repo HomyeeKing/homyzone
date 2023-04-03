@@ -13,7 +13,7 @@ const router = useRouter()
   <div class="flex flex-col items-center mt-30">
     <img src="https://avatars.githubusercontent.com/u/49113249?v=4" width="144" height="144" alt="avatar"
       class="rounded-full">
-    <p class="text-5xl font-bold text-center text-gradient from-red-500 to-yellow-500">
+    <p class="text-5xl leading-normal font-bold text-center bg-clip-text text-transparent bg-gradient-to-r from-yellow to-blue-500">
       Homyee King</p>
     <p class="mt-5 text-3xl ">
       A programmer, like playing 🏀, crazy fan of
