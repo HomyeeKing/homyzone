@@ -45,3 +45,8 @@ fn main(){
 }
 ```
 
+# 模块导出约定
+
+Many crates contain a prelude, a list of things that are convenient to import all at once. This allows common features of the module to be conveniently accessed without a lengthy prefix. F
+
+一般会提供`prelude`用来导出一些通用feature
