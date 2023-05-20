@@ -654,6 +654,48 @@ enum Result<T, E> {
 `let content = std::fs::read_to_string("test.txt")?;`
 如果对应语句报错，就会 return `Err`, 否则就会`unwrap`对应的值, 不过要注意的是**只能在函数返回类型是 `Result` or `Option`的函数里调用**
 
+
+## 闭包
+
+语法：
+`|arg1, arg2, ...| expression`
+```rs
+use std::process::Command;
+
+fn main() {
+    let commands = vec![
+        "echo hello",
+        "echo world",
+        "ls -l",
+    ];
+
+    let handles: Vec<_> = commands.into_iter().map(|command| {
+        std::thread::spawn(move || {
+            let mut child = Command::new("sh")
+                .arg("-c")
+                .arg(command)
+                .spawn()
+                .expect("failed to execute command");
+
+            let status = child.wait().expect("failed to wait for child");
+
+            println!("command {} exited with status {:?}", command, status);
+        })
+    }).collect();
+
+    for handle in handles {
+        handle.join().unwrap();
+    }
+}
+
+```
+
+在 Rust 中，闭包的类型是一个匿名结构体，它实现了一个特定的函数类型 Trait，因此可以像普通函数一样被调用。例如，在上述代码中，闭包被传递给 map 方法，map 方法会对列表中的每个元素调用闭包，然后返回一个新的列表。
+
+闭包在 Rust 的函数式编程中非常常用，可以用来实现函数的柯里化（Currying）、高阶函数（Higher-Order Functions）等功能。
+
+**其实就是回调函数在rust里就是用闭包这种语法来写**
+
 ## 心智负担
 
 一些学习时候的心智负担
