@@ -4,6 +4,7 @@ const router = useRouter();
 
 const allRoutes = router
   .getRoutes()
+  .filter((i) => !i.meta.frontmatter?.hidden)
   .filter((i) => i.meta.frontmatter?.isCategory)
   .filter((i) => !i.path.endsWith('.html'));
 
