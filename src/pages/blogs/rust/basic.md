@@ -654,11 +654,11 @@ enum Result<T, E> {
 `let content = std::fs::read_to_string("test.txt")?;`
 如果对应语句报错，就会 return `Err`, 否则就会`unwrap`对应的值, 不过要注意的是**只能在函数返回类型是 `Result` or `Option`的函数里调用**
 
-
 ## 闭包
 
 语法：
 `|arg1, arg2, ...| expression`
+
 ```rs
 use std::process::Command;
 
@@ -694,10 +694,8 @@ fn main() {
 
 闭包在 Rust 的函数式编程中非常常用，可以用来实现函数的柯里化（Currying）、高阶函数（Higher-Order Functions）等功能。
 
-**其实就是回调函数在rust里就是用闭包这种语法来写**
+**其实就是回调函数在 rust 里就是用闭包这种语法来写**
 
-## 心智负担
+## Error Handle
 
-一些学习时候的心智负担
-
-- 什么时候用分号 什么时候用逗号 什么时候缺省
+rust 将异常分为 可恢复异常 和 不可恢复异常，分别对应`Result<T,E>` 和 `panic!`宏来处理
