@@ -12,6 +12,49 @@ duration: 1min
 
 排序完 数字的相对位置没有变， 也就是对于数组里有重复数字的 case，如果排序后相对位置没有变，那就是稳定排序
 
+> 以下默认都是按照升序处理
+
+# 冒泡排序
+
+- 两个两个比较，如果前者比后者大，则交换两个元素的位置
+- 冒泡排序最好的时间复杂度为 O(n)。冒泡排序的最坏时间复杂度为 O(n^2)。因此冒泡排序总的平均时间复杂度为 O(n^2)。
+- 算法适用于少量数据的排序，是稳定的排序方法。
+
+```ts
+function bubbleSort(arr: number[]) {
+  const len = arr.length
+  for (let i = 0; i < len; i++) {
+    for (let j = i + 1; j < len; j++) {
+      if (arr[j] < arr[i])
+        [arr[i], arr[j]] = [arr[j], arr[i]]
+    }
+
+  }
+  return arr
+}
+```
+
+# 选择排序
+
+- 找到一组数据中最小（大）的那个数，然后放到最前面
+- 不稳定 O(n^2)
+
+```js
+function selectSort(arr: number[]) {
+  const len = arr.length
+
+  for (let i = 0; i < len - 1; i++) {
+    let minIndex = i
+    for (let j = i + 1; j < len; j++) {
+      if (arr[j] < arr[minIndex])
+        minIndex = j
+    }
+
+    [arr[i], arr[minIndex]] = [arr[minIndex], arr[i]]
+  }
+}
+```
+
 # 插入排序
 
 - 选择基准值 放置已经排序好的文件中
@@ -74,4 +117,59 @@ function quickSort(arr, _left, _right) {
 
 quickSort(arr1, 0, arr1.length - 1)
 console.log('arr', arr1)
+```
+
+# 希尔排序
+
+- 先分组 按照对半砍这么区分，比如分组跨度值为 5， 那么取下标为 0 5 10...的一组
+- 每个组里按照插入排序排
+- 等跨度为 1 排完后 基本排好了
+- 不稳定 最好 O(nlogn) 最差 O(n^2)
+
+```js
+function shellSort(arr: number[]) {
+  const len = arr.length
+  for (let gap = Math.floor(len / 2); gap > 0; gap = Math.floor(gap / 2)) {
+    for (let i = gap; i < len; i++) {
+      const tmp = arr[i]
+      let j = i
+      for (; j >= gap && arr[j - gap] > tmp; j -= gap) arr[j] = arr[j - gap]
+
+      arr[j] = tmp
+    }
+  }
+}
+```
+
+# 堆排序
+
+- 构建大（小）顶堆， 从第一个非叶子节点开始
+- 构建完后 将堆顶元素和末尾元素交换
+- 然后继续将剩下的 len - 1 个元素进行 堆化，这里从堆顶开始即可，因为下边子树的根节点已经是对应的最大值了，只需要从堆顶及其子元素找出最大值即可
+
+```js
+function heapSort(arr: number[]) {
+  let len = arr.length
+  function heapify(arr: number[], index: number, length: number) {
+    const left = 2 * index + 1
+    const right = 2 * index + 2
+    let largest = index
+    if (left < length && arr[left] > arr[largest])
+      largest = left
+    if (right < length && arr[right] > arr[largest])
+      largest = right
+    if (largest !== index)
+      [arr[largest], arr[index]] = [arr[index], arr[largest]]
+
+  }
+  for (let i = Math.floor(len / 2) - 1; i >= 0; i--)
+    heapify(arr, i, len)
+
+  for (let i = len - 1; i > 0; i--) {
+    [arr[0], arr[i]] = [arr[i], arr[0]]
+
+    len--
+    heapify(arr, 0, len)
+  }
+}
 ```
