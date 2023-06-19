@@ -85,3 +85,5 @@ a是服务端动态获取的数据，b、c不变，那么我们可以把b c涉�
 - 函数有一些内部状态，比如函数是debounced 或是 throtted的
 
 
+## This Suspense boundary received an update before it finished hydrating.
+https://www.reddit.com/r/nextjs/comments/yxa87v/im_glad_im_not_the_only_one_that_thinks_this/
