@@ -17,6 +17,23 @@ fn main() {
 }
 ```
 
+另外`&str`类型表示的是一个不可变的 UTF-8 字符串切片，也就是内容不可变
+```rs
+fn main() {
+    let s = "hello";
+    s[0] = 'H'; // 报错：`&str` 类型的变量内容不可变
+}
+```
+
+而`String` 类型表示可变的 UTF-8 字符串，也就是说，String 类型的变量既可以指向一个固定的字符串，也可以动态地改变其值。
+```rs
+fn main() {
+    let mut s = String::from("hello");
+    s.push_str(", world!");
+    println!("{}", s);  // 输出：hello, world!
+}
+```
+
 # borrow rule
 - 在任意时刻，只能存在一个mutable的指针或者多个immutable的指针
 - reference 必须总是有效(生命周期)
