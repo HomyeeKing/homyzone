@@ -7,7 +7,8 @@ duration: 10min
 ---
 
 # 异步编程
-- tokio 异步
+- [tokio](https://tokio.rs/tokio/tutorial) 异步 适用于I/O密集型
+- [rayon](https://docs.rs/rayon/latest/rayon/) CPU密集型 并发执行
 - reqwest 数据请求
 
 # 终端展示
