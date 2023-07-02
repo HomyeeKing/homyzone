@@ -1,7 +1,7 @@
 ---
 title: 跟着吴恩达课程学习编写prompt
 date: 2023-07-02 16:24:31
-hero_image: ./iterative-development-steps.png
+hero_image: https://github.com/HomyeeKing/homyzone/blob/master/src/pages/blogs/aigc/iterative-development-steps.png?raw=true
 lang: zh
 duration: 5min
 ---
