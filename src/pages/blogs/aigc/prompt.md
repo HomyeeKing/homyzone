@@ -1,10 +1,11 @@
 ---
 title: 跟着吴恩达课程学习编写prompt
 date: 2023-07-02 16:24:31
-hero_image: ''
+hero_image: ./iterative-development-steps.png
 lang: zh
 duration: 5min
 ---
+
 
 > 原视频地址 https://www.youtube.com/watch?v=5uZkkeafNC0&t=31s
 
