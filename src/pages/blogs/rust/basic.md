@@ -626,6 +626,8 @@ impl<T: PartialEq> PartialEq for Foo<T> {
 
 > 参考文档 https://rust-cli.github.io/book/tutorial/errors.html
 
+rust 将异常分为 可恢复异常 和 不可恢复异常，分别对应`Result<T,E>` 和 `panic!`宏来处理
+
 针对于[Result](https://doc.rust-lang.org/1.39.0/std/result/index.html)类型,
 
 ```rs
@@ -696,6 +698,32 @@ fn main() {
 
 **其实就是回调函数在 rust 里就是用闭包这种语法来写**
 
-## Error Handle
+## cfg!
 
-rust 将异常分为 可恢复异常 和 不可恢复异常，分别对应`Result<T,E>` 和 `panic!`宏来处理
+cfg! 是 Rust 的一个宏（macro），用于根据不同的编译时条件选择不同的代码路径。具体来说，cfg! 宏可以检查代码所处的平台、操作系统、编译器等多种编译时条件，并根据这些条件来选择不同的代码路径。
+
+例如，以下是一个使用 cfg! 宏来编译跨平台代码的示例：
+```rs
+#[cfg(target_os = "linux")]
+fn foo() {
+    println!("Hello, Linux!");
+}
+
+#[cfg(target_os = "windows")]
+fn foo() {
+    println!("Hello, Windows!");
+}
+
+#[cfg(not(any(target_os = "linux", target_os = "windows")))]
+fn foo() {
+    println!("Hello, unknown platform!");
+}
+
+fn main() {
+    foo();
+}
+```
+
+
+
+
