@@ -1,6 +1,6 @@
 ---
 title: swc debugging
-date: 2022-05-03 22:49:56
+date: 2023-07-06 23:15:08
 hero_image: ""
 lang: zh
 duration: 1min
