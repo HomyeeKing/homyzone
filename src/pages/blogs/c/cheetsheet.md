@@ -40,3 +40,23 @@ void func(char *str);
 void func(const int *ptr);
 ```
 在上述函数中，参数 ptr 被声明为指向 int 类型的指针，但此指针指向的值不能被修改。如果在函数中尝试修改 ptr 所指向的值，编译器会发出警告。
+
+
+# CPPFLAGS LDFLAGS
+
+在编译和链接程序时，LDFLAGS 和 CPPFLAGS 都是用于传递参数给编译器或链接器的环境变量。它们分别代表：
+
+LDFLAGS：用于传递链接器（ld）的参数。链接器用于将多个目标文件或库文件合并成一个可执行文件或共享库。LDFLAGS 可以用于传递链接器参数，例如链接库文件的路径、链接库的名称等。例如，-L 选项可以指定库文件的路径，-l 选项可以指定链接的库文件名称，例如 -L/usr/local/lib -lmylib。
+
+CPPFLAGS：用于传递预处理器（cpp）的参数。预处理器用于在编译程序之前对源代码进行宏替换、条件编译等预处理工作。CPPFLAGS 可以用于传递预处理器参数，例如指定头文件的搜索路径、定义宏等。例如，-I 选项可以指定头文件的搜索路径，例如 -I/usr/local/include。
+
+在编译和链接程序时，你可以使用这两个环境变量来传递参数给编译器或链接器，以控制编译和链接的行为。例如，如果你的程序依赖于某个库文件，你可以使用 LDFLAGS 来指定库文件的路径和名称，以便链接器能够找到它。另外，如果你的程序需要使用某个头文件，你可以使用 CPPFLAGS 来指定头文件搜索的路径。
+
+需要注意的是，LDFLAGS 和 CPPFLAGS 只是环境变量，需要在编译和链接命令中显式地使用它们才能生效
+
+```bash
+$ CPPFLAGS="-I/usr/local/include" LDFLAGS="-L/usr/local/lib -lmylib" ./configure
+$ make
+$ make install
+
+```
