@@ -140,7 +140,7 @@ LLDB是LLVM项目中的一个调试器，它支持多种平台和多种编程语
 ```
 
 如果想测试某个flag里包不包含flag2 就进行 与操作， 即
-`flag & flag2 == flag`
+`flag & flag2 == flag2`
 
 如果想添加flag，进行或操作
 `flag | flag2`
