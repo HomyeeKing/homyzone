@@ -71,3 +71,76 @@ Clang是LLVM项目中的一个编译器前端，它支持C、C++、Objective-C�
 LLDB是LLVM项目中的一个调试器，它支持多种平台和多种编程语言。LLDB具有模块化的设计，可以轻松地扩展到新的目标平台或编程语言，并提供了强大的调试功能，可以帮助开发人员诊断和修复程序中的错误。
 
 综上，LLVM是一个编译器基础设施，Clang是LLVM项目中的一个编译器前端，LLDB是LLVM项目中的一个调试器。这三个项目都在共同构建一个通用的编译器基础设施。
+
+# 使用位运算进行flag确认
+比如git源码里通过位运算来确定文件的flag
+```c
+	enum {
+
+		/**
+		 * Return just ignored files in `entries[]`, not untracked files.
+		 * This flag is mutually exclusive with `DIR_SHOW_IGNORED_TOO`.
+		 */
+		DIR_SHOW_IGNORED = 1<<0,
+
+		/* Include a directory that is not tracked. */
+		DIR_SHOW_OTHER_DIRECTORIES = 1<<1,
+
+		/* Do not include a directory that is not tracked and is empty. */
+		DIR_HIDE_EMPTY_DIRECTORIES = 1<<2,
+
+		/**
+		 * If set, recurse into a directory that looks like a Git directory.
+		 * Otherwise it is shown as a directory.
+		 */
+		DIR_NO_GITLINKS = 1<<3,
+
+		/**
+		 * Special mode for git-add. Return ignored files in `ignored[]` and
+		 * untracked files in `entries[]`. Only returns ignored files that match
+		 * pathspec exactly (no wildcards). Does not recurse into ignored
+		 * directories.
+		 */
+		DIR_COLLECT_IGNORED = 1<<4,
+
+		/**
+		 * Similar to `DIR_SHOW_IGNORED`, but return ignored files in
+		 * `ignored[]` in addition to untracked files in `entries[]`.
+		 * This flag is mutually exclusive with `DIR_SHOW_IGNORED`.
+		 */
+		DIR_SHOW_IGNORED_TOO = 1<<5,
+
+		DIR_COLLECT_KILLED_ONLY = 1<<6,
+
+		/**
+		 * Only has meaning if `DIR_SHOW_IGNORED_TOO` is also set; if this is
+		 * set, the untracked contents of untracked directories are also
+		 * returned in `entries[]`.
+		 */
+		DIR_KEEP_UNTRACKED_CONTENTS = 1<<7,
+
+		/**
+		 * Only has meaning if `DIR_SHOW_IGNORED_TOO` is also set; if this is
+		 * set, returns ignored files and directories that match an exclude
+		 * pattern. If a directory matches an exclude pattern, then the
+		 * directory is returned and the contained paths are not. A directory
+		 * that does not match an exclude pattern will not be returned even if
+		 * all of its contents are ignored. In this case, the contents are
+		 * returned as individual entries.
+		 *
+		 * If this is set, files and directories that explicitly match an ignore
+		 * pattern are reported. Implicitly ignored directories (directories that
+		 * do not match an ignore pattern, but whose contents are all ignored)
+		 * are not reported, instead all of the contents are reported.
+		 */
+		DIR_SHOW_IGNORED_TOO_MODE_MATCHING = 1<<8,
+
+		DIR_SKIP_NESTED_GIT = 1<<9
+	} flags;
+```
+
+如果想测试某个flag里包不包含flag2 就进行 与操作， 即
+`flag & flag2 == flag`
+
+如果想添加flag，进行或操作
+`flag | flag2`
