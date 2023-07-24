@@ -1,5 +1,5 @@
 ---
-title: 宏业之道
+title: 红叶随笔
 date: 2021-09-08 19:35:26
 hero_image: ''
 lang: zh
