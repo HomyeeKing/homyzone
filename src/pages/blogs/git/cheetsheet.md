@@ -1,5 +1,5 @@
 ---
-title: Git Troubleshooting
+title: Git Cheetsheet
 date: 2022-02-10 20:34:46
 hero_image: ""
 lang: zh
@@ -91,3 +91,9 @@ git completion 的切换分支会包含远程分支
 git fetch --all --tags # 拉取所有分支的tags
 git switch tags/<tag> --detach # 切换到指定tag
 ```
+
+## detached HEAD 
+表示当前HEAD指向的不是一个分支，而是一个提交。
+
+这种情况下是不能提交的，也就是提交只能作用在分支上，但是仍然可以做一些修改。
+可以通过`git switch -` 来退出这个模式，
