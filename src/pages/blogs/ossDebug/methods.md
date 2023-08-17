@@ -7,5 +7,6 @@ duration: 1min
 ---
 
 # error stack
-
-![Alt text](image.png)
+```ts
+console.log(new Error().stack)
+```
