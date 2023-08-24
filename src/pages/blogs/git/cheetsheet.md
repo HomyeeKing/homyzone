@@ -97,3 +97,10 @@ git switch tags/<tag> --detach # 切换到指定tag
 
 这种情况下是不能提交的，也就是提交只能作用在分支上，但是仍然可以做一些修改。
 可以通过`git switch -` 来退出这个模式，
+
+
+## 分支a的某文件用分支b的某文件替换
+```bash 
+git switch 分支a
+git checkout 分支b -- 某文件名
+```
