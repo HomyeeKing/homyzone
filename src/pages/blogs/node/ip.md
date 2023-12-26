@@ -59,3 +59,8 @@ for (const name of Object.keys(nets)) {
 }
 console.log('results', results)
 ```
+
+
+```bash 
+ipconfig getifaddr en0 # en0 可以替换为其他端口
+```
