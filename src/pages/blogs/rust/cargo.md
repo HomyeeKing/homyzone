@@ -27,3 +27,23 @@ cargo build -r  # 会生成release版本，相应的可执行程序在./target/r
 所以调试基本就很简单了，改完代码build以下，然后执行编译过后的bin命令即可
 
 
+# 查看本地项目依赖关系
+
+```bash 
+cargo tree
+```
+
+# 查看某个crate的最新版本
+
+```bash
+cargo search <crate_name>
+```
+
+# 更新本地依赖
+
+```bash
+cargo update
+
+# 更新指定包到最新版本
+cargo update -p <crate_name>
+```
