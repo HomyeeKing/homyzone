@@ -47,3 +47,26 @@ cargo update
 # 更新指定包到最新版本
 cargo update -p <crate_name>
 ```
+
+# 发布包
+
+```bash
+cargo publish
+
+# 发布指定包
+cargo publish -p <crate_name>
+```
+
+# 升级全局 bin crate
+
+```bash
+cargo install -f <crate_name>
+# 升级包到指定版本
+cargo install -f <crate_name> --version <version>
+```
+
+# 本地项目安装依赖
+
+```bash
+cargo add <crate_name>
+```
