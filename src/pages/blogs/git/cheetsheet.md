@@ -104,3 +104,25 @@ git switch tags/<tag> --detach # 切换到指定tag
 git switch 分支a
 git checkout 分支b -- 某文件名
 ```
+
+## Failed to connect to github.com port 443: Connection refused
+
+> 推荐答案： https://github.com/desktop/desktop/issues/13404#issuecomment-1542316515
+
+执行以下命令：
+
+```bash
+git config --global --unset http.proxy
+```
+
+原文：
+
+if you aren't behind a proxy you can run this command to unset the config option:
+
+`git config --global --unset http.proxy`
+
+Or you can directly edit the ~/.gitconfig file (`git config --global --edit` will open that directly).
+
+You can set a proxy by running `git config --global http.proxy http://proxyuser:proxypwd@proxy.server.com:8080`
+
+Replace `proxyuser` with your proxy username and `proxypwd` with your proxy password. Also, proxy.server.com:8080 needs to point to the URL of your proxy server.
