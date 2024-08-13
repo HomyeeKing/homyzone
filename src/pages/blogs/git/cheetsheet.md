@@ -126,3 +126,8 @@ Or you can directly edit the ~/.gitconfig file (`git config --global --edit` wil
 You can set a proxy by running `git config --global http.proxy http://proxyuser:proxypwd@proxy.server.com:8080`
 
 Replace `proxyuser` with your proxy username and `proxypwd` with your proxy password. Also, proxy.server.com:8080 needs to point to the URL of your proxy server.
+
+## 清除远程分支所有 tags
+```bash 
+git push origin --delete $(git tag -l)
+```
