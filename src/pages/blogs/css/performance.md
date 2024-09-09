@@ -44,8 +44,8 @@ js 运行时，有可能会请求样式信息，如果此时还没有加载和�
 - `<script>` 标签会阻塞DOM的解析和渲染；
 - 带src属性的`<script>`标签会触发页面paint，渲染此`<script>`标签之前的元素，但也有一定的条件：
 
-- 此`<script>`标签是在`<body>`中的，`<head>`中的不会触发paint；
-- 此`<script>`标签之前的`<link>`标签需加载完毕。
+  - 此`<script>`标签是在`<body>`中的，`<head>`中的不会触发paint；
+  - 此`<script>`标签之前的`<link>`标签需加载完毕。
 
 
 - inline的`<script>`标签不会触发页面paint，页面必须等到脚本执行完毕，且DOM Tree和CSSOM Tree解析完毕后才会渲染；
