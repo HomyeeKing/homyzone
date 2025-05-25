@@ -169,3 +169,56 @@ line-height: 100px;
 
 ### 参考
 - https://www.zhangxinxu.com/wordpress/2009/11/css%E8%A1%8C%E9%AB%98line-height%E7%9A%84%E4%B8%80%E4%BA%9B%E6%B7%B1%E5%85%A5%E7%90%86%E8%A7%A3%E5%8F%8A%E5%BA%94%E7%94%A8/
+
+## 倒计时反复横跳问题
+
+如果不是等宽字体的话就会出现这种情况，如果没有指定宽度 或者宽度设置的比最宽的0要小的情况下就会出现被挤出来的情况，所以我们要么引入等宽字体（影响页面加载） 要么通过css来调控  
+这里我们借助flex布局来实现等宽，通过space-between来实现均分
+
+## flex容器自适应子元素宽高
+
+属性： inline-flex  
+作用：inline-flex 并不是把子元素都变成inline，它是把flex容器变为了inline，容器会根据子元素的宽高进行自适应
+
+## 圆角无法展示
+
+对于视频可替换组件，层级可能都很高，如果在父级元素上设置了圆角没有展示的话 可以用overflow:hidden 来避免子级视频元素遮挡，如果还显示不出来的话，用transform相关的属性来让它们变成合成层，使得处于同一层级
+
+![image](https://intranetproxy.alipay.com/skylark/lark/0/2022/png/24957178/1650007524796-ab78874f-474d-4b06-b35a-e1956561dffb.png) 
+
+## 如何正确使用line-height
+
+![image](https://intranetproxy.alipay.com/skylark/lark/0/2022/png/24957178/1650437940566-c94f499c-9fd5-4c58-bec7-4b820ad1ec58.png) 
+
+![image](https://intranetproxy.alipay.com/skylark/lark/0/2022/png/24957178/1650439678434-d55191d0-6ef0-424e-8ae2-21e1f2cd9515.png) 
+
+![image](https://intranetproxy.alipay.com/skylark/lark/0/2022/png/24957178/1650439893828-23a2e70c-b685-4dfb-9fb4-350c050101f9.png) 
+
+![image](https://intranetproxy.alipay.com/skylark/lark/0/2022/png/24957178/1650441440245-36a9e4db-0f1b-48a8-893a-f44f8c6a0920.png) 
+
+## 如何阻止滚动穿透
+
+![image](https://s3-us-west-2.amazonaws.com/secure.notion-static.com/8bdc4f0f-8347-47ed-a034-e4736f51516d/Untitled.png)
+
+chatgpt给出以上四种方案，以overflow:hidden来说，不是直接设置属性就可以解决问题的，首先要确定**滚动容器** 是哪个 ，然后确保高度不要过大，不然容器本身高度很高，那自然就不存在overflow的情况
+
+# 动画篇
+
+## 轮播
+
+曾经困扰我无数次的轮播问题，终于在这次紧急上线的时候彻底搞懂了。  
+第一次接触轮播是在网上的教学视频看的，对视频中老师印象很深的一句话就是： 没有什么是一顿饭解决不了的问题，如果不行那就两顿，同理，如果一张图解决不了轮播，那就两张😂。  
+虽然对这句话印象很深刻，但是并没有get到为什么要这么做，现在终于明白了，如果要实现这种无限轮播，我们需要在后面插入一张和第一个同样的图片，在最后一张图片**完全**进入屏幕后，我们立马切回第一个，由于首尾相同，肉眼几乎分辨不出，所以可以做到无缝切换。  
+小结一下：
+
+*   向后插入一张和第一个相同的图片，此时首尾的图片相同
+    
+
+*   当最后一个**完全**（为什么要完全，如果在过渡中我们进行切换的话，那还是会穿帮的） 进入屏幕后，立刻切换到第一个，从而做到无缝切换
+    
+
+## dom插入移除的过渡动画怎么加
+
+dom插入的时候，核心是通过**延时**来实现动画效果，无论是通过animation transition 还是js实现，都是要通过延时来处理
+
+dom移除核心要素就是先触发动画，在动画结束的时候再移除dom
