@@ -3,14 +3,7 @@
 > https://formulae.brew.sh/cask/
 
 ```bash
-brew install --cask visual-studio-code
-brew install --cask google-chrome
-brew install --cask iterm2
-brew install --cask qqmusic
-brew install --cask alfred
-brew install --cask postman
-brew install --cask kap
-brew install --cask monitorcontrol
+brew install --cask visual-studio-code google-chrome iterm2 qqmusic alfred postman kap monitorcontrol
 ```
 
 others:
@@ -817,8 +810,8 @@ npm install -g envinfo
 }
 ```
 
-
 ### gitconfig
+
 ```
 [alias]
     cmm = commit -m
@@ -856,6 +849,7 @@ npm install -g envinfo
 ```
 
 ### ssh config
+
 ```
 # CodeSandbox SSH Integration
 Include "csb/config"
@@ -877,4 +871,3 @@ ForwardAgent yes
 User root
 PubKeyAuthentication yes
 ```
-
