@@ -190,3 +190,12 @@ h6:focus .header-anchor {
 .table-of-contents ul > li {
   padding-left: 0.8rem;
 }
+
+/* 代码块复制按钮 hover 显示 */
+.code-block-with-copy .copy-btn {
+  opacity: 0;
+  transition: opacity 0.2s;
+}
+.code-block-with-copy:hover .copy-btn {
+  opacity: 1;
+}

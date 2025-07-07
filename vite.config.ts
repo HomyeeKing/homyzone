@@ -106,6 +106,13 @@ const config: UserConfig = {
       },
       markdownItSetup(md) {
         md.use(Prism)
+        // 添加代码块复制按钮
+        const defaultFence = md.renderer.rules.fence!
+        md.renderer.rules.fence = (tokens, idx, options, env, self) => {
+          const code = defaultFence(tokens, idx, options, env, self)
+          // 包裹一层div，便于前端挂载复制按钮
+          return `<div class="code-block-with-copy">${code}</div>`
+        }
         md.use(anchor, {
           slugify,
           permalink: anchor.permalink.linkInsideHeader({
