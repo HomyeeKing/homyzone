@@ -29,9 +29,7 @@ others:
 ## Commands
 
 ```bash
-# node npm manager, see
-brew install nvm
-
+brew install nvm gh
 ```
 
 ### git
