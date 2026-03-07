@@ -16,21 +16,21 @@ onMounted(() => {
 </script>
 
 <template>
-  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-1000 ease-out"
+  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-1000 ease-out font-serif"
         :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'">
-    <!-- Background with glassmorphism -->
-    <div class="mx-4 mt-4 px-6 py-4 rounded-2xl bg-white/70 dark:bg-gray-900/70 backdrop-blur-xl shadow-lg border border-white/20 dark:border-gray-700/20">
+    <!-- Background with artistic style -->
+    <div class="mx-4 mt-4 px-6 py-4 rounded-2xl bg-[var(--color-cream)]/80 dark:bg-[var(--color-cream)]/10 backdrop-blur-xl shadow-sm border border-[var(--color-warm)] dark:border-[var(--color-warm)]/20">
       <div class="max-w-6xl mx-auto">
         <div class="grid grid-cols-3 items-center">
           <!-- Logo/Brand -->
           <div class="flex items-center gap-3">
             <div class="relative">
               <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 to-blue-500 rounded-full blur-md opacity-40 animate-pulse"></div>
-              <router-link to="/" class="relative flex items-center gap-2 group">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-r from-yellow-400 via-orange-500 to-blue-500 flex items-center justify-center text-white font-bold text-lg shadow-lg group-hover:scale-110 transition-transform duration-300">
+              <router-link to="/" class="relative flex items-center gap-3 group">
+                <div class="w-10 h-10 rounded-full bg-[var(--color-primary)] dark:bg-[var(--color-cream)] flex items-center justify-center text-[var(--color-cream)] dark:text-[var(--color-primary)] font-serif font-bold text-lg shadow-md group-hover:scale-110 transition-transform duration-300 border-2 border-[var(--color-accent)]">
                   H
                 </div>
-                <span class="text-xl font-bold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-blue-500 hidden sm:block">
+                <span class="text-xl font-serif font-semibold text-[var(--color-primary)] dark:text-[var(--color-cream)] hidden sm:block tracking-wide">
                   Homyee
                 </span>
               </router-link>
@@ -43,13 +43,13 @@ onMounted(() => {
               v-for="nav in navLists"
               :key="nav"
               :to="`/${nav}`"
-              class="relative px-3 py-2 text-base sm:text-lg font-medium text-gray-700 dark:text-gray-300 rounded-xl transition-all duration-300 hover:scale-105 first-letter:uppercase"
-              :class="route.path === `/${nav}` ? 'text-blue-500 dark:text-blue-400' : ''"
+              class="relative px-4 py-2 text-sm sm:text-base font-serif font-medium text-[var(--color-muted)] dark:text-[var(--color-muted)] rounded-lg transition-all duration-300 hover:text-[var(--color-primary)] dark:hover:text-[var(--color-cream)] tracking-wide uppercase"
+              :class="route.path === `/${nav}` ? 'text-[var(--color-primary)] dark:text-[var(--color-cream)]' : ''"
             >
               <span class="relative z-10">{{ nav }}</span>
               <div
                 v-if="route.path === `/${nav}`"
-                class="absolute inset-0 bg-gradient-to-r from-yellow-400/10 to-blue-500/10 rounded-xl animate-pulse"
+                class="absolute inset-0 bg-[var(--color-accent)]/10 rounded-lg"
               ></div>
             </router-link>
           </div>
@@ -114,15 +114,14 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- Animated bottom border -->
-    <div class="mx-4 h-px bg-gradient-to-r from-transparent via-yellow-400/50 to-transparent mt-2"></div>
+    <!-- Elegant bottom border -->
+    <div class="mx-4 h-px bg-gradient-to-r from-transparent via-[var(--color-accent)]/30 to-transparent mt-2"></div>
   </nav>
 
   <!-- Spacer for fixed nav -->
   <div class="h-28"></div>
 
-  <!-- 3D Luxo Jr Lamp -->
-  <LuxoJr3D />
+  <!-- Vintage Lamp removed from Nav, now in index page -->
 </template>
 
 <style scoped>

@@ -1,7 +1,15 @@
 :root {
-  --c-bg: #fff;
-  --c-scrollbar: #eee;
-  --c-scrollbar-hover: #bbb;
+  --c-bg: #faf9f7;
+  --c-scrollbar: #d4d0c8;
+  --c-scrollbar-hover: #a8a49c;
+  
+  /* 艺术风格配色 */
+  --color-primary: #1a1a1a;
+  --color-secondary: #8b7355;
+  --color-accent: #c9a86c;
+  --color-muted: #6b6560;
+  --color-cream: #f5f3ef;
+  --color-warm: #e8e4de;
 }
 
 html {
@@ -9,9 +17,26 @@ html {
 }
 
 html.dark {
-  --c-bg: #050505;
-  --c-scrollbar: #111;
-  --c-scrollbar-hover: #222;
+  --c-bg: #1a1816;
+  --c-scrollbar: #3a3632;
+  --c-scrollbar-hover: #4a4642;
+  --color-primary: #f5f3ef;
+  --color-secondary: #b8a890;
+  --color-accent: #d4b896;
+  --color-muted: #9a948e;
+  --color-cream: #2a2826;
+  --color-warm: #3a3632;
+}
+
+/* 衬线字体 */
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500&family=Noto+Serif+SC:wght@400;500;600;700&display=swap');
+
+.font-serif {
+  font-family: 'Playfair Display', 'Noto Serif SC', Georgia, 'Times New Roman', serif;
+}
+
+.font-serif-cn {
+  font-family: 'Noto Serif SC', 'Playfair Display', Georgia, 'Times New Roman', serif;
 }
 
 html {
