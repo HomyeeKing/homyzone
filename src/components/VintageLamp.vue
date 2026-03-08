@@ -128,9 +128,15 @@ const toggleTheme = () => {
       <!-- 灯泡发光 -->
       <circle cx="55" cy="130" r="15" fill="#FFD700" opacity="0.3" class="animate-pulse"/>
       
-      <!-- 拉线开关 -->
-      <line x1="75" y1="100" x2="75" y2="140" stroke="#8B7355" stroke-width="1"/>
-      <circle cx="75" cy="142" r="3" fill="#C9A86C"/>
+      <!-- 拉线开关 - 可点击 -->
+      <g class="cursor-pointer" @click.stop="toggleTheme">
+        <line x1="75" y1="100" x2="75" y2="150" stroke="#8B7355" stroke-width="2"/>
+        <circle cx="75" cy="100" r="4" fill="#C9A86C"/>
+        <!-- 拉绳末端的小球 -->
+        <circle cx="75" cy="152" r="5" fill="#D4B896" stroke="#8B7355" stroke-width="1"/>
+        <!-- 点击区域（透明） -->
+        <rect x="65" y="95" width="20" height="65" fill="transparent"/>
+      </g>
     </svg>
     
     <!-- 提示文字 -->
