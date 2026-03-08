@@ -1,8 +1,40 @@
 <script setup lang="ts">
+import { ref } from 'vue'
 import { isDark } from '@/logics'
+
+const isPulling = ref(false)
+const ballY = ref(152)
+const lineEndY = ref(150)
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
+}
+
+const handlePullStart = () => {
+  isPulling.value = true
+  // 拉下效果 - 模拟重力拉拽
+  ballY.value = 168
+  lineEndY.value = 166
+}
+
+const handlePullEnd = () => {
+  // 回弹效果 - 模拟弹簧回弹
+  setTimeout(() => {
+    // 过冲一点再回弹
+    ballY.value = 148
+    lineEndY.value = 146
+    setTimeout(() => {
+      ballY.value = 152
+      lineEndY.value = 150
+      isPulling.value = false
+    }, 100)
+  }, 150)
+}
+
+const handleClick = () => {
+  handlePullStart()
+  toggleTheme()
+  handlePullEnd()
 }
 </script>
 
@@ -129,13 +161,35 @@ const toggleTheme = () => {
       <circle cx="55" cy="130" r="15" fill="#FFD700" opacity="0.3" class="animate-pulse"/>
       
       <!-- 拉线开关 - 可点击 -->
-      <g class="cursor-pointer" @click.stop="toggleTheme">
-        <line x1="75" y1="100" x2="75" y2="150" stroke="#8B7355" stroke-width="2"/>
+      <g 
+        class="cursor-pointer" 
+        @mousedown.prevent="handleClick"
+        @touchstart.prevent="handleClick"
+      >
+        <!-- 灯绳 - 使用动态长度 -->
+        <line 
+          x1="75" 
+          y1="100" 
+          :x2="75" 
+          :y2="lineEndY" 
+          stroke="#8B7355" 
+          stroke-width="2"
+          class="transition-all duration-150 ease-out"
+        />
         <circle cx="75" cy="100" r="4" fill="#C9A86C"/>
-        <!-- 拉绳末端的小球 -->
-        <circle cx="75" cy="152" r="5" fill="#D4B896" stroke="#8B7355" stroke-width="1"/>
+        <!-- 拉绳末端的小球 - 使用动态位置 -->
+        <circle 
+          :cx="75" 
+          :cy="ballY" 
+          r="5" 
+          fill="#D4B896" 
+          stroke="#8B7355" 
+          stroke-width="1"
+          class="transition-all duration-150 ease-out"
+          :class="isPulling ? 'scale-110' : ''"
+        />
         <!-- 点击区域（透明） -->
-        <rect x="65" y="95" width="20" height="65" fill="transparent"/>
+        <rect x="65" y="95" width="20" height="80" fill="transparent"/>
       </g>
     </svg>
     
