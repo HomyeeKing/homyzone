@@ -18,8 +18,8 @@ onMounted(() => {
 <template>
   <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-1000 ease-out font-serif"
         :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'">
-    <!-- Background with artistic style -->
-    <div class="mx-4 mt-4 px-6 py-4 rounded-2xl bg-[var(--color-cream)]/80 dark:bg-[var(--color-cream)]/10 backdrop-blur-xl shadow-sm border border-[var(--color-warm)] dark:border-[var(--color-warm)]/20">
+    <!-- Background with artistic style - 增强磨砂玻璃效果 -->
+    <div class="mx-4 mt-4 px-6 py-4 rounded-2xl bg-[var(--c-bg)]/95 dark:bg-[var(--c-bg)]/95 backdrop-blur-xl shadow-lg border border-[var(--color-warm)] dark:border-[var(--color-warm)]/30">
       <div class="max-w-6xl mx-auto">
         <div class="flex items-center justify-between">
           <!-- Logo/Brand -->
