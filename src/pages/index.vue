@@ -91,11 +91,6 @@ onMounted(() => {
         "I can do all things..."
       </p>
     </div>
-
-
-
-    <!-- 中世纪复古台灯 -->
-    <VintageLamp />
   </div>
 </template>
 
