@@ -14,8 +14,8 @@ const REPO_ID = 'MDEwOlJlcG9zaXRvcnkzNDA2MTA5MTA='
 const CATEGORY = 'Announcements'
 const CATEGORY_ID = 'DIC_kwDOFE1PXs4C4hhi'
 
-// Disqus 配置 - 需要到 https://disqus.com 注册
-const DISQUS_SHORTNAME = 'homyzone' // 替换为你的 Disqus shortname
+// Disqus 配置
+const DISQUS_SHORTNAME = 'homyzone'
 
 const loadGiscus = () => {
   if (!giscusContainer.value) return
