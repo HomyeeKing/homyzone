@@ -40,7 +40,7 @@ const handleClick = () => {
 
 <template>
   <div 
-    class="fixed bottom-0 right-0 z-40 cursor-pointer transition-transform duration-300 hover:scale-105" 
+    class="absolute bottom-0 right-0 z-40 cursor-pointer transition-transform duration-300 hover:scale-105" 
     style="width: 200px; height: 280px;"
     @click="toggleTheme"
     title="点击切换主题"

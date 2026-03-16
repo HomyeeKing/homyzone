@@ -11,7 +11,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-[calc(100vh-7rem)] w-full flex items-center justify-center px-4 relative bg-[var(--c-bg)]">
+  <div class="h-[calc(100vh-7rem)] w-full flex items-center justify-center px-4 relative bg-[var(--c-bg)] overflow-hidden">
     <!-- 艺术风格背景 -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
       <!-- 水彩晕染效果 -->
