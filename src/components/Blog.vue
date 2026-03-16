@@ -2,6 +2,7 @@
 import { useRoute } from 'vue-router'
 import { isClient, useEventListener } from '@vueuse/core'
 import { fromDateString } from '@/logics'
+import GiscusComments from './GiscusComments.vue'
 
 const route = useRoute()
 const { frontmatter } = defineProps<{ frontmatter: any }>()
@@ -35,5 +36,8 @@ useEventListener(window, 'hashchange', navigate)
         cd ..
       </router-link>
     </div>
+
+    <!-- GitHub 评论 -->
+    <GiscusComments v-if="route.path !== '/'" />
   </div>
 </template>
