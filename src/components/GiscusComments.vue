@@ -6,11 +6,11 @@ import { isDark } from '@/logics'
 const route = useRoute()
 const giscusContainer = ref<HTMLElement>()
 
-// 你的 GitHub 配置 - 需要到 https://giscus.app 生成
+// 你的 GitHub 配置
 const REPO = 'HomyeeKing/homyzone'
-const REPO_ID = 'R_kgDOGXxQqQ' // 从 giscus.app 获取
+const REPO_ID = 'MDEwOlJlcG9zaXRvcnkzNDA2MTA5MTA='
 const CATEGORY = 'Announcements'
-const CATEGORY_ID = 'DIC_kwDOGXxQqc4CcxY-' // 从 giscus.app 获取
+const CATEGORY_ID = 'DIC_kwDOFE1PXs4C4hhi'
 
 const loadGiscus = () => {
   if (!giscusContainer.value) return
