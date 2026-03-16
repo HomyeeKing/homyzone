@@ -27,7 +27,7 @@ const loadGiscus = () => {
   script.setAttribute('data-category', CATEGORY)
   script.setAttribute('data-category-id', CATEGORY_ID)
   script.setAttribute('data-mapping', 'pathname')
-  script.setAttribute('data-strict', '0')
+  script.setAttribute('data-strict', '1')
   script.setAttribute('data-reactions-enabled', '1')
   script.setAttribute('data-emit-metadata', '1')
   script.setAttribute('data-input-position', 'bottom')
