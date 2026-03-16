@@ -11,14 +11,14 @@ onMounted(() => {
   }, 100);
 });
 
-// 获取所有电视剧文章
-const allDramas = computed(() => {
-  const dramas = router
+// 获取所有阅读文章
+const allReadings = computed(() => {
+  const readings = router
     .getRoutes()
     .filter((i) => !i.meta.frontmatter?.hidden)
     .filter((i) => !i.meta.frontmatter?.isCategory)
     .filter((i) => !i.path.endsWith('.html'))
-    .filter((i) => i.path.startsWith('/dramas/') && i.path !== '/dramas')
+    .filter((i) => i.path.startsWith('/blogs/reading/') && !i.path.endsWith('/index'))
     .map((route) => ({
       ...route,
       date: route.meta.frontmatter?.date
@@ -27,7 +27,7 @@ const allDramas = computed(() => {
     }))
     .sort((a, b) => b.date.getTime() - a.date.getTime());
 
-  return dramas;
+  return readings;
 });
 
 // 格式化日期
@@ -64,40 +64,40 @@ const formatDate = (date: Date) => {
           <div class="h-px w-16 bg-gradient-to-r from-transparent via-[var(--color-secondary)] to-transparent"></div>
         </div>
         <h1 class="font-serif text-4xl md:text-5xl text-[var(--color-primary)] mb-4">
-          <span class="italic">Dramas</span>
+          <span class="italic">Reading</span>
         </h1>
         <p class="font-serif text-[var(--color-muted)] tracking-widest">
-          剧集时光
+          阅读随想
         </p>
       </div>
 
-      <!-- 电视剧列表 -->
+      <!-- 阅读列表 -->
       <div class="max-w-4xl mx-auto">
         <div
-          v-for="(drama, index) in allDramas"
-          :key="drama.path"
+          v-for="(reading, index) in allReadings"
+          :key="reading.path"
           class="group"
         >
           <router-link
-            :to="drama.path"
+            :to="reading.path"
             class="block py-6 border-b border-[var(--color-secondary)]/10 transition-all duration-300 hover:pl-4"
           >
             <div class="flex items-start justify-between gap-4">
               <div class="flex-1 min-w-0">
                 <h2 class="font-serif text-xl md:text-2xl text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors duration-300 mb-2">
-                  {{ drama.meta.frontmatter?.title || drama.name }}
+                  {{ reading.meta.frontmatter?.title || reading.name }}
                 </h2>
                 <p
-                  v-if="drama.meta.frontmatter?.description"
+                  v-if="reading.meta.frontmatter?.description"
                   class="font-serif text-sm text-[var(--color-muted)] line-clamp-2 mb-3"
                 >
-                  {{ drama.meta.frontmatter.description }}
+                  {{ reading.meta.frontmatter.description }}
                 </p>
                 <div class="flex items-center gap-4 text-xs text-[var(--color-muted)]">
-                  <span class="font-serif">{{ formatDate(drama.date) }}</span>
-                  <span v-if="drama.meta.frontmatter?.duration" class="flex items-center gap-1">
+                  <span class="font-serif">{{ formatDate(reading.date) }}</span>
+                  <span v-if="reading.meta.frontmatter?.duration" class="flex items-center gap-1">
                     <span class="w-1 h-1 rounded-full bg-[var(--color-accent)]"></span>
-                    {{ drama.meta.frontmatter.duration }}
+                    {{ reading.meta.frontmatter.duration }}
                   </span>
                 </div>
               </div>
@@ -116,7 +116,7 @@ const formatDate = (date: Date) => {
         </div>
 
         <!-- 空状态 -->
-        <div v-if="allDramas.length === 0" class="py-16 text-center">
+        <div v-if="allReadings.length === 0" class="py-16 text-center">
           <div class="font-serif text-[var(--color-muted)]">
             <p class="text-lg mb-2">暂无内容</p>
             <p class="text-sm">敬请期待...</p>
