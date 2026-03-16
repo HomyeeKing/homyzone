@@ -21,7 +21,7 @@ onMounted(() => {
     <!-- Background with artistic style -->
     <div class="mx-4 mt-4 px-6 py-4 rounded-2xl bg-[var(--color-cream)]/80 dark:bg-[var(--color-cream)]/10 backdrop-blur-xl shadow-sm border border-[var(--color-warm)] dark:border-[var(--color-warm)]/20">
       <div class="max-w-6xl mx-auto">
-        <div class="grid grid-cols-3 items-center">
+        <div class="flex items-center justify-between">
           <!-- Logo/Brand -->
           <div class="flex items-center gap-3">
             <div class="relative">
