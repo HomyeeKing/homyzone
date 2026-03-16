@@ -11,7 +11,7 @@ onMounted(() => {
 </script>
 
 <template>
-  <div class="h-screen w-screen flex items-center justify-center px-4 relative overflow-hidden bg-[var(--c-bg)] fixed inset-0">
+  <div class="h-screen w-screen flex items-center justify-center px-4 relative overflow-hidden bg-[var(--c-bg)] fixed inset-0 overflow-hidden">
     <!-- 艺术风格背景 -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
       <!-- 水彩晕染效果 -->

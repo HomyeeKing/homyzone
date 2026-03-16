@@ -1,8 +1,6 @@
 <template>
   <Nav />
-  <main class="mx-auto w-3/4  text-gray-700 dark:text-gray-200">
-
+  <main class="h-screen w-screen overflow-hidden text-gray-700 dark:text-gray-200">
     <router-view />
-
   </main>
 </template>

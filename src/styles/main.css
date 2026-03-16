@@ -40,7 +40,11 @@ html.dark {
 }
 
 html {
-  overflow: scroll;
+  overflow: hidden;
+}
+
+body {
+  overflow: hidden;
 }
 
 #nprogress {
