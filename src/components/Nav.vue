@@ -43,8 +43,8 @@ onMounted(() => {
               v-for="nav in navLists"
               :key="nav"
               :to="`/${nav}`"
-              class="relative px-4 py-2 text-sm sm:text-base font-serif font-medium text-[var(--color-muted)] dark:text-[var(--color-muted)] rounded-lg transition-all duration-300 hover:text-[var(--color-primary)] dark:hover:text-[var(--color-cream)] tracking-wide uppercase"
-              :class="route.path === `/${nav}` ? 'text-[var(--color-primary)] dark:text-[var(--color-cream)]' : ''"
+              class="relative px-4 py-2 text-sm sm:text-base font-serif font-medium text-[var(--color-muted)] dark:text-[var(--color-secondary)] rounded-lg transition-all duration-300 hover:text-[var(--color-primary)] dark:hover:text-[var(--color-accent)] tracking-wide uppercase"
+              :class="route.path === `/${nav}` ? 'text-[var(--color-primary)] dark:text-[var(--color-accent)]' : ''"
             >
               <span class="relative z-10">{{ nav }}</span>
               <div
