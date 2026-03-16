@@ -4,7 +4,7 @@ import { isDark } from '@/logics'
 import { useRoute } from 'vue-router'
 import LuxoJr3D from './LuxoJr3D.vue'
 
-const navLists = ['blogs', 'movies', 'dramas', 'reading']
+const navLists = ['blogs', 'novels', 'movies', 'dramas', 'reading']
 const route = useRoute()
 const isVisible = ref(false)
 

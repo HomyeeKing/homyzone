@@ -18,7 +18,7 @@ onMounted(() => {
   setupInfiniteScroll();
 });
 
-// 获取所有文章（非分类页面）
+// 获取所有文章（非分类页面，排除 novels）
 const allPosts = computed(() => {
   const posts = router
     .getRoutes()
@@ -26,6 +26,7 @@ const allPosts = computed(() => {
     .filter((i) => !i.meta.frontmatter?.isCategory)
     .filter((i) => !i.path.endsWith('.html'))
     .filter((i) => i.path.startsWith('/blogs/') && i.path !== '/blogs')
+    .filter((i) => !i.path.includes('/novels'))
     .map((route) => ({
       ...route,
       date: route.meta.frontmatter?.date
