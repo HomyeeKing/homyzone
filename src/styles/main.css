@@ -40,11 +40,11 @@ html.dark {
 }
 
 html {
-  overflow: hidden;
+  overflow: auto;
 }
 
 body {
-  overflow: hidden;
+  overflow: auto;
 }
 
 #nprogress {
