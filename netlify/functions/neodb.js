@@ -1,10 +1,28 @@
 exports.handler = async (event, context) => {
-  // 从环境变量读取 Token
-  const token = process.env.NEODB_TOKEN || process.env.VITE_NEODB_TOKEN;
+  // 处理 CORS 预检请求
+  if (event.httpMethod === 'OPTIONS') {
+    return {
+      statusCode: 200,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET, POST, PUT, DELETE, OPTIONS',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Max-Age': '86400'
+      },
+      body: ''
+    };
+  }
+
+  // 从环境变量读取 Token（优先使用 VITE_NEODB_TOKEN）
+  const token = process.env.VITE_NEODB_TOKEN || process.env.NEODB_TOKEN;
   
   if (!token) {
     return {
       statusCode: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ error: 'NEODB_TOKEN not configured' })
     };
   }
@@ -31,7 +49,7 @@ exports.handler = async (event, context) => {
       statusCode: 200,
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Content-Type': 'application/json'
       },
       body: JSON.stringify(data)
@@ -39,6 +57,10 @@ exports.handler = async (event, context) => {
   } catch (error) {
     return {
       statusCode: 500,
+      headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ error: error.message })
     };
   }
