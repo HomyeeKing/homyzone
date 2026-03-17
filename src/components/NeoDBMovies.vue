@@ -2,13 +2,15 @@
 import { ref, onMounted, computed } from 'vue'
 
 const NEODB_USERNAME = 'homyeeking'
-const NEODB_BASE = 'https://neodb.social'
+const NEODB_API_BASE = 'https://neodb.social'
 
 interface Mark {
   id: string
   title: string
   cover: string
   url: string
+  rating?: number
+  date: string
   shelf: 'wishlist' | 'complete'
 }
 
@@ -17,72 +19,67 @@ const loading = ref(true)
 const error = ref('')
 const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
 
-// 抓取 NeoDB 用户主页
+// 获取标记数据 - 使用 NeoDB API
 const fetchMarks = async () => {
   try {
     loading.value = true
-    const response = await fetch(`${NEODB_BASE}/@${NEODB_USERNAME}`, {
-      headers: { 'Accept': 'text/html' }
+    
+    // 获取已看的电影
+    const completeResponse = await fetch(`${NEODB_API_BASE}/api/me/shelf/complete?category=movie`, {
+      headers: { 
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_NEODB_TOKEN || ''}`
+      }
     })
 
-    if (!response.ok) throw new Error('Failed to fetch')
+    if (!completeResponse.ok) throw new Error('Failed to fetch marks')
     
-    const html = await response.text()
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(html, 'text/html')
+    const completeData = await completeResponse.json()
     
-    const parsedMarks: Mark[] = []
-    
-    // 查找 "movies to watch" 部分
-    const headings = doc.querySelectorAll('h5')
-    headings.forEach(heading => {
-      const text = heading.textContent?.toLowerCase() || ''
-      
-      // 匹配电影想看/已看
-      if (text.includes('movies to watch')) {
-        const list = heading.nextElementSibling
-        if (list) {
-          const items = list.querySelectorAll('li')
-          items.forEach(item => {
-            const link = item.querySelector('a')
-            const img = item.querySelector('img')
-            
-            if (link && img) {
-              parsedMarks.push({
-                id: link.getAttribute('href') || '',
-                title: img.getAttribute('alt') || link.textContent?.trim() || '',
-                cover: img.getAttribute('src') || '',
-                url: link.getAttribute('href') || '',
-                shelf: 'wishlist'
-              })
-            }
-          })
-        }
-      }
-      
-      if (text.includes('movies watched')) {
-        const list = heading.nextElementSibling
-        if (list) {
-          const items = list.querySelectorAll('li')
-          items.forEach(item => {
-            const link = item.querySelector('a')
-            const img = item.querySelector('img')
-            
-            if (link && img) {
-              parsedMarks.push({
-                id: link.getAttribute('href') || '',
-                title: img.getAttribute('alt') || link.textContent?.trim() || '',
-                cover: img.getAttribute('src') || '',
-                url: link.getAttribute('href') || '',
-                shelf: 'complete'
-              })
-            }
-          })
-        }
+    // 获取想看的电影
+    const wishlistResponse = await fetch(`${NEODB_API_BASE}/api/me/shelf/wishlist?category=movie`, {
+      headers: { 
+        'Accept': 'application/json',
+        'Authorization': `Bearer ${import.meta.env.VITE_NEODB_TOKEN || ''}`
       }
     })
+
+    const wishlistData = wishlistResponse.ok ? await wishlistResponse.json() : { results: [] }
     
-    marks.value = parsedMarks
+    // 合并数据
+    const allMarks: Mark[] = []
+    
+    // 处理已看
+    if (completeData.results) {
+      completeData.results.forEach((item: any) => {
+        allMarks.push({
+          id: item.item.uuid,
+          title: item.item.display_title || item.item.title,
+          cover: item.item.cover_image_url || '',
+          url: `https://neodb.social${item.item.url}`,
+          rating: item.rating_grade,
+          date: item.created_time,
+          shelf: 'complete'
+        })
+      })
+    }
+    
+    // 处理想看
+    if (wishlistData.results) {
+      wishlistData.results.forEach((item: any) => {
+        allMarks.push({
+          id: item.item.uuid,
+          title: item.item.display_title || item.item.title,
+          cover: item.item.cover_image_url || '',
+          url: `https://neodb.social${item.item.url}`,
+          rating: item.rating_grade,
+          date: item.created_time,
+          shelf: 'wishlist'
+        })
+      })
+    }
+    
+    marks.value = allMarks
   } catch (err) {
     error.value = '加载失败'
     console.error('NeoDB fetch error:', err)
@@ -102,6 +99,18 @@ const stats = computed(() => ({
   complete: marks.value.filter(m => m.shelf === 'complete').length
 }))
 
+const formatDate = (dateStr: string) => {
+  return new Date(dateStr).toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+const getStars = (rating: number) => {
+  return '★'.repeat(Math.floor(rating / 2)) + (rating % 2 === 1 ? '½' : '')
+}
+
 onMounted(() => {
   fetchMarks()
 })
@@ -109,7 +118,6 @@ onMounted(() => {
 
 <template>
   <div class="neodb-movies">
-    <!-- 状态筛选 -->
     <div class="flex justify-center mb-8">
       <div class="inline-flex rounded-xl bg-[var(--color-warm)]/20 p-1">
         <button
@@ -130,7 +138,6 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- 加载状态 -->
     <div v-if="loading" class="py-8 text-center">
       <div class="inline-flex items-center gap-2 text-[var(--color-muted)] font-serif">
         <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
@@ -141,17 +148,15 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- 错误状态 -->
     <div v-else-if="error" class="py-8 text-center text-[var(--color-muted)] font-serif">
       {{ error }}
     </div>
 
-    <!-- 电影列表 -->
     <div v-else-if="filteredMarks.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       <a
         v-for="mark in filteredMarks"
         :key="mark.id"
-        :href="`https://neodb.social${mark.url}`"
+        :href="mark.url"
         target="_blank"
         rel="noopener noreferrer"
         class="group block"
@@ -167,6 +172,9 @@ onMounted(() => {
           <div v-else class="w-full h-full flex items-center justify-center text-[var(--color-muted)]">
             <span class="font-serif text-sm">暂无封面</span>
           </div>
+          <div v-if="mark.rating" class="absolute top-2 right-2 bg-black/70 text-yellow-400 text-xs px-2 py-1 rounded font-serif">
+            {{ getStars(mark.rating) }}
+          </div>
           <div class="absolute top-2 left-2 text-xs px-2 py-1 rounded font-serif"
             :class="mark.shelf === 'wishlist' ? 'bg-blue-500/80 text-white' : 'bg-green-500/80 text-white'"
           >
@@ -176,10 +184,10 @@ onMounted(() => {
         <h4 class="font-serif text-sm text-[var(--color-primary)] line-clamp-2 group-hover:text-[var(--color-accent)] transition-colors">
           {{ mark.title }}
         </h4>
+        <p class="text-xs text-[var(--color-muted)] mt-1">{{ formatDate(mark.date) }}</p>
       </a>
     </div>
 
-    <!-- 空状态 -->
     <div v-else class="py-16 text-center">
       <div class="font-serif text-[var(--color-muted)]">
         <p class="text-lg mb-2">暂无电影</p>
@@ -187,7 +195,6 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- 查看更多 -->
     <div class="text-center mt-6">
       <a
         :href="`https://neodb.social/@${NEODB_USERNAME}`"
