@@ -1,0 +1,5 @@
+# 这个文件用于 Cloudflare Pages 或 Netlify 的重定向
+# 但路径重写需要 Worker，所以这个文件只是备份
+
+/me/*  https://homyzone.netlify.app/:splat  200
+/me     https://homyzone.netlify.app/        200
