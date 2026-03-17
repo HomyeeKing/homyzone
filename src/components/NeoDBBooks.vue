@@ -10,6 +10,7 @@ interface Mark {
   rating?: number
   date: string
   shelf: 'wishlist' | 'complete'
+  comment?: string
 }
 
 const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
@@ -22,7 +23,8 @@ const marks = computed<Mark[]>(() => {
     url: `https://neodb.social${item.item?.url || item.url || ''}`,
     rating: item.rating_grade || item.rating,
     date: item.created_time || item.date || new Date().toISOString(),
-    shelf: item.shelf_type === 'wishlist' ? 'wishlist' : 'complete'
+    shelf: item.shelf_type === 'wishlist' ? 'wishlist' : 'complete',
+    comment: item.comment_text
   }))
 })
 
@@ -105,6 +107,9 @@ const getStars = (rating: number) => {
           {{ mark.title }}
         </h4>
         <p class="text-xs text-[var(--color-muted)] mt-1">{{ formatDate(mark.date) }}</p>
+        <p v-if="mark.comment" class="text-xs text-[var(--color-muted)] mt-2 line-clamp-2 italic">
+          "{{ mark.comment }}"
+        </p>
       </a>
     </div>
 
