@@ -27,9 +27,16 @@ exports.handler = async (event, context) => {
     };
   }
 
-  // 解析请求路径
+  // 解析请求路径和 query 参数
   const path = event.path.replace('/.netlify/functions/neodb', '');
-  const url = `https://neodb.social/api${path}`;
+  const queryString = event.queryStringParameters ? 
+    '?' + Object.entries(event.queryStringParameters)
+      .map(([k, v]) => `${encodeURIComponent(k)}=${encodeURIComponent(v)}`)
+      .join('&') : '';
+  
+  const url = `https://neodb.social/api${path}${queryString}`;
+  
+  console.log('Fetching:', url); // 用于调试
   
   try {
     const response = await fetch(url, {
