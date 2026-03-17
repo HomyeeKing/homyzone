@@ -1,0 +1,41 @@
+name: Weekly Deploy to Netlify
+
+on:
+  schedule:
+    # 每周一凌晨 3:00 UTC (北京时间周一上午 11:00)
+    - cron: '0 3 * * 1'
+  # 也支持手动触发
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          
+      - name: Install dependencies
+        run: npm install
+        
+      - name: Fetch NeoDB data
+        env:
+          VITE_NEODB_TOKEN: ${{ secrets.VITE_NEODB_TOKEN }}
+        run: npm run fetch-data
+        
+      - name: Build site
+        run: npm run build
+        
+      - name: Deploy to Netlify
+        uses: nwtgck/actions-netlify@v3.0
+        with:
+          publish-dir: './dist'
+          production-deploy: true
+        env:
+          NETLIFY_AUTH_TOKEN: ${{ secrets.NETLIFY_AUTH_TOKEN }}
+          NETLIFY_SITE_ID: ${{ secrets.NETLIFY_SITE_ID }}
