@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 
-const NEODB_USERNAME = 'homyeeking'
-const NEODB_BASE = 'https://neodb.social'
+const NEODB_API_BASE = '/.netlify/functions/neodb'
 
 interface Mark {
   id: string
   title: string
   cover: string
   url: string
+  rating?: number
+  date: string
   shelf: 'wishlist' | 'complete'
 }
 
@@ -20,68 +21,53 @@ const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
 const fetchMarks = async () => {
   try {
     loading.value = true
-    const response = await fetch(`${NEODB_BASE}/@${NEODB_USERNAME}`, {
-      headers: { 'Accept': 'text/html' }
-    })
+    
+    // 获取已读的书
+    const completeResponse = await fetch(`${NEODB_API_BASE}/me/shelf/complete?category=book`)
 
-    if (!response.ok) throw new Error('Failed to fetch')
+    if (!completeResponse.ok) throw new Error('Failed to fetch marks')
     
-    const html = await response.text()
-    const parser = new DOMParser()
-    const doc = parser.parseFromString(html, 'text/html')
+    const completeData = await completeResponse.json()
     
-    const parsedMarks: Mark[] = []
+    // 获取想读的书
+    const wishlistResponse = await fetch(`${NEODB_API_BASE}/me/shelf/wishlist?category=book`)
+
+    const wishlistData = wishlistResponse.ok ? await wishlistResponse.json() : { results: [] }
     
-    const headings = doc.querySelectorAll('h5')
-    headings.forEach(heading => {
-      const text = heading.textContent?.toLowerCase() || ''
-      
-      // books to read
-      if (text.includes('books to read')) {
-        const list = heading.nextElementSibling
-        if (list) {
-          const items = list.querySelectorAll('li')
-          items.forEach(item => {
-            const link = item.querySelector('a')
-            const img = item.querySelector('img')
-            
-            if (link && img) {
-              parsedMarks.push({
-                id: link.getAttribute('href') || '',
-                title: img.getAttribute('alt') || link.textContent?.trim() || '',
-                cover: img.getAttribute('src') || '',
-                url: link.getAttribute('href') || '',
-                shelf: 'wishlist'
-              })
-            }
-          })
-        }
-      }
-      
-      // books completed
-      if (text.includes('books completed')) {
-        const list = heading.nextElementSibling
-        if (list) {
-          const items = list.querySelectorAll('li')
-          items.forEach(item => {
-            const link = item.querySelector('a')
-            const img = item.querySelector('img')
-            
-            if (link && img) {
-              parsedMarks.push({
-                id: link.getAttribute('href') || '',
-                title: img.getAttribute('alt') || link.textContent?.trim() || '',
-                cover: img.getAttribute('src') || '',
-                url: link.getAttribute('href') || '',
-                shelf: 'complete'
-              })
-            }
-          })
-        }
-      }
-    })
+    // 合并数据
+    const allMarks: Mark[] = []
     
-    marks.value = parsedMarks
+    // 处理已读
+    if (completeData.results) {
+      completeData.results.forEach((item: any) => {
+        allMarks.push({
+          id: item.item.uuid,
+          title: item.item.display_title || item.item.title,
+          cover: item.item.cover_image_url || '',
+          url: `https://neodb.social${item.item.url}`,
+          rating: item.rating_grade,
+          date: item.created_time,
+          shelf: 'complete'
+        })
+      })
+    }
+    
+    // 处理想读
+    if (wishlistData.results) {
+      wishlistData.results.forEach((item: any) => {
+        allMarks.push({
+          id: item.item.uuid,
+          title: item.item.display_title || item.item.title,
+          cover: item.item.cover_image_url || '',
+          url: `https://neodb.social${item.item.url}`,
+          rating: item.rating_grade,
+          date: item.created_time,
+          shelf: 'wishlist'
+        })
+      })
+    }
+    
+    marks.value = allMarks
   } catch (err) {
     error.value = '加载失败'
     console.error('NeoDB fetch error:', err)
@@ -100,6 +86,18 @@ const stats = computed(() => ({
   wishlist: marks.value.filter(m => m.shelf === 'wishlist').length,
   complete: marks.value.filter(m => m.shelf === 'complete').length
 }))
+
+const formatDate = (dateStr: string) => {
+  return new Date(dateStr).toLocaleDateString('zh-CN', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  })
+}
+
+const getStars = (rating: number) => {
+  return '★'.repeat(Math.floor(rating / 2)) + (rating % 2 === 1 ? '½' : '')
+}
 
 onMounted(() => {
   fetchMarks()
@@ -146,7 +144,7 @@ onMounted(() => {
       <a
         v-for="mark in filteredMarks"
         :key="mark.id"
-        :href="`https://neodb.social${mark.url}`"
+        :href="mark.url"
         target="_blank"
         rel="noopener noreferrer"
         class="group block"
@@ -162,6 +160,9 @@ onMounted(() => {
           <div v-else class="w-full h-full flex items-center justify-center text-[var(--color-muted)]">
             <span class="font-serif text-sm">暂无封面</span>
           </div>
+          <div v-if="mark.rating" class="absolute top-2 right-2 bg-black/70 text-yellow-400 text-xs px-2 py-1 rounded font-serif">
+            {{ getStars(mark.rating) }}
+          </div>
           <div class="absolute top-2 left-2 text-xs px-2 py-1 rounded font-serif"
             :class="mark.shelf === 'wishlist' ? 'bg-blue-500/80 text-white' : 'bg-green-500/80 text-white'"
           >
@@ -171,6 +172,7 @@ onMounted(() => {
         <h4 class="font-serif text-sm text-[var(--color-primary)] line-clamp-2 group-hover:text-[var(--color-accent)] transition-colors">
           {{ mark.title }}
         </h4>
+        <p class="text-xs text-[var(--color-muted)] mt-1">{{ formatDate(mark.date) }}</p>
       </a>
     </div>
 
@@ -183,7 +185,7 @@ onMounted(() => {
 
     <div class="text-center mt-6">
       <a
-        :href="`https://neodb.social/@${NEODB_USERNAME}`"
+        href="https://neodb.social/@homyeeking"
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center gap-2 font-serif text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors"
