@@ -37,8 +37,8 @@ const fetchMarks = async () => {
     // 合并数据
     const allMarks: Mark[] = []
     
-    // 处理已看 - API 可能返回 results 或直接数组
-    const completeResults = completeData.results || completeData
+    // 处理已看 - API 返回 { data: [...], count, pages }
+    const completeResults = completeData.data || completeData.results || completeData
     if (Array.isArray(completeResults)) {
       completeResults.forEach((item: any) => {
         if (item.item) {
@@ -56,7 +56,7 @@ const fetchMarks = async () => {
     }
     
     // 处理想看
-    const wishlistResults = wishlistData.results || wishlistData
+    const wishlistResults = wishlistData.data || wishlistData.results || wishlistData
     if (Array.isArray(wishlistResults)) {
       wishlistResults.forEach((item: any) => {
         if (item.item) {
