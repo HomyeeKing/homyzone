@@ -2,8 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 
 const NEODB_USERNAME = 'homyeeking'
-const NEODB_API_BASE = 'https://neodb.social'
-const NEODB_TOKEN = import.meta.env.VITE_NEODB_TOKEN || ''
+const NEODB_API_BASE = '/.netlify/functions/neodb'
 
 interface Mark {
   id: string
@@ -26,24 +25,14 @@ const fetchMarks = async () => {
     loading.value = true
     
     // 获取已看的电影
-    const completeResponse = await fetch(`${NEODB_API_BASE}/api/me/shelf/complete?category=movie`, {
-      headers: { 
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${NEODB_TOKEN}`
-      }
-    })
+    const completeResponse = await fetch(`${NEODB_API_BASE}/me/shelf/complete?category=movie`)
 
     if (!completeResponse.ok) throw new Error('Failed to fetch marks')
     
     const completeData = await completeResponse.json()
     
     // 获取想看的电影
-    const wishlistResponse = await fetch(`${NEODB_API_BASE}/api/me/shelf/wishlist?category=movie`, {
-      headers: { 
-        'Accept': 'application/json',
-        'Authorization': `Bearer ${NEODB_TOKEN}`
-      }
-    })
+    const wishlistResponse = await fetch(`${NEODB_API_BASE}/me/shelf/wishlist?category=movie`)
 
     const wishlistData = wishlistResponse.ok ? await wishlistResponse.json() : { results: [] }
     
