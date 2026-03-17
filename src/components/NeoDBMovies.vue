@@ -2,7 +2,7 @@
 import { ref, onMounted, computed } from 'vue'
 
 // NeoDB 配置
-const NEODB_USERNAME = 'homyee'
+const NEODB_USERNAME = 'homyeeking'
 const NEODB_API_BASE = 'https://neodb.social/api'
 
 interface Mark {

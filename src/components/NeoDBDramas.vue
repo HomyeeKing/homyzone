@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 
-const NEODB_USERNAME = 'homyee'
+const NEODB_USERNAME = 'homyeeking'
 const NEODB_API_BASE = 'https://neodb.social/api'
 
 interface Mark {
