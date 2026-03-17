@@ -39,7 +39,22 @@ async function fetchData(category, shelf) {
     }
     
     const data = await response.json();
-    return data.data || data.results || data || [];
+    const results = data.data || data.results || data || [];
+    
+    // 处理数据，提取豆瓣链接
+    return results.map(item => {
+      const externalUrls = item.item?.external_resources || [];
+      const doubanUrl = externalUrls.find(url => 
+        url.url?.includes('douban.com') || 
+        url.url?.includes('movie.douban.com') ||
+        url.url?.includes('book.douban.com')
+      )?.url;
+      
+      return {
+        ...item,
+        douban_url: doubanUrl || null
+      };
+    });
   } catch (error) {
     console.error(`Failed to fetch ${category}/${shelf}:`, error.message);
     return [];

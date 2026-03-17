@@ -18,16 +18,22 @@ const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
 
 // 直接使用导入的数据，无需 loading
 const marks = computed<Mark[]>(() => {
-  return (moviesData as any[]).map((item: any) => ({
-    id: item.item?.uuid || item.uuid || Math.random().toString(),
-    title: item.item?.display_title || item.item?.title || item.title || 'Unknown',
-    cover: item.item?.cover_image_url || item.cover_image_url || '',
-    url: `https://neodb.social${item.item?.url || item.url || ''}`,
-    rating: item.rating_grade || item.rating,
-    date: item.created_time || item.date || new Date().toISOString(),
-    shelf: item.shelf_type === 'wishlist' ? 'wishlist' : 'complete',
-    comment: item.comment_text
-  }))
+  return (moviesData as any[]).map((item: any) => {
+    // 优先使用豆瓣链接，否则使用 NeoDB 链接
+    const doubanUrl = item.douban_url;
+    const neodbUrl = `https://neodb.social${item.item?.url || item.url || ''}`;
+    
+    return {
+      id: item.item?.uuid || item.uuid || Math.random().toString(),
+      title: item.item?.display_title || item.item?.title || item.title || 'Unknown',
+      cover: item.item?.cover_image_url || item.cover_image_url || '',
+      url: doubanUrl || neodbUrl,
+      rating: item.rating_grade || item.rating,
+      date: item.created_time || item.date || new Date().toISOString(),
+      shelf: item.shelf_type === 'wishlist' ? 'wishlist' : 'complete',
+      comment: item.comment_text
+    };
+  })
 })
 
 const filteredMarks = computed(() => {

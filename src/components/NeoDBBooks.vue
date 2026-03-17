@@ -16,16 +16,21 @@ interface Mark {
 const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
 
 const marks = computed<Mark[]>(() => {
-  return (booksData as any[]).map((item: any) => ({
-    id: item.item?.uuid || item.uuid || Math.random().toString(),
-    title: item.item?.display_title || item.item?.title || item.title || 'Unknown',
-    cover: item.item?.cover_image_url || item.cover_image_url || '',
-    url: `https://neodb.social${item.item?.url || item.url || ''}`,
-    rating: item.rating_grade || item.rating,
-    date: item.created_time || item.date || new Date().toISOString(),
-    shelf: item.shelf_type === 'wishlist' ? 'wishlist' : 'complete',
-    comment: item.comment_text
-  }))
+  return (booksData as any[]).map((item: any) => {
+    const doubanUrl = item.douban_url;
+    const neodbUrl = `https://neodb.social${item.item?.url || item.url || ''}`;
+    
+    return {
+      id: item.item?.uuid || item.uuid || Math.random().toString(),
+      title: item.item?.display_title || item.item?.title || item.title || 'Unknown',
+      cover: item.item?.cover_image_url || item.cover_image_url || '',
+      url: doubanUrl || neodbUrl,
+      rating: item.rating_grade || item.rating,
+      date: item.created_time || item.date || new Date().toISOString(),
+      shelf: item.shelf_type === 'wishlist' ? 'wishlist' : 'complete',
+      comment: item.comment_text
+    };
+  })
 })
 
 const filteredMarks = computed(() => {
