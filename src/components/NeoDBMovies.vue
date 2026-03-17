@@ -2,14 +2,13 @@
 import { ref, onMounted, computed } from 'vue'
 
 const NEODB_USERNAME = 'homyeeking'
+const NEODB_BASE = 'https://neodb.social'
 
 interface Mark {
   id: string
   title: string
   cover: string
   url: string
-  rating?: number
-  date: string
   shelf: 'wishlist' | 'complete'
 }
 
@@ -18,42 +17,68 @@ const loading = ref(true)
 const error = ref('')
 const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
 
-// 解析 RSS feed
+// 抓取 NeoDB 用户主页
 const fetchMarks = async () => {
   try {
     loading.value = true
-    // 使用 RSS feed
-    const response = await fetch(`https://neodb.social/@${NEODB_USERNAME}@neodb.social/rss/`)
+    const response = await fetch(`${NEODB_BASE}/@${NEODB_USERNAME}`, {
+      headers: { 'Accept': 'text/html' }
+    })
+
+    if (!response.ok) throw new Error('Failed to fetch')
     
-    if (!response.ok) throw new Error('Failed to fetch RSS')
-    
-    const xmlText = await response.text()
+    const html = await response.text()
     const parser = new DOMParser()
-    const xmlDoc = parser.parseFromString(xmlText, 'text/xml')
+    const doc = parser.parseFromString(html, 'text/html')
     
-    const items = xmlDoc.querySelectorAll('item')
     const parsedMarks: Mark[] = []
     
-    items.forEach((item) => {
-      const title = item.querySelector('title')?.textContent || ''
-      const link = item.querySelector('link')?.textContent || ''
-      const description = item.querySelector('description')?.textContent || ''
-      const pubDate = item.querySelector('pubDate')?.textContent || ''
+    // 查找 "movies to watch" 部分
+    const headings = doc.querySelectorAll('h5')
+    headings.forEach(heading => {
+      const text = heading.textContent?.toLowerCase() || ''
       
-      // 从 description 中提取封面图片
-      const imgMatch = description.match(/<img[^>]+src="([^"]+)"/)
-      const cover = imgMatch ? imgMatch[1] : ''
+      // 匹配电影想看/已看
+      if (text.includes('movies to watch')) {
+        const list = heading.nextElementSibling
+        if (list) {
+          const items = list.querySelectorAll('li')
+          items.forEach(item => {
+            const link = item.querySelector('a')
+            const img = item.querySelector('img')
+            
+            if (link && img) {
+              parsedMarks.push({
+                id: link.getAttribute('href') || '',
+                title: img.getAttribute('alt') || link.textContent?.trim() || '',
+                cover: img.getAttribute('src') || '',
+                url: link.getAttribute('href') || '',
+                shelf: 'wishlist'
+              })
+            }
+          })
+        }
+      }
       
-      // 只添加电影相关的条目
-      if (link.includes('/movie/')) {
-        parsedMarks.push({
-          id: link,
-          title: title.replace(/^[^:]+:\s*/, ''), // 移除前缀
-          cover,
-          url: link,
-          date: pubDate,
-          shelf: 'complete'
-        })
+      if (text.includes('movies watched')) {
+        const list = heading.nextElementSibling
+        if (list) {
+          const items = list.querySelectorAll('li')
+          items.forEach(item => {
+            const link = item.querySelector('a')
+            const img = item.querySelector('img')
+            
+            if (link && img) {
+              parsedMarks.push({
+                id: link.getAttribute('href') || '',
+                title: img.getAttribute('alt') || link.textContent?.trim() || '',
+                cover: img.getAttribute('src') || '',
+                url: link.getAttribute('href') || '',
+                shelf: 'complete'
+              })
+            }
+          })
+        }
       }
     })
     
@@ -76,14 +101,6 @@ const stats = computed(() => ({
   wishlist: marks.value.filter(m => m.shelf === 'wishlist').length,
   complete: marks.value.filter(m => m.shelf === 'complete').length
 }))
-
-const formatDate = (dateStr: string) => {
-  return new Date(dateStr).toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
 
 onMounted(() => {
   fetchMarks()
@@ -134,7 +151,7 @@ onMounted(() => {
       <a
         v-for="mark in filteredMarks"
         :key="mark.id"
-        :href="mark.url"
+        :href="`https://neodb.social${mark.url}`"
         target="_blank"
         rel="noopener noreferrer"
         class="group block"
@@ -159,7 +176,6 @@ onMounted(() => {
         <h4 class="font-serif text-sm text-[var(--color-primary)] line-clamp-2 group-hover:text-[var(--color-accent)] transition-colors">
           {{ mark.title }}
         </h4>
-        <p class="text-xs text-[var(--color-muted)] mt-1">{{ formatDate(mark.date) }}</p>
       </a>
     </div>
 

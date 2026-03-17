@@ -2,20 +2,14 @@
 import { ref, onMounted, computed } from 'vue'
 
 const NEODB_USERNAME = 'homyeeking'
-const NEODB_API_BASE = 'https://neodb.social/api'
+const NEODB_BASE = 'https://neodb.social'
 
 interface Mark {
   id: string
-  item: {
-    id: string
-    title: string
-    cover: string
-    url: string
-    type: 'tv'
-  }
-  rating: number
-  created_time: string
-  shelf: 'wishlist' | 'progress' | 'complete'
+  title: string
+  cover: string
+  url: string
+  shelf: 'wishlist' | 'complete'
 }
 
 const marks = ref<Mark[]>([])
@@ -26,13 +20,68 @@ const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
 const fetchMarks = async () => {
   try {
     loading.value = true
-    const response = await fetch(`${NEODB_API_BASE}/user/${NEODB_USERNAME}/marks?category=tv&page=1`, {
-      headers: { 'Accept': 'application/json' }
+    const response = await fetch(`${NEODB_BASE}/@${NEODB_USERNAME}`, {
+      headers: { 'Accept': 'text/html' }
     })
 
-    if (!response.ok) throw new Error('Failed to fetch marks')
-    const data = await response.json()
-    marks.value = data.results || []
+    if (!response.ok) throw new Error('Failed to fetch')
+    
+    const html = await response.text()
+    const parser = new DOMParser()
+    const doc = parser.parseFromString(html, 'text/html')
+    
+    const parsedMarks: Mark[] = []
+    
+    const headings = doc.querySelectorAll('h5')
+    headings.forEach(heading => {
+      const text = heading.textContent?.toLowerCase() || ''
+      
+      // TV shows to watch
+      if (text.includes('tv shows to watch')) {
+        const list = heading.nextElementSibling
+        if (list) {
+          const items = list.querySelectorAll('li')
+          items.forEach(item => {
+            const link = item.querySelector('a')
+            const img = item.querySelector('img')
+            
+            if (link && img) {
+              parsedMarks.push({
+                id: link.getAttribute('href') || '',
+                title: img.getAttribute('alt') || link.textContent?.trim() || '',
+                cover: img.getAttribute('src') || '',
+                url: link.getAttribute('href') || '',
+                shelf: 'wishlist'
+              })
+            }
+          })
+        }
+      }
+      
+      // TV shows watched
+      if (text.includes('tv shows watched')) {
+        const list = heading.nextElementSibling
+        if (list) {
+          const items = list.querySelectorAll('li')
+          items.forEach(item => {
+            const link = item.querySelector('a')
+            const img = item.querySelector('img')
+            
+            if (link && img) {
+              parsedMarks.push({
+                id: link.getAttribute('href') || '',
+                title: img.getAttribute('alt') || link.textContent?.trim() || '',
+                cover: img.getAttribute('src') || '',
+                url: link.getAttribute('href') || '',
+                shelf: 'complete'
+              })
+            }
+          })
+        }
+      }
+    })
+    
+    marks.value = parsedMarks
   } catch (err) {
     error.value = '加载失败'
     console.error('NeoDB fetch error:', err)
@@ -52,18 +101,6 @@ const stats = computed(() => ({
   complete: marks.value.filter(m => m.shelf === 'complete').length
 }))
 
-const formatDate = (dateStr: string) => {
-  return new Date(dateStr).toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  })
-}
-
-const getStars = (rating: number) => {
-  return '★'.repeat(Math.floor(rating / 2)) + (rating % 2 === 1 ? '½' : '')
-}
-
 onMounted(() => {
   fetchMarks()
 })
@@ -71,7 +108,6 @@ onMounted(() => {
 
 <template>
   <div class="neodb-dramas">
-    <!-- 状态筛选 -->
     <div class="flex justify-center mb-8">
       <div class="inline-flex rounded-xl bg-[var(--color-warm)]/20 p-1">
         <button
@@ -92,7 +128,6 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- 加载状态 -->
     <div v-if="loading" class="py-8 text-center">
       <div class="inline-flex items-center gap-2 text-[var(--color-muted)] font-serif">
         <svg class="animate-spin w-5 h-5" fill="none" viewBox="0 0 24 24">
@@ -103,34 +138,29 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- 错误状态 -->
     <div v-else-if="error" class="py-8 text-center text-[var(--color-muted)] font-serif">
       {{ error }}
     </div>
 
-    <!-- 剧集列表 -->
     <div v-else-if="filteredMarks.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       <a
         v-for="mark in filteredMarks"
         :key="mark.id"
-        :href="mark.item.url"
+        :href="`https://neodb.social${mark.url}`"
         target="_blank"
         rel="noopener noreferrer"
         class="group block"
       >
         <div class="relative aspect-[2/3] rounded-lg overflow-hidden mb-2 bg-[var(--color-warm)]">
           <img
-            v-if="mark.item.cover"
-            :src="mark.item.cover"
-            :alt="mark.item.title"
+            v-if="mark.cover"
+            :src="mark.cover"
+            :alt="mark.title"
             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
           />
           <div v-else class="w-full h-full flex items-center justify-center text-[var(--color-muted)]">
             <span class="font-serif text-sm">暂无封面</span>
-          </div>
-          <div v-if="mark.rating" class="absolute top-2 right-2 bg-black/70 text-yellow-400 text-xs px-2 py-1 rounded font-serif">
-            {{ getStars(mark.rating) }}
           </div>
           <div class="absolute top-2 left-2 text-xs px-2 py-1 rounded font-serif"
             :class="mark.shelf === 'wishlist' ? 'bg-blue-500/80 text-white' : 'bg-green-500/80 text-white'"
@@ -139,13 +169,11 @@ onMounted(() => {
           </div>
         </div>
         <h4 class="font-serif text-sm text-[var(--color-primary)] line-clamp-2 group-hover:text-[var(--color-accent)] transition-colors">
-          {{ mark.item.title }}
+          {{ mark.title }}
         </h4>
-        <p class="text-xs text-[var(--color-muted)] mt-1">{{ formatDate(mark.created_time) }}</p>
       </a>
     </div>
 
-    <!-- 空状态 -->
     <div v-else class="py-16 text-center">
       <div class="font-serif text-[var(--color-muted)]">
         <p class="text-lg mb-2">暂无剧集</p>
@@ -153,10 +181,9 @@ onMounted(() => {
       </div>
     </div>
 
-    <!-- 查看更多 -->
     <div class="text-center mt-6">
       <a
-        :href="`https://neodb.social/user/${NEODB_USERNAME}/marks?category=tv`"
+        :href="`https://neodb.social/@${NEODB_USERNAME}`"
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center gap-2 font-serif text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors"
