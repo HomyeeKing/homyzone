@@ -1,23 +1,16 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 
-// NeoDB 配置
 const NEODB_USERNAME = 'homyeeking'
-const NEODB_API_BASE = 'https://neodb.social/api'
 
 interface Mark {
   id: string
-  item: {
-    id: string
-    title: string
-    cover: string
-    url: string
-    type: 'movie'
-  }
-  rating: number
-  created_time: string
-  comment?: string
-  shelf: 'wishlist' | 'progress' | 'complete'
+  title: string
+  cover: string
+  url: string
+  rating?: number
+  date: string
+  shelf: 'wishlist' | 'complete'
 }
 
 const marks = ref<Mark[]>([])
@@ -25,17 +18,46 @@ const loading = ref(true)
 const error = ref('')
 const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
 
-// 获取标记数据
+// 解析 RSS feed
 const fetchMarks = async () => {
   try {
     loading.value = true
-    const response = await fetch(`${NEODB_API_BASE}/user/${NEODB_USERNAME}/marks?category=movie&page=1`, {
-      headers: { 'Accept': 'application/json' }
+    // 使用 RSS feed
+    const response = await fetch(`https://neodb.social/@${NEODB_USERNAME}@neodb.social/rss/`)
+    
+    if (!response.ok) throw new Error('Failed to fetch RSS')
+    
+    const xmlText = await response.text()
+    const parser = new DOMParser()
+    const xmlDoc = parser.parseFromString(xmlText, 'text/xml')
+    
+    const items = xmlDoc.querySelectorAll('item')
+    const parsedMarks: Mark[] = []
+    
+    items.forEach((item) => {
+      const title = item.querySelector('title')?.textContent || ''
+      const link = item.querySelector('link')?.textContent || ''
+      const description = item.querySelector('description')?.textContent || ''
+      const pubDate = item.querySelector('pubDate')?.textContent || ''
+      
+      // 从 description 中提取封面图片
+      const imgMatch = description.match(/<img[^>]+src="([^"]+)"/)
+      const cover = imgMatch ? imgMatch[1] : ''
+      
+      // 只添加电影相关的条目
+      if (link.includes('/movie/')) {
+        parsedMarks.push({
+          id: link,
+          title: title.replace(/^[^:]+:\s*/, ''), // 移除前缀
+          cover,
+          url: link,
+          date: pubDate,
+          shelf: 'complete'
+        })
+      }
     })
-
-    if (!response.ok) throw new Error('Failed to fetch marks')
-    const data = await response.json()
-    marks.value = data.results || []
+    
+    marks.value = parsedMarks
   } catch (err) {
     error.value = '加载失败'
     console.error('NeoDB fetch error:', err)
@@ -44,31 +66,23 @@ const fetchMarks = async () => {
   }
 }
 
-// 按状态筛选
 const filteredMarks = computed(() => {
   if (activeTab.value === 'all') return marks.value
   return marks.value.filter(mark => mark.shelf === activeTab.value)
 })
 
-// 分组统计
 const stats = computed(() => ({
   all: marks.value.length,
   wishlist: marks.value.filter(m => m.shelf === 'wishlist').length,
   complete: marks.value.filter(m => m.shelf === 'complete').length
 }))
 
-// 格式化日期
 const formatDate = (dateStr: string) => {
   return new Date(dateStr).toLocaleDateString('zh-CN', {
     year: 'numeric',
     month: 'short',
     day: 'numeric',
   })
-}
-
-// 获取评分星星
-const getStars = (rating: number) => {
-  return '★'.repeat(Math.floor(rating / 2)) + (rating % 2 === 1 ? '½' : '')
 }
 
 onMounted(() => {
@@ -120,27 +134,22 @@ onMounted(() => {
       <a
         v-for="mark in filteredMarks"
         :key="mark.id"
-        :href="mark.item.url"
+        :href="mark.url"
         target="_blank"
         rel="noopener noreferrer"
         class="group block"
       >
         <div class="relative aspect-[2/3] rounded-lg overflow-hidden mb-2 bg-[var(--color-warm)]">
           <img
-            v-if="mark.item.cover"
-            :src="mark.item.cover"
-            :alt="mark.item.title"
+            v-if="mark.cover"
+            :src="mark.cover"
+            :alt="mark.title"
             class="w-full h-full object-cover transition-transform duration-300 group-hover:scale-105"
             loading="lazy"
           />
           <div v-else class="w-full h-full flex items-center justify-center text-[var(--color-muted)]">
             <span class="font-serif text-sm">暂无封面</span>
           </div>
-          <!-- 评分 -->
-          <div v-if="mark.rating" class="absolute top-2 right-2 bg-black/70 text-yellow-400 text-xs px-2 py-1 rounded font-serif">
-            {{ getStars(mark.rating) }}
-          </div>
-          <!-- 状态标签 -->
           <div class="absolute top-2 left-2 text-xs px-2 py-1 rounded font-serif"
             :class="mark.shelf === 'wishlist' ? 'bg-blue-500/80 text-white' : 'bg-green-500/80 text-white'"
           >
@@ -148,9 +157,9 @@ onMounted(() => {
           </div>
         </div>
         <h4 class="font-serif text-sm text-[var(--color-primary)] line-clamp-2 group-hover:text-[var(--color-accent)] transition-colors">
-          {{ mark.item.title }}
+          {{ mark.title }}
         </h4>
-        <p class="text-xs text-[var(--color-muted)] mt-1">{{ formatDate(mark.created_time) }}</p>
+        <p class="text-xs text-[var(--color-muted)] mt-1">{{ formatDate(mark.date) }}</p>
       </a>
     </div>
 
@@ -165,7 +174,7 @@ onMounted(() => {
     <!-- 查看更多 -->
     <div class="text-center mt-6">
       <a
-        :href="`https://neodb.social/user/${NEODB_USERNAME}/marks?category=movie`"
+        :href="`https://neodb.social/@${NEODB_USERNAME}`"
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center gap-2 font-serif text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors"
