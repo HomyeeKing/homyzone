@@ -1,10 +1,15 @@
 <script setup lang="ts">
-import { ref } from 'vue'
+import { ref, computed } from 'vue'
 import { isDark } from '@/logics'
+import { useWindowSize } from '@vueuse/core'
 
 const isPulling = ref(false)
 const ballY = ref(152)
 const lineEndY = ref(150)
+
+// 检测移动端
+const { width } = useWindowSize()
+const isMobile = computed(() => width.value < 640)
 
 const toggleTheme = () => {
   isDark.value = !isDark.value
@@ -40,8 +45,8 @@ const handleClick = () => {
 
 <template>
   <div 
-    class="fixed bottom-4 right-4 z-50 cursor-pointer transition-transform duration-300 hover:scale-105" 
-    style="width: 200px; height: 280px;"
+    class="fixed bottom-2 sm:bottom-4 right-2 sm:right-4 z-50 cursor-pointer transition-transform duration-300 hover:scale-105" 
+    :style="{ width: isMobile.value ? '100px' : '150px', height: isMobile.value ? '140px' : '210px' }"
     @click="toggleTheme"
     title="点击切换主题"
   >

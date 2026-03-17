@@ -23,27 +23,27 @@ onMounted(() => {
       <div class="max-w-6xl mx-auto">
         <div class="flex items-center justify-between">
           <!-- Logo/Brand -->
-          <div class="flex items-center gap-3">
+          <div class="flex items-center gap-2 sm:gap-3">
             <div class="relative">
               <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 to-blue-500 rounded-full blur-md opacity-40 animate-pulse"></div>
-              <router-link to="/" class="relative flex items-center gap-3 group">
-                <div class="w-10 h-10 rounded-full bg-[var(--color-primary)] dark:bg-[var(--color-cream)] flex items-center justify-center text-[var(--color-cream)] dark:text-[var(--color-primary)] font-serif font-bold text-lg shadow-md group-hover:scale-110 transition-transform duration-300 border-2 border-[var(--color-accent)]">
+              <router-link to="/" class="relative flex items-center gap-2 sm:gap-3 group">
+                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[var(--color-primary)] dark:bg-[var(--color-cream)] flex items-center justify-center text-[var(--color-cream)] dark:text-[var(--color-primary)] font-serif font-bold text-base sm:text-lg shadow-md group-hover:scale-110 transition-transform duration-300 border-2 border-[var(--color-accent)]">
                   H
                 </div>
-                <span class="text-xl font-serif font-semibold text-[var(--color-primary)] dark:text-[var(--color-cream)] hidden sm:block tracking-wide">
+                <span class="text-lg sm:text-xl font-serif font-semibold text-[var(--color-primary)] dark:text-[var(--color-cream)] hidden sm:block tracking-wide">
                   Homyee
                 </span>
               </router-link>
             </div>
           </div>
 
-          <!-- Navigation Links -->
-          <div class="flex items-center justify-center gap-1 sm:gap-2">
+          <!-- Navigation Links - 移动端缩小间距和字体 -->
+          <div class="flex items-center justify-center gap-0.5 sm:gap-1 md:gap-2">
             <router-link
               v-for="nav in navLists"
               :key="nav"
               :to="`/${nav}`"
-              class="relative px-4 py-2 text-sm sm:text-base font-serif font-medium text-[var(--color-muted)] dark:text-[var(--color-secondary)] rounded-lg transition-all duration-300 hover:text-[var(--color-primary)] dark:hover:text-[var(--color-accent)] tracking-wide uppercase"
+              class="relative px-2 sm:px-3 md:px-4 py-2 text-xs sm:text-sm md:text-base font-serif font-medium text-[var(--color-muted)] dark:text-[var(--color-secondary)] rounded-lg transition-all duration-300 hover:text-[var(--color-primary)] dark:hover:text-[var(--color-accent)] tracking-wide uppercase"
               :class="route.path === `/${nav}` ? 'text-[var(--color-primary)] dark:text-[var(--color-accent)]' : ''"
             >
               <span class="relative z-10">{{ nav }}</span>
