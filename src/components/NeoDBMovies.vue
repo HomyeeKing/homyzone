@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from 'vue'
 
 const NEODB_USERNAME = 'homyeeking'
 const NEODB_API_BASE = 'https://neodb.social'
+const NEODB_TOKEN = import.meta.env.VITE_NEODB_TOKEN || ''
 
 interface Mark {
   id: string
@@ -28,7 +29,7 @@ const fetchMarks = async () => {
     const completeResponse = await fetch(`${NEODB_API_BASE}/api/me/shelf/complete?category=movie`, {
       headers: { 
         'Accept': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_NEODB_TOKEN || ''}`
+        'Authorization': `Bearer ${NEODB_TOKEN}`
       }
     })
 
@@ -40,7 +41,7 @@ const fetchMarks = async () => {
     const wishlistResponse = await fetch(`${NEODB_API_BASE}/api/me/shelf/wishlist?category=movie`, {
       headers: { 
         'Accept': 'application/json',
-        'Authorization': `Bearer ${import.meta.env.VITE_NEODB_TOKEN || ''}`
+        'Authorization': `Bearer ${NEODB_TOKEN}`
       }
     })
 
