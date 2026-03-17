@@ -1,7 +1,8 @@
 {
   "private": true,
   "scripts": {
-    "build": "cross-env NODE_ENV=production vite-ssg build",
+    "fetch-data": "node scripts/fetch-neodb-data.js",
+    "build": "npm run fetch-data && cross-env NODE_ENV=production vite-ssg build",
     "dev": "vite --port 3333 --open",
     "preview": "vite preview"
   },

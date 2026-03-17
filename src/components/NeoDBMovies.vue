@@ -1,9 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from 'vue'
 
-const NEODB_USERNAME = 'homyeeking'
-const NEODB_API_BASE = '/.netlify/functions/neodb'
-
 interface Mark {
   id: string
   title: string
@@ -19,66 +16,32 @@ const loading = ref(true)
 const error = ref('')
 const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
 
-// 获取标记数据 - 使用 NeoDB API
 const fetchMarks = async () => {
   try {
     loading.value = true
     
-    // 获取已看的电影
-    const completeResponse = await fetch(`${NEODB_API_BASE}/me/shelf/complete?category=movie`)
-
-    if (!completeResponse.ok) throw new Error('Failed to fetch marks')
+    // 从静态 JSON 文件读取数据
+    const response = await fetch('/data/movies_all.json')
     
-    const completeData = await completeResponse.json()
+    if (!response.ok) throw new Error('Failed to fetch data')
     
-    // 获取想看的电影
-    const wishlistResponse = await fetch(`${NEODB_API_BASE}/me/shelf/wishlist?category=movie`)
-
-    const wishlistData = wishlistResponse.ok ? await wishlistResponse.json() : { results: [] }
+    const data = await response.json()
     
-    // 合并数据
-    const allMarks: Mark[] = []
-    
-    // 处理已看 - API 返回 { data: [...], count, pages }
-    const completeResults = completeData.data || completeData.results || completeData
-    if (Array.isArray(completeResults)) {
-      completeResults.forEach((item: any) => {
-        if (item.item) {
-          allMarks.push({
-            id: item.item.uuid,
-            title: item.item.display_title || item.item.title,
-            cover: item.item.cover_image_url || '',
-            url: `https://neodb.social${item.item.url}`,
-            rating: item.rating_grade,
-            date: item.created_time,
-            shelf: 'complete'
-          })
-        }
-      })
-    }
-    
-    // 处理想看
-    const wishlistResults = wishlistData.data || wishlistData.results || wishlistData
-    if (Array.isArray(wishlistResults)) {
-      wishlistResults.forEach((item: any) => {
-        if (item.item) {
-          allMarks.push({
-            id: item.item.uuid,
-            title: item.item.display_title || item.item.title,
-            cover: item.item.cover_image_url || '',
-            url: `https://neodb.social${item.item.url}`,
-            rating: item.rating_grade,
-            date: item.created_time,
-            shelf: 'wishlist'
-          })
-        }
-      })
-    }
+    // 转换数据格式
+    const allMarks: Mark[] = data.map((item: any) => ({
+      id: item.item?.uuid || item.uuid || Math.random().toString(),
+      title: item.item?.display_title || item.item?.title || item.title || 'Unknown',
+      cover: item.item?.cover_image_url || item.cover_image_url || '',
+      url: `https://neodb.social${item.item?.url || item.url || ''}`,
+      rating: item.rating_grade || item.rating,
+      date: item.created_time || item.date || new Date().toISOString(),
+      shelf: item.shelf_type === 'wishlist' ? 'wishlist' : 'complete'
+    }))
     
     marks.value = allMarks
   } catch (err) {
     error.value = '加载失败'
-    console.error('NeoDB fetch error:', err)
+    console.error('Fetch error:', err)
   } finally {
     loading.value = false
   }
@@ -193,7 +156,7 @@ onMounted(() => {
 
     <div class="text-center mt-6">
       <a
-        :href="`https://neodb.social/@${NEODB_USERNAME}`"
+        href="https://neodb.social/@homyeeking"
         target="_blank"
         rel="noopener noreferrer"
         class="inline-flex items-center gap-2 font-serif text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors"
