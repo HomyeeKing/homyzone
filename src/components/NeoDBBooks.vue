@@ -37,33 +37,39 @@ const fetchMarks = async () => {
     // 合并数据
     const allMarks: Mark[] = []
     
-    // 处理已读
-    if (completeData.results) {
-      completeData.results.forEach((item: any) => {
-        allMarks.push({
-          id: item.item.uuid,
-          title: item.item.display_title || item.item.title,
-          cover: item.item.cover_image_url || '',
-          url: `https://neodb.social${item.item.url}`,
-          rating: item.rating_grade,
-          date: item.created_time,
-          shelf: 'complete'
-        })
+    // 处理已读 - API 可能返回 results 或直接数组
+    const completeResults = completeData.results || completeData
+    if (Array.isArray(completeResults)) {
+      completeResults.forEach((item: any) => {
+        if (item.item) {
+          allMarks.push({
+            id: item.item.uuid,
+            title: item.item.display_title || item.item.title,
+            cover: item.item.cover_image_url || '',
+            url: `https://neodb.social${item.item.url}`,
+            rating: item.rating_grade,
+            date: item.created_time,
+            shelf: 'complete'
+          })
+        }
       })
     }
     
     // 处理想读
-    if (wishlistData.results) {
-      wishlistData.results.forEach((item: any) => {
-        allMarks.push({
-          id: item.item.uuid,
-          title: item.item.display_title || item.item.title,
-          cover: item.item.cover_image_url || '',
-          url: `https://neodb.social${item.item.url}`,
-          rating: item.rating_grade,
-          date: item.created_time,
-          shelf: 'wishlist'
-        })
+    const wishlistResults = wishlistData.results || wishlistData
+    if (Array.isArray(wishlistResults)) {
+      wishlistResults.forEach((item: any) => {
+        if (item.item) {
+          allMarks.push({
+            id: item.item.uuid,
+            title: item.item.display_title || item.item.title,
+            cover: item.item.cover_image_url || '',
+            url: `https://neodb.social${item.item.url}`,
+            rating: item.rating_grade,
+            date: item.created_time,
+            shelf: 'wishlist'
+          })
+        }
       })
     }
     
