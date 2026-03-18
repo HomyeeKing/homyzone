@@ -127,8 +127,8 @@ const closeMenu = () => {
               v-for="nav in navLists"
               :key="nav"
               :to="`/${nav}`"
-              class="relative px-3 py-2 text-sm font-serif font-medium text-[var(--color-muted)] dark:text-[var(--color-secondary)] rounded-lg transition-all duration-300 hover:text-[var(--color-primary)] dark:hover:text-[var(--color-accent)] tracking-wide uppercase"
-              :class="route.path === `/${nav}` ? 'text-[var(--color-primary)] dark:text-[var(--color-accent)]' : ''"
+              class="relative px-3 py-2 text-sm font-serif font-medium text-[var(--color-muted)] rounded-lg transition-all duration-300 hover:text-[var(--color-primary)] tracking-wide uppercase"
+              :class="route.path === `/${nav}` ? 'text-[var(--color-primary)]' : ''"
             >
               <span class="relative z-10">{{ nav }}</span>
               <div

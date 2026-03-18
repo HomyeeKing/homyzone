@@ -77,19 +77,33 @@ onMounted(() => {
         你想活出怎样的人生
       </p>
 
+      <!-- 兴趣爱好 -->
+      <Highlighter color="var(--color-accent)" :size="300" :duration="0.3">
+        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-3xl mx-auto">
+          <div class="flex flex-col items-center p-4 rounded-lg bg-gradient-to-br from-[var(--c-card)] to-[var(--c-bg)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all duration-300 hover:scale-105">
+            <span class="text-3xl mb-2">🏋🏻</span>
+            <span class="font-serif text-sm text-[var(--color-primary)]">健身</span>
+          </div>
+          <div class="flex flex-col items-center p-4 rounded-lg bg-gradient-to-br from-[var(--c-card)] to-[var(--c-bg)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all duration-300 hover:scale-105">
+            <span class="text-3xl mb-2">🏀</span>
+            <span class="font-serif text-sm text-[var(--color-primary)]">篮球</span>
+            <span class="text-xs text-[var(--color-muted)] italic">（已荒废）</span>
+          </div>
+          <div class="flex flex-col items-center p-4 rounded-lg bg-gradient-to-br from-[var(--c-card)] to-[var(--c-bg)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all duration-300 hover:scale-105">
+            <span class="text-3xl mb-2">🎬</span>
+            <span class="font-serif text-sm text-[var(--color-primary)]">剪辑</span>
+            <span class="text-xs text-[var(--color-muted)] italic">（学习中）</span>
+          </div>
+          <div class="flex flex-col items-center p-4 rounded-lg bg-gradient-to-br from-[var(--c-card)] to-[var(--c-bg)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all duration-300 hover:scale-105">
+            <span class="text-3xl mb-2">あ</span>
+            <span class="font-serif text-sm text-[var(--color-primary)]">日语</span>
+            <span class="text-xs text-[var(--color-muted)] italic">（学习中）</span>
+          </div>
+        </div>
+      </Highlighter>
 
-
-      <!-- 底部装饰 -->
-      <div class="flex items-center justify-center gap-6">
-        <div class="h-px w-20 bg-gradient-to-r from-transparent to-[var(--color-secondary)]"></div>
-        <div class="font-serif text-3xl text-[var(--color-accent)] italic">§</div>
-        <div class="h-px w-20 bg-gradient-to-l from-transparent to-[var(--color-secondary)]"></div>
-      </div>
-
-      <!-- 引言 -->
-      <p class="mt-8 font-serif text-sm text-[var(--color-muted)] italic tracking-wide">
-        "I can do all things..."
-      </p>
+      <!-- 底部引言 -->
+      <FooterQuote quote="I can do all things..." />
     </div>
   </div>
 </template>

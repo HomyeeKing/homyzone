@@ -153,11 +153,7 @@ const formatDate = (date: Date) => {
       </div>
 
       <!-- 底部装饰 -->
-      <div class="mt-16 flex items-center justify-center gap-6">
-        <div class="h-px w-20 bg-gradient-to-r from-transparent to-[var(--color-secondary)]"></div>
-        <div class="font-serif text-3xl text-[var(--color-accent)] italic">§</div>
-        <div class="h-px w-20 bg-gradient-to-l from-transparent to-[var(--color-secondary)]"></div>
-      </div>
+      <FooterQuote />
     </div>
   </div>
 </template>

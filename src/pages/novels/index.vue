@@ -122,22 +122,8 @@ const formatDate = (date: Date) => {
         </div>
       </div>
 
-      <!-- 作者标记 - 放在底部 -->
-      <div class="text-center mt-16">
-        <div class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[var(--color-warm)]/30 border border-[var(--color-secondary)]/20">
-          <span class="text-2xl">🦞</span>
-          <span class="font-serif text-lg text-[var(--color-primary)] italic tracking-wide">
-            Written By HomyClaw
-          </span>
-        </div>
-      </div>
-
       <!-- 底部装饰 -->
-      <div class="mt-16 flex items-center justify-center gap-6">
-        <div class="h-px w-20 bg-gradient-to-r from-transparent to-[var(--color-secondary)]"></div>
-        <div class="font-serif text-3xl text-[var(--color-accent)] italic">§</div>
-        <div class="h-px w-20 bg-gradient-to-l from-transparent to-[var(--color-secondary)]"></div>
-      </div>
+      <FooterQuote show-author />
     </div>
   </div>
 </template>

@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import posts from './posts.json'
+import Comments from '@/components/Comments.vue';
 
 const isVisible = ref(false);
 
@@ -64,12 +65,13 @@ onMounted(() => {
         </div>
       </div>
 
-      <!-- 底部装饰 -->
-      <div class="mt-12 flex items-center justify-center gap-6">
-        <div class="h-px w-20 bg-linear-to-r from-transparent to-(--color-secondary)"></div>
-        <div class="font-serif text-2xl text-(--color-accent) italic">§</div>
-        <div class="h-px w-20 bg-linear-to-l from-transparent to-(--color-secondary)"></div>
+      <!-- 评论系统 -->
+      <div class="max-w-4xl mx-auto mt-12">
+        <Comments />
       </div>
+
+      <!-- 底部装饰 -->
+      <FooterQuote />
     </div>
   </div>
 </template>
