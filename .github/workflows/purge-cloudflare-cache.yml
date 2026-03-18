@@ -1,0 +1,22 @@
+name: Purge Cloudflare Cache on Deploy
+
+on:
+  push:
+    branches: [master, main]
+
+jobs:
+  purge-cache:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Wait for Netlify Deploy
+        run: sleep 120  # 等待2分钟让 Netlify 完成部署
+
+      - name: Purge Cloudflare Cache
+        env:
+          ZONE_ID: "95d66e5e21094a3e443e62a1b8797369"
+          API_TOKEN: "0bb304a956efd40ff5240e5c0e8e33ece0671"
+        run: |
+          curl -X POST "https://api.cloudflare.com/client/v4/zones/${ZONE_ID}/purge_cache" \
+            -H "Authorization: Bearer ${API_TOKEN}" \
+            -H "Content-Type: application/json" \
+            --data '{"purge_everything":true}'
