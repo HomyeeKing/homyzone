@@ -36,19 +36,92 @@ const closeMenu = () => {
     <div class="px-4 sm:px-6 py-3">
       <div class="max-w-6xl mx-auto">
         <div class="flex items-center justify-between">
-          <!-- Logo/Brand -->
+          <!-- Logo/Brand - 手写艺术签名 -->
           <div class="flex items-center gap-2">
-            <div class="relative">
-              <div class="absolute inset-0 bg-gradient-to-r from-yellow-400 to-blue-500 rounded-full blur-md opacity-40 animate-pulse"></div>
-              <router-link to="/" class="relative flex items-center gap-2 group">
-                <div class="w-8 h-8 sm:w-10 sm:h-10 rounded-full bg-[var(--color-primary)] dark:bg-[var(--color-cream)] flex items-center justify-center text-[var(--color-cream)] dark:text-[var(--color-primary)] font-serif font-bold text-base sm:text-lg shadow-md group-hover:scale-110 transition-transform duration-300 border-2 border-[var(--color-accent)]">
-                  H
-                </div>
-                <span class="text-lg sm:text-xl font-serif font-semibold text-[var(--color-primary)] dark:text-[var(--color-cream)] tracking-wide">
-                  Homyee
-                </span>
-              </router-link>
-            </div>
+            <router-link to="/" class="relative group">
+              <!-- 手写签名 SVG -->
+              <svg 
+                class="h-10 sm:h-12 w-auto overflow-visible" 
+                viewBox="0 0 220 50" 
+                fill="none" 
+                xmlns="http://www.w3.org/2000/svg"
+              >
+                <defs>
+                  <linearGradient id="signature-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                    <stop offset="0%" style="stop-color:var(--color-accent);stop-opacity:1" />
+                    <stop offset="50%" style="stop-color:var(--color-primary);stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:var(--color-secondary);stop-opacity:1" />
+                  </linearGradient>
+                  <filter id="glow">
+                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
+                    <feMerge>
+                      <feMergeNode in="coloredBlur"/>
+                      <feMergeNode in="SourceGraphic"/>
+                    </feMerge>
+                  </filter>
+                </defs>
+                
+                <!-- 签名文字 - 使用 path 实现手写动画 -->
+                <path
+                  id="signature-path"
+                  d="M20 35 C 20 35, 25 20, 35 25 C 45 30, 40 40, 50 35 C 60 30, 55 20, 65 25 C 75 30, 70 40, 80 35 L 85 35 M 90 30 C 95 25, 100 25, 105 30 C 110 35, 105 40, 100 38 C 95 36, 95 32, 100 30 C 105 28, 110 30, 115 35 L 120 35 M 125 25 C 130 20, 140 20, 145 25 C 150 30, 145 38, 140 38 C 135 38, 135 30, 140 28 C 145 26, 150 28, 155 32 L 160 35 M 165 30 C 170 25, 180 25, 185 30 C 190 35, 185 40, 180 40 C 175 40, 175 32, 180 30 C 185 28, 190 30, 195 35"
+                  stroke="url(#signature-gradient)"
+                  stroke-width="3"
+                  fill="none"
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  filter="url(#glow)"
+                  class="signature-animate"
+                />
+                
+                <!-- 装饰下划线 -->
+                <path
+                  d="M10 45 Q 110 50, 210 45"
+                  stroke="var(--color-accent)"
+                  stroke-width="2"
+                  fill="none"
+                  stroke-linecap="round"
+                  class="underline-animate"
+                  opacity="0.6"
+                />
+              </svg>
+              
+              <!-- CSS 动画样式 -->
+              <style scoped>
+                .signature-animate {
+                  stroke-dasharray: 500;
+                  stroke-dashoffset: 500;
+                  animation: drawSignature 2.5s ease-out forwards;
+                }
+                
+                .underline-animate {
+                  stroke-dasharray: 300;
+                  stroke-dashoffset: 300;
+                  animation: drawUnderline 1s ease-out 2s forwards;
+                }
+                
+                @keyframes drawSignature {
+                  to {
+                    stroke-dashoffset: 0;
+                  }
+                }
+                
+                @keyframes drawUnderline {
+                  to {
+                    stroke-dashoffset: 0;
+                  }
+                }
+                
+                /* 悬停效果 - 重新播放动画 */
+                .group:hover .signature-animate {
+                  animation: drawSignature 2s ease-out forwards;
+                }
+                
+                .group:hover .underline-animate {
+                  animation: drawUnderline 0.8s ease-out 1.8s forwards;
+                }
+              </style>
+            </router-link>
           </div>
 
           <!-- Desktop Navigation -->
