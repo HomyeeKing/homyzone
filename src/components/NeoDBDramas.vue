@@ -14,6 +14,8 @@ interface Mark {
 }
 
 const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
+const currentPage = ref(1)
+const itemsPerPage = 20
 
 const marks = computed<Mark[]>(() => {
   return (dramasData as any[]).map((item: any) => {
@@ -41,6 +43,14 @@ const filteredMarks = computed(() => {
   return marks.value.filter(mark => mark.shelf === activeTab.value)
 })
 
+const totalPages = computed(() => Math.ceil(filteredMarks.value.length / itemsPerPage))
+
+const paginatedMarks = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return filteredMarks.value.slice(start, end)
+})
+
 const stats = computed(() => ({
   all: marks.value.length,
   wishlist: marks.value.filter(m => m.shelf === 'wishlist').length,
@@ -58,6 +68,18 @@ const formatDate = (dateStr: string) => {
 const getStars = (rating: number) => {
   return '★'.repeat(Math.floor(rating / 2)) + (rating % 2 === 1 ? '½' : '')
 }
+
+const goToPage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+const switchTab = (tab: 'all' | 'wishlist' | 'complete') => {
+  activeTab.value = tab
+  currentPage.value = 1
+}
 </script>
 
 <template>
@@ -71,7 +93,7 @@ const getStars = (rating: number) => {
             { key: 'complete', label: `已看 (${stats.complete})` }
           ]"
           :key="tab.key"
-          @click="activeTab = tab.key as 'all' | 'wishlist' | 'complete'"
+          @click="switchTab(tab.key as 'all' | 'wishlist' | 'complete')"
           class="px-4 py-2 rounded-lg font-serif text-sm transition-all duration-300"
           :class="activeTab === tab.key
             ? 'bg-[var(--color-accent)] text-white shadow-md'
@@ -82,9 +104,9 @@ const getStars = (rating: number) => {
       </div>
     </div>
 
-    <div v-if="filteredMarks.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <div v-if="paginatedMarks.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       <a
-        v-for="mark in filteredMarks"
+        v-for="mark in paginatedMarks"
         :key="mark.id"
         :href="mark.url"
         target="_blank"
@@ -128,6 +150,48 @@ const getStars = (rating: number) => {
       </div>
     </div>
 
+    <!-- 分页 -->
+    <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 mt-8">
+      <button
+        @click="goToPage(currentPage - 1)"
+        :disabled="currentPage === 1"
+        class="px-3 py-2 rounded-lg font-serif text-sm transition-all duration-300"
+        :class="currentPage === 1 
+          ? 'text-[var(--color-muted)] cursor-not-allowed' 
+          : 'text-[var(--color-primary)] hover:bg-[var(--color-warm)]'"
+      >
+        上一页
+      </button>
+      
+      <div class="flex gap-1">
+        <button
+          v-for="page in totalPages"
+          :key="page"
+          @click="goToPage(page)"
+          class="w-8 h-8 rounded-lg font-serif text-sm transition-all duration-300"
+          :class="currentPage === page
+            ? 'bg-[var(--color-accent)] text-white'
+            : 'text-[var(--color-muted)] hover:bg-[var(--color-warm)] hover:text-[var(--color-primary)]'"
+        >
+          {{ page }}
+        </button>
+      </div>
+      
+      <button
+        @click="goToPage(currentPage + 1)"
+        :disabled="currentPage === totalPages"
+        class="px-3 py-2 rounded-lg font-serif text-sm transition-all duration-300"
+        :class="currentPage === totalPages 
+          ? 'text-[var(--color-muted)] cursor-not-allowed' 
+          : 'text-[var(--color-primary)] hover:bg-[var(--color-warm)]'"
+      >
+        下一页
+      </button>
+    </div>
+    
+    <div class="text-center mt-4 text-sm text-[var(--color-muted)] font-serif">
+      第 {{ currentPage }} / {{ totalPages }} 页，共 {{ filteredMarks.length }} 部
+    </div>
   </div>
 </template>
 

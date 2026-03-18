@@ -23,42 +23,64 @@ const CATEGORIES = [
   { key: 'books_wishlist', category: 'book', shelf: 'wishlist' },
 ];
 
-async function fetchData(category, shelf) {
-  const url = `https://neodb.social/api/me/shelf/${shelf}?category=${category}`;
+async function fetchAllData(category, shelf) {
+  const allResults = [];
+  let page = 1;
+  let hasMore = true;
   
-  try {
-    const response = await fetch(url, {
-      headers: {
-        'Authorization': `Bearer ${TOKEN}`,
-        'Accept': 'application/json'
-      }
-    });
+  while (hasMore && page <= 10) { // 最多获取10页
+    const url = `https://neodb.social/api/me/shelf/${shelf}?category=${category}&page=${page}`;
     
-    if (!response.ok) {
-      throw new Error(`HTTP ${response.status}: ${response.statusText}`);
-    }
-    
-    const data = await response.json();
-    const results = data.data || data.results || data || [];
-    
-    // 处理数据，提取豆瓣链接
-    return results.map(item => {
-      const externalUrls = item.item?.external_resources || [];
-      const doubanUrl = externalUrls.find(url => 
-        url.url?.includes('douban.com') || 
-        url.url?.includes('movie.douban.com') ||
-        url.url?.includes('book.douban.com')
-      )?.url;
+    try {
+      const response = await fetch(url, {
+        headers: {
+          'Authorization': `Bearer ${TOKEN}`,
+          'Accept': 'application/json'
+        }
+      });
       
-      return {
-        ...item,
-        douban_url: doubanUrl || null
-      };
-    });
-  } catch (error) {
-    console.error(`Failed to fetch ${category}/${shelf}:`, error.message);
-    return [];
+      if (!response.ok) {
+        throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+      }
+      
+      const data = await response.json();
+      const results = data.data || [];
+      
+      if (results.length === 0) {
+        hasMore = false;
+      } else {
+        // 处理数据，提取豆瓣链接
+        const processedResults = results.map(item => {
+          const externalUrls = item.item?.external_resources || [];
+          const doubanUrl = externalUrls.find(url => 
+            url.url?.includes('douban.com') || 
+            url.url?.includes('movie.douban.com') ||
+            url.url?.includes('book.douban.com')
+          )?.url;
+          
+          return {
+            ...item,
+            douban_url: doubanUrl || null
+          };
+        });
+        
+        allResults.push(...processedResults);
+        console.log(`  Page ${page}: ${results.length} items`);
+        
+        // 如果返回的数据少于20条，说明是最后一页
+        if (results.length < 20) {
+          hasMore = false;
+        } else {
+          page++;
+        }
+      }
+    } catch (error) {
+      console.error(`Failed to fetch ${category}/${shelf} page ${page}:`, error.message);
+      hasMore = false;
+    }
   }
+  
+  return allResults;
 }
 
 async function main() {
@@ -69,20 +91,21 @@ async function main() {
     fs.mkdirSync(outputDir, { recursive: true });
   }
   
-  console.log('Fetching NeoDB data...\n');
+  console.log('Fetching NeoDB data...
+');
   
   for (const { key, category, shelf } of CATEGORIES) {
     console.log(`Fetching ${key}...`);
-    const data = await fetchData(category, shelf);
+    const data = await fetchAllData(category, shelf);
     
     const outputFile = path.join(outputDir, `${key}.json`);
     fs.writeFileSync(outputFile, JSON.stringify(data, null, 2));
     
-    console.log(`  ✓ ${data.length} items saved to data/${key}.json`);
+    console.log(`  ✓ Total: ${data.length} items saved to data/${key}.json\n`);
   }
   
   // 生成合并的数据文件
-  console.log('\nGenerating combined data files...');
+  console.log('Generating combined data files...');
   
   const movies = [
     ...JSON.parse(fs.readFileSync(path.join(outputDir, 'movies.json'), 'utf8')),

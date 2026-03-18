@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, computed } from 'vue'
-// 直接导入 JSON 数据，实现真正的 SSG 直出
 import moviesData from '../../public/data/movies_all.json'
 
 interface Mark {
@@ -15,15 +14,14 @@ interface Mark {
 }
 
 const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
+const currentPage = ref(1)
+const itemsPerPage = 20
 
-// 直接使用导入的数据，无需 loading
 const marks = computed<Mark[]>(() => {
   return (moviesData as any[]).map((item: any) => {
-    // 优先使用豆瓣链接，否则使用 NeoDB 链接
     const doubanUrl = item.douban_url;
     const neodbUrl = `https://neodb.social${item.item?.url || item.url || ''}`;
     
-    // 图片使用代理域名，解决大陆访问问题
     const coverUrl = item.item?.cover_image_url || item.cover_image_url || '';
     const proxiedCover = coverUrl.replace('https://neodb.social', 'https://img.homyeeking.top');
     
@@ -45,6 +43,15 @@ const filteredMarks = computed(() => {
   return marks.value.filter(mark => mark.shelf === activeTab.value)
 })
 
+// 分页
+const totalPages = computed(() => Math.ceil(filteredMarks.value.length / itemsPerPage))
+
+const paginatedMarks = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage
+  const end = start + itemsPerPage
+  return filteredMarks.value.slice(start, end)
+})
+
 const stats = computed(() => ({
   all: marks.value.length,
   wishlist: marks.value.filter(m => m.shelf === 'wishlist').length,
@@ -62,10 +69,24 @@ const formatDate = (dateStr: string) => {
 const getStars = (rating: number) => {
   return '★'.repeat(Math.floor(rating / 2)) + (rating % 2 === 1 ? '½' : '')
 }
+
+const goToPage = (page: number) => {
+  if (page >= 1 && page <= totalPages.value) {
+    currentPage.value = page
+    window.scrollTo({ top: 0, behavior: 'smooth' })
+  }
+}
+
+// 切换标签时重置页码
+const switchTab = (tab: 'all' | 'wishlist' | 'complete') => {
+  activeTab.value = tab
+  currentPage.value = 1
+}
 </script>
 
 <template>
   <div class="neodb-movies">
+    <!-- 状态筛选 -->
     <div class="flex justify-center mb-8">
       <div class="inline-flex rounded-xl bg-[var(--color-warm)]/20 p-1">
         <button
@@ -75,7 +96,7 @@ const getStars = (rating: number) => {
             { key: 'complete', label: `已看 (${stats.complete})` }
           ]"
           :key="tab.key"
-          @click="activeTab = tab.key as 'all' | 'wishlist' | 'complete'"
+          @click="switchTab(tab.key as 'all' | 'wishlist' | 'complete')"
           class="px-4 py-2 rounded-lg font-serif text-sm transition-all duration-300"
           :class="activeTab === tab.key
             ? 'bg-[var(--color-accent)] text-white shadow-md'
@@ -86,10 +107,10 @@ const getStars = (rating: number) => {
       </div>
     </div>
 
-    <!-- 直接展示，无 loading -->
-    <div v-if="filteredMarks.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+    <!-- 电影列表 -->
+    <div v-if="paginatedMarks.length > 0" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
       <a
-        v-for="mark in filteredMarks"
+        v-for="mark in paginatedMarks"
         :key="mark.id"
         :href="mark.url"
         target="_blank"
@@ -120,13 +141,13 @@ const getStars = (rating: number) => {
           {{ mark.title }}
         </h4>
         <p class="text-xs text-[var(--color-muted)] mt-1">{{ formatDate(mark.date) }}</p>
-        <!-- 评论预览 -->
         <p v-if="mark.comment" class="text-xs text-[var(--color-muted)] mt-2 line-clamp-2 italic">
           "{{ mark.comment }}"
         </p>
       </a>
     </div>
 
+    <!-- 空状态 -->
     <div v-else class="py-16 text-center">
       <div class="font-serif text-[var(--color-muted)]">
         <p class="text-lg mb-2">暂无电影</p>
@@ -134,18 +155,48 @@ const getStars = (rating: number) => {
       </div>
     </div>
 
-    <div class="text-center mt-6">
-      <a
-        href="https://neodb.social/@homyeeking"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 font-serif text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors"
+    <!-- 分页 -->
+    <div v-if="totalPages > 1" class="flex justify-center items-center gap-2 mt-8">
+      <button
+        @click="goToPage(currentPage - 1)"
+        :disabled="currentPage === 1"
+        class="px-3 py-2 rounded-lg font-serif text-sm transition-all duration-300"
+        :class="currentPage === 1 
+          ? 'text-[var(--color-muted)] cursor-not-allowed' 
+          : 'text-[var(--color-primary)] hover:bg-[var(--color-warm)]'"
       >
-        在 NeoDB 查看更多
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-      </a>
+        上一页
+      </button>
+      
+      <div class="flex gap-1">
+        <button
+          v-for="page in totalPages"
+          :key="page"
+          @click="goToPage(page)"
+          class="w-8 h-8 rounded-lg font-serif text-sm transition-all duration-300"
+          :class="currentPage === page
+            ? 'bg-[var(--color-accent)] text-white'
+            : 'text-[var(--color-muted)] hover:bg-[var(--color-warm)] hover:text-[var(--color-primary)]'"
+        >
+          {{ page }}
+        </button>
+      </div>
+      
+      <button
+        @click="goToPage(currentPage + 1)"
+        :disabled="currentPage === totalPages"
+        class="px-3 py-2 rounded-lg font-serif text-sm transition-all duration-300"
+        :class="currentPage === totalPages 
+          ? 'text-[var(--color-muted)] cursor-not-allowed' 
+          : 'text-[var(--color-primary)] hover:bg-[var(--color-warm)]'"
+      >
+        下一页
+      </button>
+    </div>
+    
+    <!-- 页码信息 -->
+    <div class="text-center mt-4 text-sm text-[var(--color-muted)] font-serif">
+      第 {{ currentPage }} / {{ totalPages }} 页，共 {{ filteredMarks.length }} 部
     </div>
   </div>
 </template>
