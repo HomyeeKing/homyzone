@@ -9,26 +9,26 @@
 data/*
   Cache-Control: public, max-age=3600
 
-# HTML 文件不缓存（确保获取最新版本）
+# HTML 文件缓存 1 小时（部署后会自动刷新）
 *.html
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: public, max-age=3600, must-revalidate
 
 # 图片缓存 30 天
 *.png
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=2592000, immutable
 
 *.jpg
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=2592000, immutable
 
 *.jpeg
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=2592000, immutable
 
 *.svg
-  Cache-Control: public, max-age=2592000
+  Cache-Control: public, max-age=2592000, immutable
 
-# 根路径（首页）不缓存
+# 根路径（首页）缓存 1 小时
 /
-  Cache-Control: public, max-age=0, must-revalidate
+  Cache-Control: public, max-age=3600, must-revalidate
 
 # 安全头（可选）
 /*
