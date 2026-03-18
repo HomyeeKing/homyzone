@@ -1,8 +1,7 @@
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
 import { ref, onMounted, computed } from 'vue';
+import postsData from './posts.json'
 
-const router = useRouter();
 const isVisible = ref(false);
 
 onMounted(() => {
@@ -11,22 +10,10 @@ onMounted(() => {
   }, 100);
 });
 
-// 获取所有 zone 文章（排除 index.vue 自身）
-const allPosts = computed(() => {
-  const posts = router
-    .getRoutes()
-    .filter((i) => !i.meta.frontmatter?.hidden)
-    .filter((i) => i.path.startsWith('/zone/') && i.path !== '/zone')
-    .map((route) => ({
-      ...route,
-      date: route.meta.frontmatter?.date
-        ? new Date(route.meta.frontmatter.date)
-        : new Date(0),
-    }))
-    .sort((a, b) => b.date.getTime() - a.date.getTime());
-
-  return posts;
-});
+const posts = ref(postsData.map(p => ({
+  ...p,
+  date: new Date(p.date)
+})));
 
 // 格式化日期为 Twitter 风格
 const formatTime = (date: Date) => {
@@ -56,15 +43,29 @@ const formatFullDate = (date: Date) => {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
-    hour: '2-digit',
-    minute: '2-digit',
   });
 };
 
-// 简化内容显示（取前200字）
-const truncateContent = (content: string, maxLength = 200) => {
-  if (content.length <= maxLength) return content;
-  return content.slice(0, maxLength).trim() + '...';
+// 处理内容：移除 markdown 标记，截取前 280 字（类似 Twitter）
+const formatContent = (content: string) => {
+  // 移除 markdown 标记
+  let text = content
+    .replace(/#+ /g, '') // 标题
+    .replace(/\*\*/g, '') // 粗体
+    .replace(/\*/g, '') // 斜体
+    .replace(/`{3}[\s\S]*?`{3}/g, '[代码]') // 代码块
+    .replace(/`([^`]+)`/g, '$1') // 行内代码
+    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // 链接
+    .replace(/> /g, '') // 引用
+    .replace(/\n+/g, ' ') // 换行转空格
+    .trim()
+  
+  // 截取 280 字
+  if (text.length > 280) {
+    text = text.slice(0, 280).trim() + '...'
+  }
+  
+  return text
 };
 </script>
 
@@ -81,47 +82,39 @@ const truncateContent = (content: string, maxLength = 200) => {
 
     <!-- 主内容 -->
     <div
-      class="relative z-10 px-4 sm:px-8 lg:px-12 py-12 transition-all duration-1000 ease-out"
+      class="relative z-10 px-4 py-8 transition-all duration-1000 ease-out"
       :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
     >
-      <!-- Timeline 消息卡片列表 -->
-      <div class="max-w-2xl mx-auto">
-        <div class="space-y-0">
+      <!-- Twitter 风格卡片列表 -->
+      <div class="max-w-xl mx-auto">
+        <div class="divide-y divide-(--color-secondary)/10">
           <div
-            v-for="(post, index) in allPosts"
-            :key="post.path"
-            class="relative"
+            v-for="(post, index) in posts"
+            :key="index"
+            class="py-4 first:pt-0"
           >
-            <!-- 消息卡片 -->
-            <div class="ml-0 mb-6">
-              <router-link
-                :to="post.path"
-                class="block relative bg-(--c-bg-light) rounded-2xl p-6 shadow-sm border border-(--color-secondary)/10 hover:shadow-md hover:border-(--color-secondary)/20 transition-all duration-300 group"
+            <!-- 卡片头部：标题和时间 -->
+            <div class="flex items-baseline justify-between gap-4 mb-2">
+              <h3 class="font-serif text-lg font-medium text-(--color-primary)">
+                {{ post.title }}
+              </h3>
+              <span 
+                class="text-xs text-(--color-muted) shrink-0" 
+                :title="formatFullDate(post.date)"
               >
-                <!-- 帖子标题和时间 -->
-                <div class="flex items-start justify-between gap-4 mb-3">
-                  <h3 class="font-serif text-xl text-(--color-primary)">
-                    {{ post.meta.frontmatter?.title || post.name }}
-                  </h3>
-                  <span class="text-xs text-(--color-muted) whitespace-nowrap pt-1" :title="formatFullDate(post.date)">
-                    {{ formatTime(post.date) }}
-                  </span>
-                </div>
-
-                <!-- 帖子内容预览 -->
-                <div class="text-(--color-muted) leading-relaxed">
-                  {{ post.meta.frontmatter?.description || '点击查看详情' }}
-                </div>
-
-                <!-- 悬停光效 -->
-                <div class="absolute inset-0 rounded-2xl bg-linear-to-br from-(--color-accent)/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-              </router-link>
+                {{ formatTime(post.date) }}
+              </span>
             </div>
+            
+            <!-- 卡片内容 -->
+            <p class="text-sm text-(--color-muted) leading-relaxed whitespace-pre-wrap">
+              {{ formatContent(post.content) }}
+            </p>
           </div>
         </div>
 
         <!-- 空状态 -->
-        <div v-if="allPosts.length === 0" class="py-16 text-center">
+        <div v-if="posts.length === 0" class="py-16 text-center">
           <div class="font-serif text-(--color-muted)">
             <p class="text-lg mb-2">暂无内容</p>
             <p class="text-sm">敬请期待...</p>
@@ -130,9 +123,9 @@ const truncateContent = (content: string, maxLength = 200) => {
       </div>
 
       <!-- 底部装饰 -->
-      <div class="mt-16 flex items-center justify-center gap-6">
+      <div class="mt-12 flex items-center justify-center gap-6">
         <div class="h-px w-20 bg-linear-to-r from-transparent to-(--color-secondary)"></div>
-        <div class="font-serif text-3xl text-(--color-accent) italic">§</div>
+        <div class="font-serif text-2xl text-(--color-accent) italic">§</div>
         <div class="h-px w-20 bg-linear-to-l from-transparent to-(--color-secondary)"></div>
       </div>
     </div>
