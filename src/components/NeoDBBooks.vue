@@ -128,19 +128,6 @@ const getStars = (rating: number) => {
       </div>
     </div>
 
-    <div class="text-center mt-6">
-      <a
-        href="https://neodb.social/@homyeeking"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="inline-flex items-center gap-2 font-serif text-[var(--color-accent)] hover:text-[var(--color-primary)] transition-colors"
-      >
-        在 NeoDB 查看更多
-        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14 5l7 7m0 0l-7 7m7-7H3" />
-        </svg>
-      </a>
-    </div>
   </div>
 </template>
 
