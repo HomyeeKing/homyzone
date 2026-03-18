@@ -77,30 +77,21 @@ onMounted(() => {
         你想活出怎样的人生
       </p>
 
-      <!-- 兴趣爱好 -->
-      <Highlighter color="var(--color-accent)" :size="300" :duration="0.3">
-        <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-3xl mx-auto">
-          <div class="hobby-card flex flex-col items-center p-4 rounded-xl bg-[var(--c-card)]/60 backdrop-blur-sm hover:scale-105 transition-all duration-300">
-            <span class="text-3xl mb-2">🏋🏻</span>
-            <span class="font-serif text-sm text-[var(--color-primary)]">健身</span>
-          </div>
-          <div class="hobby-card flex flex-col items-center p-4 rounded-xl bg-[var(--c-card)]/60 backdrop-blur-sm hover:scale-105 transition-all duration-300">
-            <span class="text-3xl mb-2">🏀</span>
-            <span class="font-serif text-sm text-[var(--color-primary)]">篮球</span>
-            <span class="text-xs text-[var(--color-muted)] italic">（已荒废）</span>
-          </div>
-          <div class="hobby-card flex flex-col items-center p-4 rounded-xl bg-[var(--c-card)]/60 backdrop-blur-sm hover:scale-105 transition-all duration-300">
-            <span class="text-3xl mb-2">🎬</span>
-            <span class="font-serif text-sm text-[var(--color-primary)]">剪辑</span>
-            <span class="text-xs text-[var(--color-muted)] italic">（学习中）</span>
-          </div>
-          <div class="hobby-card flex flex-col items-center p-4 rounded-xl bg-[var(--c-card)]/60 backdrop-blur-sm hover:scale-105 transition-all duration-300">
-            <span class="text-3xl mb-2">あ</span>
-            <span class="font-serif text-sm text-[var(--color-primary)]">日语</span>
-            <span class="text-xs text-[var(--color-muted)] italic">（学習中）</span>
-          </div>
-        </div>
-      </Highlighter>
+      <!-- 兴趣爱好标签 -->
+      <div class="flex flex-wrap items-center justify-center gap-3 mb-12">
+        <span class="tag-item inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm text-[var(--color-primary)] font-serif">
+          🏋🏻 健身
+        </span>
+        <span class="tag-item inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm text-[var(--color-primary)] font-serif">
+          🏀 篮球（已荒废）
+        </span>
+        <span class="tag-item inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm text-[var(--color-primary)] font-serif">
+          🎬 剪辑（学习中）
+        </span>
+        <span class="tag-item inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm text-[var(--color-primary)] font-serif">
+          あ 日语（学习中）
+        </span>
+      </div>
 
       <!-- 底部引言 -->
       <FooterQuote quote="I can do all things..." />
@@ -134,19 +125,22 @@ onMounted(() => {
   }
 }
 
-/* 兴趣卡片 - 柔和发光效果替代硬边框 */
-.hobby-card {
+/* 标签样式 - 柔和发光效果替代硬边框 */
+.tag-item {
   position: relative;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.08),
-    0 2px 8px rgba(0, 0, 0, 0.04);
+    0 1px 2px rgba(0, 0, 0, 0.04);
 }
 
-.hobby-card::before {
+.tag-item::before {
   content: '';
   position: absolute;
   inset: 0;
-  border-radius: 0.75rem;
+  border-radius: 9999px;
   padding: 1px;
   background: linear-gradient(135deg,
     rgba(255, 255, 255, 0.12) 0%,
@@ -159,16 +153,17 @@ onMounted(() => {
   pointer-events: none;
 }
 
-.hobby-card:hover {
-  background: var(--c-card) / 80%;
+.tag-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+  transform: translateY(-2px);
   box-shadow:
     inset 0 1px 1px rgba(255, 255, 255, 0.12),
-    0 8px 24px rgba(0, 0, 0, 0.08);
+    0 4px 12px rgba(0, 0, 0, 0.08);
 }
 
-.hobby-card:hover::before {
+.tag-item:hover::before {
   background: linear-gradient(135deg,
-    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.18) 0%,
     rgba(255, 255, 255, 0.06) 50%,
     rgba(255, 255, 255, 0.12) 100%);
 }
