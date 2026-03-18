@@ -20,14 +20,14 @@ onMounted(() => {
         <div class="absolute bottom-1/4 right-1/4 w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-gradient-to-tl from-stone-300/30 via-amber-100/20 to-transparent rounded-full blur-[80px]"></div>
         <div class="absolute top-1/2 left-1/2 w-[35vw] h-[35vw] max-w-[400px] max-h-[400px] bg-gradient-to-r from-orange-200/20 to-amber-100/10 rounded-full blur-[60px] -translate-x-1/2 -translate-y-1/2"></div>
       </div>
-      
+
       <!-- 装饰性线条 -->
       <svg class="absolute top-20 right-20 w-32 h-32 opacity-20" viewBox="0 0 100 100">
         <circle cx="50" cy="50" r="40" fill="none" stroke="currentColor" stroke-width="0.5" class="text-[var(--color-secondary)]"/>
         <circle cx="50" cy="50" r="30" fill="none" stroke="currentColor" stroke-width="0.5" class="text-[var(--color-accent)]"/>
         <circle cx="50" cy="50" r="20" fill="none" stroke="currentColor" stroke-width="0.5" class="text-[var(--color-secondary)]"/>
       </svg>
-      
+
       <svg class="absolute bottom-32 left-16 w-24 h-24 opacity-15" viewBox="0 0 100 100">
         <rect x="20" y="20" width="60" height="60" fill="none" stroke="currentColor" stroke-width="0.5" transform="rotate(45 50 50)" class="text-[var(--color-accent)]"/>
       </svg>
@@ -48,9 +48,9 @@ onMounted(() => {
       <!-- GitHub 头像 -->
       <div class="relative inline-block mb-10">
         <div class="absolute inset-0 bg-gradient-to-br from-[var(--color-accent)] to-[var(--color-secondary)] rounded-full blur-2xl opacity-20"></div>
-        <a 
-          href="https://github.com/HomyeeKing" 
-          target="_blank" 
+        <a
+          href="https://github.com/HomyeeKing"
+          target="_blank"
           rel="noreferrer"
           class="relative block p-1 rounded-full bg-gradient-to-br from-[var(--color-accent)] via-[var(--color-secondary)] to-[var(--color-accent)] hover:scale-105 transition-transform duration-300"
         >
@@ -73,28 +73,28 @@ onMounted(() => {
       </h1>
 
       <!-- 副标题 -->
-      <p class="font-serif text-lg md:text-xl text-[var(--color-muted)] mb-12 tracking-widest">
+      <p class="font-serif text-lg md:text-xl text-[var(--color-muted)] mb-8 tracking-widest">
         你想活出怎样的人生
       </p>
 
       <!-- 兴趣爱好 -->
       <Highlighter color="var(--color-accent)" :size="300" :duration="0.3">
         <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-12 max-w-3xl mx-auto">
-          <div class="flex flex-col items-center p-4 rounded-lg bg-gradient-to-br from-[var(--c-card)] to-[var(--c-bg)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all duration-300 hover:scale-105">
+          <div class="hobby-card flex flex-col items-center p-4 rounded-xl bg-[var(--c-card)]/60 backdrop-blur-sm hover:scale-105 transition-all duration-300">
             <span class="text-3xl mb-2">🏋🏻</span>
             <span class="font-serif text-sm text-[var(--color-primary)]">健身</span>
           </div>
-          <div class="flex flex-col items-center p-4 rounded-lg bg-gradient-to-br from-[var(--c-card)] to-[var(--c-bg)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all duration-300 hover:scale-105">
+          <div class="hobby-card flex flex-col items-center p-4 rounded-xl bg-[var(--c-card)]/60 backdrop-blur-sm hover:scale-105 transition-all duration-300">
             <span class="text-3xl mb-2">🏀</span>
             <span class="font-serif text-sm text-[var(--color-primary)]">篮球</span>
             <span class="text-xs text-[var(--color-muted)] italic">（已荒废）</span>
           </div>
-          <div class="flex flex-col items-center p-4 rounded-lg bg-gradient-to-br from-[var(--c-card)] to-[var(--c-bg)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all duration-300 hover:scale-105">
+          <div class="hobby-card flex flex-col items-center p-4 rounded-xl bg-[var(--c-card)]/60 backdrop-blur-sm hover:scale-105 transition-all duration-300">
             <span class="text-3xl mb-2">🎬</span>
             <span class="font-serif text-sm text-[var(--color-primary)]">剪辑</span>
             <span class="text-xs text-[var(--color-muted)] italic">（学习中）</span>
           </div>
-          <div class="flex flex-col items-center p-4 rounded-lg bg-gradient-to-br from-[var(--c-card)] to-[var(--c-bg)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all duration-300 hover:scale-105">
+          <div class="hobby-card flex flex-col items-center p-4 rounded-xl bg-[var(--c-card)]/60 backdrop-blur-sm hover:scale-105 transition-all duration-300">
             <span class="text-3xl mb-2">あ</span>
             <span class="font-serif text-sm text-[var(--color-primary)]">日语</span>
             <span class="text-xs text-[var(--color-muted)] italic">（学習中）</span>
@@ -132,5 +132,44 @@ onMounted(() => {
   66% {
     transform: translate(-5px, 5px) scale(0.98);
   }
+}
+
+/* 兴趣卡片 - 柔和发光效果替代硬边框 */
+.hobby-card {
+  position: relative;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.08),
+    0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.hobby-card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 0.75rem;
+  padding: 1px;
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.12) 0%,
+    rgba(255, 255, 255, 0.04) 50%,
+    rgba(255, 255, 255, 0.08) 100%);
+  -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+  -webkit-mask-composite: xor;
+  mask-composite: exclude;
+  pointer-events: none;
+}
+
+.hobby-card:hover {
+  background: var(--c-card) / 80%;
+  box-shadow:
+    inset 0 1px 1px rgba(255, 255, 255, 0.12),
+    0 8px 24px rgba(0, 0, 0, 0.08);
+}
+
+.hobby-card:hover::before {
+  background: linear-gradient(135deg,
+    rgba(255, 255, 255, 0.2) 0%,
+    rgba(255, 255, 255, 0.06) 50%,
+    rgba(255, 255, 255, 0.12) 100%);
 }
 </style>
