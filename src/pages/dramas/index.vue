@@ -1,6 +1,7 @@
 <script lang="ts" setup>
 import { ref, onMounted } from 'vue';
 import NeoDBDramas from '@/components/NeoDBDramas.vue';
+import Comments from '@/components/Comments.vue';
 
 const isVisible = ref(false);
 
@@ -32,6 +33,11 @@ onMounted(() => {
       <!-- NeoDB 剧集列表 -->
       <div class="max-w-6xl mx-auto">
         <NeoDBDramas />
+      </div>
+
+      <!-- 评论系统 -->
+      <div class="max-w-4xl mx-auto mt-12">
+        <Comments />
       </div>
 
       <!-- 底部装饰 -->
