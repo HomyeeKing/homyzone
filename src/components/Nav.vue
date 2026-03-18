@@ -163,4 +163,56 @@ const closeMenu = () => {
               v-for="nav in navLists"
               :key="nav"
               :to="`/${nav}`"
-              @click
+              @click="closeMenu"
+              class="block px-4 py-3 rounded-xl font-serif text-lg text-[var(--color-primary)] dark:text-[var(--color-cream)] hover:bg-[var(--color-warm)] dark:hover:bg-[var(--color-warm)]/20 transition-all duration-300"
+              :class="route.path === `/${nav}` ? 'bg-[var(--color-accent)]/10 text-[var(--color-accent)]' : ''"
+            >
+              {{ nav }}
+            </router-link>
+          </div>
+
+          <!-- Mobile Icons -->
+          <div class="mt-8 pt-8 border-t border-[var(--color-warm)] dark:border-[var(--color-warm)]/30 space-y-2">
+            <button
+              @click="isDark = !isDark; closeMenu()"
+              class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-[var(--color-muted)] hover:text-[var(--color-primary)] dark:hover:text-[var(--color-cream)] hover:bg-[var(--color-warm)] dark:hover:bg-[var(--color-warm)]/20 transition-all duration-300"
+            >
+              <carbon-moon v-if="isDark" class="w-5 h-5" />
+              <carbon-sun v-else class="w-5 h-5" />
+              <span class="font-serif">{{ isDark ? '深色模式' : '浅色模式' }}</span>
+            </button>
+
+            <a
+              rel="noreferrer"
+              href="https://x.com/unclehomy30"
+              target="_blank"
+              class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-[var(--color-muted)] hover:text-[var(--color-primary)] dark:hover:text-[var(--color-cream)] hover:bg-[var(--color-warm)] dark:hover:bg-[var(--color-warm)]/20 transition-all duration-300"
+            >
+              <svg class="w-5 h-5" viewBox="0 0 24 24" fill="currentColor">
+                <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
+              </svg>
+              <span class="font-serif">X (Twitter)</span>
+            </a>
+
+            <a
+              rel="noreferrer"
+              href="https://github.com/HomyeeKing"
+              target="_blank"
+              class="flex items-center gap-3 w-full px-4 py-3 rounded-xl text-[var(--color-muted)] hover:text-[var(--color-primary)] dark:hover:text-[var(--color-cream)] hover:bg-[var(--color-warm)] dark:hover:bg-[var(--color-warm)]/20 transition-all duration-300"
+            >
+              <carbon-logo-github class="w-5 h-5" />
+              <span class="font-serif">GitHub</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </transition>
+
+  <!-- Spacer for fixed nav -->
+  <div class="h-16 sm:h-20"></div>
+</template>
+
+<style scoped>
+/* Nav styles */
+</style>
