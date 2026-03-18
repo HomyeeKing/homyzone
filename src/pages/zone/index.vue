@@ -1,96 +1,19 @@
 <script lang="ts" setup>
-import { ref, onMounted, computed, markRaw } from 'vue';
-
-// 导入所有 markdown 文件（使用 ?raw 获取原始内容）
-const modules = import.meta.glob('./*.md', {
-  as: 'raw',
-});
+import { ref, onMounted, computed } from 'vue';
+import postsData from './posts.json'
 
 const isVisible = ref(false);
-const posts = ref<Array<{
-  title: string;
-  content: string;
-  date: Date;
-  visible: boolean;
-}>>([]);
 
-onMounted(async () => {
+onMounted(() => {
   setTimeout(() => {
     isVisible.value = true;
   }, 100);
-
-  // 从内容中提取标题
-const extractTitleFromContent = (content: string): string => {
-  // 移除空行，获取第一段有实际内容的部分
-  const lines = content.split('\n').filter(line => line.trim());
-  if (lines.length > 0) {
-    const firstLine = lines[0].trim();
-    // 如果第一行太短（比如列表项），取前30个字
-    if (firstLine.length > 30) {
-      return firstLine.slice(0, 30) + '...';
-    }
-    return firstLine;
-  }
-  return '无标题';
-};
-
-// 加载所有文件
-  for (const path in modules) {
-    try {
-      const module = await modules[path]() as any;
-      const content = module.default || module;
-
-      // 提取 frontmatter
-      const frontmatterMatch = content.match(/^---[\s\S]*?---/);
-      let frontmatter: any = {};
-
-      if (frontmatterMatch) {
-        const frontmatterText = frontmatterMatch[0].replace(/^---|---$/g, '');
-        frontmatterText.split('\n').forEach((line: string) => {
-          const colonIndex = line.indexOf(':');
-          if (colonIndex > 0) {
-            const key = line.slice(0, colonIndex).trim();
-            const value = line.slice(colonIndex + 1).trim();
-            if (key && value) {
-              // 处理布尔值
-              if (value === 'true') frontmatter[key] = true;
-              else if (value === 'false') frontmatter[key] = false;
-              // 处理引号包裹的字符串
-              else if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
-                frontmatter[key] = value.slice(1, -1);
-              } else {
-                frontmatter[key] = value;
-              }
-            }
-          }
-        });
-      }
-
-      // 移除 frontmatter 获取内容
-      const withoutFrontmatter = content.replace(/^---[\s\S]*?---\s*/, '');
-
-      // 跳过非 visible 的文章
-      if (frontmatter.visible === false) continue;
-
-      // 从文件路径中提取日期作为默认标题，或者从内容中提取
-      const filename = path.split('/').pop() || '';
-      const dateMatch = filename.match(/(\d{4}-\d{2}-\d{2}(?:-\d+)?)/);
-      const defaultTitle = dateMatch ? dateMatch[1] : extractTitleFromContent(withoutFrontmatter);
-
-      posts.value.push({
-        title: frontmatter.title || extractTitleFromContent(withoutFrontmatter),
-        content: withoutFrontmatter.trim(),
-        date: frontmatter.date ? new Date(frontmatter.date) : new Date(),
-        visible: frontmatter.visible !== false,
-      });
-    } catch (e) {
-      console.error(`Error loading ${path}:`, e);
-    }
-  }
-
-  // 按日期排序
-  posts.value.sort((a, b) => b.date.getTime() - a.date.getTime());
 });
+
+const posts = ref(postsData.map(p => ({
+  ...p,
+  date: new Date(p.date)
+})));
 
 const allPosts = computed(() => posts.value);
 

@@ -3,7 +3,8 @@
   "scripts": {
     "fetch-data": "node scripts/fetch-neodb-data.js",
     "build": "cross-env NODE_ENV=production VITE_BUILD_TIME=$(date -u +%Y-%m-%dT%H:%M:%SZ) vite-ssg build",
-    "build:prod": "npm run fetch-data && npm run build && npm run copy-headers",
+    "build:prod": "npm run fetch-data && npm run generate-zone && npm run build && npm run copy-headers",
+    "generate-zone": "node scripts/generate-zone-data.js",
     "copy-headers": "cp _headers dist/_headers 2>/dev/null || true",
     "dev": "vite --port 3333 --open",
     "preview": "vite preview"
