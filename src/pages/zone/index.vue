@@ -1,7 +1,8 @@
 <script lang="ts" setup>
+import { useRouter } from 'vue-router';
 import { ref, onMounted, computed } from 'vue';
-import postsData from './posts.json'
 
+const router = useRouter();
 const isVisible = ref(false);
 
 onMounted(() => {
@@ -10,12 +11,22 @@ onMounted(() => {
   }, 100);
 });
 
-const posts = ref(postsData.map(p => ({
-  ...p,
-  date: new Date(p.date)
-})));
+// 获取所有 zone 文章（排除 index.vue 自身）
+const allPosts = computed(() => {
+  const posts = router
+    .getRoutes()
+    .filter((i) => !i.meta.frontmatter?.hidden)
+    .filter((i) => i.path.startsWith('/zone/') && i.path !== '/zone')
+    .map((route) => ({
+      ...route,
+      date: route.meta.frontmatter?.date
+        ? new Date(route.meta.frontmatter.date)
+        : new Date(0),
+    }))
+    .sort((a, b) => b.date.getTime() - a.date.getTime());
 
-const allPosts = computed(() => posts.value);
+  return posts;
+});
 
 // 格式化日期为 Twitter 风格
 const formatTime = (date: Date) => {
@@ -78,32 +89,33 @@ const truncateContent = (content: string, maxLength = 200) => {
         <div class="space-y-0">
           <div
             v-for="(post, index) in allPosts"
-            :key="index"
+            :key="post.path"
             class="relative"
           >
             <!-- 消息卡片 -->
             <div class="ml-0 mb-6">
-              <div
-                class="relative bg-(--c-bg-light) rounded-2xl p-6 shadow-sm border border-(--color-secondary)/10 hover:shadow-md hover:border-(--color-secondary)/20 transition-all duration-300 group"
+              <router-link
+                :to="post.path"
+                class="block relative bg-(--c-bg-light) rounded-2xl p-6 shadow-sm border border-(--color-secondary)/10 hover:shadow-md hover:border-(--color-secondary)/20 transition-all duration-300 group"
               >
                 <!-- 帖子标题和时间 -->
                 <div class="flex items-start justify-between gap-4 mb-3">
                   <h3 class="font-serif text-xl text-(--color-primary)">
-                    {{ post.title }}
+                    {{ post.meta.frontmatter?.title || post.name }}
                   </h3>
                   <span class="text-xs text-(--color-muted) whitespace-nowrap pt-1" :title="formatFullDate(post.date)">
                     {{ formatTime(post.date) }}
                   </span>
                 </div>
 
-                <!-- 帖子内容 -->
+                <!-- 帖子内容预览 -->
                 <div class="text-(--color-muted) leading-relaxed">
-                  {{ truncateContent(post.content, 300) }}
+                  {{ post.meta.frontmatter?.description || '点击查看详情' }}
                 </div>
 
                 <!-- 悬停光效 -->
                 <div class="absolute inset-0 rounded-2xl bg-linear-to-br from-(--color-accent)/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
-              </div>
+              </router-link>
             </div>
           </div>
         </div>
