@@ -1,6 +1,6 @@
 <script lang="ts" setup>
-import { ref, onMounted, computed } from 'vue';
-import postsData from './posts.json'
+import { ref, onMounted } from 'vue';
+import posts from './posts.json'
 
 const isVisible = ref(false);
 
@@ -9,64 +9,6 @@ onMounted(() => {
     isVisible.value = true;
   }, 100);
 });
-
-const posts = ref(postsData.map(p => ({
-  ...p,
-  date: new Date(p.date)
-})));
-
-// 格式化日期为 Twitter 风格
-const formatTime = (date: Date) => {
-  const now = new Date();
-  const diff = now.getTime() - date.getTime();
-  const seconds = Math.floor(diff / 1000);
-  const minutes = Math.floor(seconds / 60);
-  const hours = Math.floor(minutes / 60);
-  const days = Math.floor(hours / 24);
-
-  if (days > 365) {
-    return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' });
-  } else if (days > 0) {
-    return `${days}天前`;
-  } else if (hours > 0) {
-    return `${hours}小时前`;
-  } else if (minutes > 0) {
-    return `${minutes}分钟前`;
-  } else {
-    return '刚刚';
-  }
-};
-
-// 格式化完整日期
-const formatFullDate = (date: Date) => {
-  return date.toLocaleDateString('zh-CN', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-  });
-};
-
-// 处理内容：移除 markdown 标记，截取前 280 字（类似 Twitter）
-const formatContent = (content: string) => {
-  // 移除 markdown 标记
-  let text = content
-    .replace(/#+ /g, '') // 标题
-    .replace(/\*\*/g, '') // 粗体
-    .replace(/\*/g, '') // 斜体
-    .replace(/`{3}[\s\S]*?`{3}/g, '[代码]') // 代码块
-    .replace(/`([^`]+)`/g, '$1') // 行内代码
-    .replace(/\[([^\]]+)\]\([^)]+\)/g, '$1') // 链接
-    .replace(/> /g, '') // 引用
-    .replace(/\n+/g, ' ') // 换行转空格
-    .trim()
-  
-  // 截取 280 字
-  if (text.length > 280) {
-    text = text.slice(0, 280).trim() + '...'
-  }
-  
-  return text
-};
 </script>
 
 <template>
@@ -100,15 +42,15 @@ const formatContent = (content: string) => {
               </h3>
               <span 
                 class="text-xs text-(--color-muted) shrink-0" 
-                :title="formatFullDate(post.date)"
+                :title="post.fullDate"
               >
-                {{ formatTime(post.date) }}
+                {{ post.timeAgo }}
               </span>
             </div>
             
             <!-- 卡片内容 -->
-            <p class="text-sm text-(--color-muted) leading-relaxed whitespace-pre-wrap">
-              {{ formatContent(post.content) }}
+            <p class="text-sm text-(--color-muted) leading-relaxed">
+              {{ post.content }}
             </p>
           </div>
         </div>
