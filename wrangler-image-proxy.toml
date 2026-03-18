@@ -1,0 +1,6 @@
+name = "image-proxy"
+main = "image-proxy-worker.js"
+compatibility_date = "2024-01-01"
+
+# 使用自定义域名，不是路由模式
+# 需要在 Dashboard 手动添加自定义域名 img.homyeeking.top

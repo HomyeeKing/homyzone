@@ -20,10 +20,13 @@ const marks = computed<Mark[]>(() => {
     const doubanUrl = item.douban_url;
     const neodbUrl = `https://neodb.social${item.item?.url || item.url || ''}`;
     
+    const coverUrl = item.item?.cover_image_url || item.cover_image_url || '';
+    const proxiedCover = coverUrl.replace('https://neodb.social', 'https://img.homyeeking.top');
+    
     return {
       id: item.item?.uuid || item.uuid || Math.random().toString(),
       title: item.item?.display_title || item.item?.title || item.title || 'Unknown',
-      cover: item.item?.cover_image_url || item.cover_image_url || '',
+      cover: proxiedCover,
       url: doubanUrl || neodbUrl,
       rating: item.rating_grade || item.rating,
       date: item.created_time || item.date || new Date().toISOString(),
