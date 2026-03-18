@@ -1,53 +1,147 @@
 <script lang="ts" setup>
-import { useRouter } from 'vue-router';
-import { ref, onMounted, computed } from 'vue';
+import { ref, onMounted, computed, markRaw } from 'vue';
 
-const router = useRouter();
+// 导入所有 markdown 文件（使用 ?raw 获取原始内容）
+const modules = import.meta.glob('./*.md', {
+  as: 'raw',
+});
+
 const isVisible = ref(false);
+const posts = ref<Array<{
+  title: string;
+  content: string;
+  date: Date;
+  visible: boolean;
+}>>([]);
 
-onMounted(() => {
+onMounted(async () => {
   setTimeout(() => {
     isVisible.value = true;
   }, 100);
+
+  // 从内容中提取标题
+const extractTitleFromContent = (content: string): string => {
+  // 移除空行，获取第一段有实际内容的部分
+  const lines = content.split('\n').filter(line => line.trim());
+  if (lines.length > 0) {
+    const firstLine = lines[0].trim();
+    // 如果第一行太短（比如列表项），取前30个字
+    if (firstLine.length > 30) {
+      return firstLine.slice(0, 30) + '...';
+    }
+    return firstLine;
+  }
+  return '无标题';
+};
+
+// 加载所有文件
+  for (const path in modules) {
+    try {
+      const module = await modules[path]() as any;
+      const content = module.default || module;
+
+      // 提取 frontmatter
+      const frontmatterMatch = content.match(/^---[\s\S]*?---/);
+      let frontmatter: any = {};
+
+      if (frontmatterMatch) {
+        const frontmatterText = frontmatterMatch[0].replace(/^---|---$/g, '');
+        frontmatterText.split('\n').forEach((line: string) => {
+          const colonIndex = line.indexOf(':');
+          if (colonIndex > 0) {
+            const key = line.slice(0, colonIndex).trim();
+            const value = line.slice(colonIndex + 1).trim();
+            if (key && value) {
+              // 处理布尔值
+              if (value === 'true') frontmatter[key] = true;
+              else if (value === 'false') frontmatter[key] = false;
+              // 处理引号包裹的字符串
+              else if ((value.startsWith('"') && value.endsWith('"')) || (value.startsWith("'") && value.endsWith("'"))) {
+                frontmatter[key] = value.slice(1, -1);
+              } else {
+                frontmatter[key] = value;
+              }
+            }
+          }
+        });
+      }
+
+      // 移除 frontmatter 获取内容
+      const withoutFrontmatter = content.replace(/^---[\s\S]*?---\s*/, '');
+
+      // 跳过非 visible 的文章
+      if (frontmatter.visible === false) continue;
+
+      // 从文件路径中提取日期作为默认标题，或者从内容中提取
+      const filename = path.split('/').pop() || '';
+      const dateMatch = filename.match(/(\d{4}-\d{2}-\d{2}(?:-\d+)?)/);
+      const defaultTitle = dateMatch ? dateMatch[1] : extractTitleFromContent(withoutFrontmatter);
+
+      posts.value.push({
+        title: frontmatter.title || extractTitleFromContent(withoutFrontmatter),
+        content: withoutFrontmatter.trim(),
+        date: frontmatter.date ? new Date(frontmatter.date) : new Date(),
+        visible: frontmatter.visible !== false,
+      });
+    } catch (e) {
+      console.error(`Error loading ${path}:`, e);
+    }
+  }
+
+  // 按日期排序
+  posts.value.sort((a, b) => b.date.getTime() - a.date.getTime());
 });
 
-// 获取 zone 下的所有文章
-const allPosts = computed(() => {
-  const posts = router
-    .getRoutes()
-    .filter((i) => !i.meta.frontmatter?.hidden)
-    .filter((i) => !i.meta.frontmatter?.isCategory)
-    .filter((i) => !i.path.endsWith('.html'))
-    .filter((i) => i.path.startsWith('/zone/') && i.path !== '/zone')
-    .map((route) => ({
-      ...route,
-      date: route.meta.frontmatter?.date
-        ? new Date(route.meta.frontmatter.date)
-        : new Date(0),
-    }))
-    .sort((a, b) => b.date.getTime() - a.date.getTime());
+const allPosts = computed(() => posts.value);
 
-  return posts;
-});
+// 格式化日期为 Twitter 风格
+const formatTime = (date: Date) => {
+  const now = new Date();
+  const diff = now.getTime() - date.getTime();
+  const seconds = Math.floor(diff / 1000);
+  const minutes = Math.floor(seconds / 60);
+  const hours = Math.floor(minutes / 60);
+  const days = Math.floor(hours / 24);
 
-// 格式化日期
-const formatDate = (date: Date) => {
+  if (days > 365) {
+    return date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' });
+  } else if (days > 0) {
+    return `${days}天前`;
+  } else if (hours > 0) {
+    return `${hours}小时前`;
+  } else if (minutes > 0) {
+    return `${minutes}分钟前`;
+  } else {
+    return '刚刚';
+  }
+};
+
+// 格式化完整日期
+const formatFullDate = (date: Date) => {
   return date.toLocaleDateString('zh-CN', {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    hour: '2-digit',
+    minute: '2-digit',
   });
+};
+
+// 简化内容显示（取前200字）
+const truncateContent = (content: string, maxLength = 200) => {
+  if (content.length <= maxLength) return content;
+  return content.slice(0, maxLength).trim() + '...';
 };
 </script>
 
 <template>
-  <div class="min-h-screen w-full relative overflow-hidden bg-[var(--c-bg)]">
+  <div class="min-h-screen w-full relative overflow-hidden bg-(--c-bg)">
     <!-- 艺术风格背景 -->
     <div class="absolute inset-0 overflow-hidden pointer-events-none">
       <div class="absolute top-0 left-0 w-full h-full opacity-30">
-        <div class="absolute top-1/4 left-1/4 w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-gradient-to-br from-amber-200/40 via-orange-100/20 to-transparent rounded-full blur-[100px]"></div>
-        <div class="absolute bottom-1/4 right-1/4 w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-gradient-to-tl from-stone-300/30 via-amber-100/20 to-transparent rounded-full blur-[80px]"></div>
-        <div class="absolute top-1/2 left-1/2 w-[35vw] h-[35vw] max-w-[400px] max-h-[400px] bg-gradient-to-r from-orange-200/20 to-amber-100/10 rounded-full blur-[60px] -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute top-1/4 left-1/4 w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-linear-to-br from-amber-200/40 via-orange-100/20 to-transparent rounded-full blur-[100px]"></div>
+        <div class="absolute bottom-1/4 right-1/4 w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-linear-to-tl from-stone-300/30 via-amber-100/20 to-transparent rounded-full blur-[80px]"></div>
+        <div class="absolute top-1/2 left-1/2 w-[35vw] h-[35vw] max-w-[400px] max-h-[400px] bg-linear-to-r from-orange-200/20 to-amber-100/10 rounded-full blur-[60px] -translate-x-1/2 -translate-y-1/2"></div>
       </div>
     </div>
 
@@ -56,33 +150,44 @@ const formatDate = (date: Date) => {
       class="relative z-10 px-4 sm:px-8 lg:px-12 py-12 transition-all duration-1000 ease-out"
       :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
     >
-      <!-- 文章列表 -->
-      <div class="max-w-4xl mx-auto">
-        <div
-          v-for="(post, index) in allPosts"
-          :key="post.path"
-          class="group mb-8"
-        >
-          <router-link
-            :to="post.path"
-            class="block transition-all duration-300 hover:pl-2"
+      <!-- Timeline 消息卡片列表 -->
+      <div class="max-w-2xl mx-auto">
+        <div class="space-y-0">
+          <div
+            v-for="(post, index) in allPosts"
+            :key="index"
+            class="relative"
           >
-            <h2 class="font-serif text-2xl md:text-3xl text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors duration-300 mb-2">
-              {{ post.meta.frontmatter?.title || post.name }}
-            </h2>
-            <div class="flex items-center gap-3 text-sm text-[var(--color-muted)]">
-              <span v-if="post.date.getTime() > 0">{{ formatDate(post.date) }}</span>
-              <span v-if="post.meta.frontmatter?.duration" class="flex items-center gap-1">
-                <span class="w-1 h-1 rounded-full bg-[var(--color-accent)]"></span>
-                {{ post.meta.frontmatter.duration }}
-              </span>
+            <!-- 消息卡片 -->
+            <div class="ml-0 mb-6">
+              <div
+                class="relative bg-(--c-bg-light) rounded-2xl p-6 shadow-sm border border-(--color-secondary)/10 hover:shadow-md hover:border-(--color-secondary)/20 transition-all duration-300 group"
+              >
+                <!-- 帖子标题和时间 -->
+                <div class="flex items-start justify-between gap-4 mb-3">
+                  <h3 class="font-serif text-xl text-(--color-primary)">
+                    {{ post.title }}
+                  </h3>
+                  <span class="text-xs text-(--color-muted) whitespace-nowrap pt-1" :title="formatFullDate(post.date)">
+                    {{ formatTime(post.date) }}
+                  </span>
+                </div>
+
+                <!-- 帖子内容 -->
+                <div class="text-(--color-muted) leading-relaxed">
+                  {{ truncateContent(post.content, 300) }}
+                </div>
+
+                <!-- 悬停光效 -->
+                <div class="absolute inset-0 rounded-2xl bg-linear-to-br from-(--color-accent)/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none"></div>
+              </div>
             </div>
-          </router-link>
+          </div>
         </div>
 
         <!-- 空状态 -->
         <div v-if="allPosts.length === 0" class="py-16 text-center">
-          <div class="font-serif text-[var(--color-muted)]">
+          <div class="font-serif text-(--color-muted)">
             <p class="text-lg mb-2">暂无内容</p>
             <p class="text-sm">敬请期待...</p>
           </div>
@@ -91,9 +196,9 @@ const formatDate = (date: Date) => {
 
       <!-- 底部装饰 -->
       <div class="mt-16 flex items-center justify-center gap-6">
-        <div class="h-px w-20 bg-gradient-to-r from-transparent to-[var(--color-secondary)]"></div>
-        <div class="font-serif text-3xl text-[var(--color-accent)] italic">§</div>
-        <div class="h-px w-20 bg-gradient-to-l from-transparent to-[var(--color-secondary)]"></div>
+        <div class="h-px w-20 bg-linear-to-r from-transparent to-(--color-secondary)"></div>
+        <div class="font-serif text-3xl text-(--color-accent) italic">§</div>
+        <div class="h-px w-20 bg-linear-to-l from-transparent to-(--color-secondary)"></div>
       </div>
     </div>
   </div>
