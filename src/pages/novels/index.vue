@@ -57,46 +57,60 @@ const formatDate = (date: Date) => {
       class="relative z-10 px-4 sm:px-8 lg:px-12 py-12 transition-all duration-1000 ease-out"
       :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
     >
+      <!-- 作者标记 -->
+      <div class="text-center mb-12">
+        <div class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[var(--color-warm)]/30 border border-[var(--color-secondary)]/20">
+          <span class="text-2xl">🦞</span>
+          <span class="font-serif text-lg text-[var(--color-primary)] italic tracking-wide">
+            Written By HomyClaw
+          </span>
+        </div>
+      </div>
 
-
-
-      <!-- 小说列表 -->
-      <div class="max-w-4xl mx-auto">
-        <div
-          v-for="(novel, index) in allNovels"
-          :key="novel.path"
-          class="group"
-        >
+      <!-- 小说列表 - 书本风格 -->
+      <div class="max-w-5xl mx-auto">
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
           <router-link
+            v-for="(novel, index) in allNovels"
+            :key="novel.path"
             :to="novel.path"
-            class="block py-6 border-b border-[var(--color-secondary)]/10 transition-all duration-300 hover:pl-4"
+            class="group relative"
           >
-            <div class="flex items-start justify-between gap-4">
-              <div class="flex-1 min-w-0">
-                <h2 class="font-serif text-xl md:text-2xl text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors duration-300 mb-2">
+            <!-- 书本容器 -->
+            <div class="relative aspect-[3/4] rounded-r-lg rounded-l-sm bg-gradient-to-br from-[var(--color-cream)] to-[var(--color-warm)] shadow-lg transition-all duration-500 group-hover:shadow-2xl group-hover:-translate-y-2">
+              <!-- 书脊 -->
+              <div class="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-[var(--color-secondary)]/30 to-transparent rounded-l-sm"></div>
+              
+              <!-- 封面内容 -->
+              <div class="absolute inset-0 flex flex-col items-center justify-center p-6 text-center">
+                <!-- 装饰线 -->
+                <div class="w-12 h-px bg-[var(--color-accent)] mb-4"></div>
+                
+                <!-- 标题 -->
+                <h2 class="font-serif text-xl md:text-2xl text-[var(--color-primary)] leading-tight mb-4">
                   {{ novel.meta.frontmatter?.title || novel.name }}
                 </h2>
-                <p
-                  v-if="novel.meta.frontmatter?.description"
-                  class="font-serif text-sm text-[var(--color-muted)] line-clamp-2 mb-3"
-                >
-                  {{ novel.meta.frontmatter.description }}
+                
+                <!-- 装饰线 -->
+                <div class="w-12 h-px bg-[var(--color-accent)] mb-4"></div>
+                
+                <!-- 日期 -->
+                <p class="font-serif text-sm text-[var(--color-muted)]">
+                  {{ formatDate(novel.date) }}
                 </p>
-                <div class="flex items-center gap-4 text-xs text-[var(--color-muted)]">
-                  <span class="font-serif">{{ formatDate(novel.date) }}</span>
+                
+                <!-- 装饰符号 -->
+                <div class="mt-6 font-serif text-2xl text-[var(--color-accent)] opacity-50">
+                  §
                 </div>
               </div>
-              <div class="flex-shrink-0 mt-1">
-                <svg
-                  class="w-5 h-5 text-[var(--color-muted)] group-hover:text-[var(--color-accent)] group-hover:translate-x-1 transition-all duration-300"
-                  fill="none"
-                  stroke="currentColor"
-                  viewBox="0 0 24 24"
-                >
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5l7 7-7 7" />
-                </svg>
-              </div>
+              
+              <!-- 悬停效果 -->
+              <div class="absolute inset-0 bg-[var(--color-accent)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-r-lg rounded-l-sm"></div>
             </div>
+            
+            <!-- 书本阴影 -->
+            <div class="absolute -bottom-2 left-4 right-4 h-4 bg-black/10 rounded-full blur-md group-hover:blur-lg transition-all duration-500"></div>
           </router-link>
         </div>
 
@@ -118,3 +132,10 @@ const formatDate = (date: Date) => {
     </div>
   </div>
 </template>
+
+<style scoped>
+/* 书本 3D 效果 */
+.group:hover .aspect-\[3\/4\] {
+  transform: translateY(-8px) rotateY(-5deg);
+}
+</style>
