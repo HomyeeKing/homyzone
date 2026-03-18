@@ -45,3 +45,9 @@
   for = "*.svg"
   [headers.values]
     Cache-Control = "public, max-age=2592000"
+
+# 允许 Disqus 跨域
+[[headers]]
+  for = "/*"
+  [headers.values]
+    Referrer-Policy = "origin-when-cross-origin"
