@@ -91,8 +91,8 @@ async function main() {
     fs.mkdirSync(outputDir, { recursive: true });
   }
   
-  console.log('Fetching NeoDB data...
-');
+  console.log('Fetching NeoDB data...');
+  console.log();
   
   for (const { key, category, shelf } of CATEGORIES) {
     console.log(`Fetching ${key}...`);
