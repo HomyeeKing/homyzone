@@ -33,6 +33,12 @@ export const createApp = ViteSSG(
   ({ router, isClient }) => {
     dayjs.extend(LocalizedFormat)
 
+    // 设置默认路由重定向到 /zone
+    router.addRoute({
+      path: '/',
+      redirect: '/zone',
+    })
+
     if (isClient) {
       router.beforeEach(() => { NProgress.start() })
       router.afterEach(() => { NProgress.done() })

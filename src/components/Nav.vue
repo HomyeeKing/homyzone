@@ -4,7 +4,7 @@ import { isDark } from '@/logics'
 import { useRoute } from 'vue-router'
 import BorderBeam from './BorderBeam.vue'
 
-const navLists = ['blogs', 'novels', 'movies', 'dramas', 'reading']
+const navLists = ['zone', 'blogs', 'novels', 'movies', 'dramas', 'reading']
 const route = useRoute()
 const isVisible = ref(false)
 const isMenuOpen = ref(false)
@@ -118,74 +118,6 @@ const closeMenu = () => {
                   opacity="0.6"
                 />
               </svg>
-
-              <!-- CSS 动画样式 -->
-              <style scoped>
-                .letter-h, .letter-o, .letter-m, .letter-y, .letter-e, .letter-e2, .letter-k, .letter-i, .letter-i-dot, .letter-n, .letter-g {
-                  stroke-dasharray: 100;
-                  stroke-dashoffset: 100;
-                  animation: drawLetter 0.3s ease-out forwards;
-                }
-
-                .letter-h { animation-delay: 0.1s; }
-                .letter-o { animation-delay: 0.2s; }
-                .letter-m { animation-delay: 0.3s; }
-                .letter-y { animation-delay: 0.4s; }
-                .letter-e { animation-delay: 0.5s; }
-                .letter-e2 { animation-delay: 0.6s; }
-                .letter-k { animation-delay: 0.7s; }
-                .letter-i { animation-delay: 0.8s; }
-                .letter-i-dot { animation: dotAppear 0.3s ease-out 1s forwards; opacity: 0; }
-                .letter-n { animation-delay: 0.9s; }
-                .letter-g { animation-delay: 1s; }
-
-                .underline-animate {
-                  stroke-dasharray: 300;
-                  stroke-dashoffset: 300;
-                  animation: drawUnderline 1s ease-out 1.5s forwards;
-                }
-
-                @keyframes drawLetter {
-                  to {
-                    stroke-dashoffset: 0;
-                  }
-                }
-
-                @keyframes drawUnderline {
-                  to {
-                    stroke-dashoffset: 0;
-                  }
-                }
-
-                @keyframes dotAppear {
-                  to {
-                    opacity: 1;
-                  }
-                }
-
-                /* 悬停效果 - 重新播放动画 */
-                .group:hover .letter-h, .group:hover .letter-o, .group:hover .letter-m,
-                .group:hover .letter-y, .group:hover .letter-e, .group:hover .letter-e2,
-                .group:hover .letter-k, .group:hover .letter-i, .group:hover .letter-n,
-                .group:hover .letter-g {
-                  animation: drawLetter 0.25s ease-out forwards;
-                }
-
-                .group:hover .letter-h { animation-delay: 0.05s; }
-                .group:hover .letter-o { animation-delay: 0.1s; }
-                .group:hover .letter-m { animation-delay: 0.15s; }
-                .group:hover .letter-y { animation-delay: 0.2s; }
-                .group:hover .letter-e { animation-delay: 0.25s; }
-                .group:hover .letter-e2 { animation-delay: 0.3s; }
-                .group:hover .letter-k { animation-delay: 0.35s; }
-                .group:hover .letter-i { animation-delay: 0.4s; }
-                .group:hover .letter-n { animation-delay: 0.45s; }
-                .group:hover .letter-g { animation-delay: 0.5s; }
-
-                .group:hover .underline-animate {
-                  animation: drawUnderline 0.8s ease-out 1.3s forwards;
-                }
-              </style>
             </router-link>
           </div>
 
@@ -358,4 +290,68 @@ const closeMenu = () => {
 
 <style scoped>
 /* Nav styles */
+.letter-h, .letter-o, .letter-m, .letter-y, .letter-e, .letter-e2, .letter-k, .letter-i, .letter-i-dot, .letter-n, .letter-g {
+  stroke-dasharray: 100;
+  stroke-dashoffset: 100;
+  animation: drawLetter 0.3s ease-out forwards;
+}
+
+.letter-h { animation-delay: 0.1s; }
+.letter-o { animation-delay: 0.2s; }
+.letter-m { animation-delay: 0.3s; }
+.letter-y { animation-delay: 0.4s; }
+.letter-e { animation-delay: 0.5s; }
+.letter-e2 { animation-delay: 0.6s; }
+.letter-k { animation-delay: 0.7s; }
+.letter-i { animation-delay: 0.8s; }
+.letter-i-dot { animation: dotAppear 0.3s ease-out 1s forwards; opacity: 0; }
+.letter-n { animation-delay: 0.9s; }
+.letter-g { animation-delay: 1s; }
+
+.underline-animate {
+  stroke-dasharray: 300;
+  stroke-dashoffset: 300;
+  animation: drawUnderline 1s ease-out 1.5s forwards;
+}
+
+@keyframes drawLetter {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes drawUnderline {
+  to {
+    stroke-dashoffset: 0;
+  }
+}
+
+@keyframes dotAppear {
+  to {
+    opacity: 1;
+  }
+}
+
+/* 悬停效果 - 重新播放动画 */
+.group:hover .letter-h, .group:hover .letter-o, .group:hover .letter-m,
+.group:hover .letter-y, .group:hover .letter-e, .group:hover .letter-e2,
+.group:hover .letter-k, .group:hover .letter-i, .group:hover .letter-n,
+.group:hover .letter-g {
+  animation: drawLetter 0.25s ease-out forwards;
+}
+
+.group:hover .letter-h { animation-delay: 0.05s; }
+.group:hover .letter-o { animation-delay: 0.1s; }
+.group:hover .letter-m { animation-delay: 0.15s; }
+.group:hover .letter-y { animation-delay: 0.2s; }
+.group:hover .letter-e { animation-delay: 0.25s; }
+.group:hover .letter-e2 { animation-delay: 0.3s; }
+.group:hover .letter-k { animation-delay: 0.35s; }
+.group:hover .letter-i { animation-delay: 0.4s; }
+.group:hover .letter-n { animation-delay: 0.45s; }
+.group:hover .letter-g { animation-delay: 0.5s; }
+
+.group:hover .underline-animate {
+  animation: drawUnderline 0.8s ease-out 1.3s forwards;
+}
 </style>
