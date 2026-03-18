@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { onMounted } from 'vue'
 import VintageLamp from './components/VintageLamp.vue'
+import ClickConfetti from './components/ClickConfetti.vue'
 
 // 不蒜子统计
 onMounted(() => {
@@ -20,9 +21,11 @@ onMounted(() => {
   <VintageLamp />
   
   <!-- 站点统计 - 不蒜子 -->
-  <div class="fixed bottom-4 left-4 z-40 font-serif text-xs text-[var(--color-muted)] opacity-60 hover:opacity-100 transition-opacity">
-    <span id="busuanzi_container_site_uv">
-      <span id="busuanzi_value_site_uv">...</span> 人来过
-    </span>
-  </div>
+  <ClickConfetti :particle-count="60" :colors="['#c9a86c', '#d4b896', '#8b7355', '#a08060', '#e8d5b7', '#f5e6d3', '#d4a574']">
+    <div class="fixed bottom-4 left-4 z-40 font-serif text-xs text-[var(--color-muted)] opacity-60 hover:opacity-100 transition-opacity cursor-pointer px-3 py-2 rounded-lg hover:bg-[var(--color-warm)]/20">
+      <span id="busuanzi_container_site_uv">
+        <span id="busuanzi_value_site_uv">...</span> 人来过
+      </span>
+    </div>
+  </ClickConfetti>
 </template>
