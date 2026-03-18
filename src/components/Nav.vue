@@ -242,8 +242,8 @@ const closeMenu = () => {
               :key="nav"
               :to="`/${nav}`"
               @click="closeMenu"
-              class="block px-4 py-3 rounded-xl font-serif text-lg text-[var(--color-primary)] dark:text-[var(--color-cream)] hover:bg-[var(--color-warm)] dark:hover:bg-[var(--color-warm)]/20 transition-all duration-300"
-              :class="route.path === `/${nav}` ? 'bg-[var(--color-accent)]/10 text-[var(--color-accent)]' : ''"
+              class="block px-4 py-3 rounded-xl font-serif text-lg text-[var(--color-primary)] dark:text-[var(--color-secondary)] hover:bg-[var(--color-warm)] dark:hover:bg-[var(--color-warm)]/20 transition-all duration-300"
+              :class="route.path === `/${nav}` ? 'bg-[var(--color-accent)]/10 text-[var(--color-accent)] dark:text-[var(--color-accent)]' : ''"
             >
               {{ nav }}
             </router-link>
