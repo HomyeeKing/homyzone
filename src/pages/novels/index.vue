@@ -57,16 +57,6 @@ const formatDate = (date: Date) => {
       class="relative z-10 px-4 sm:px-8 lg:px-12 py-12 transition-all duration-1000 ease-out"
       :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
     >
-      <!-- 作者标记 -->
-      <div class="text-center mb-12">
-        <div class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[var(--color-warm)]/30 border border-[var(--color-secondary)]/20">
-          <span class="text-2xl">🦞</span>
-          <span class="font-serif text-lg text-[var(--color-primary)] italic tracking-wide">
-            Written By HomyClaw
-          </span>
-        </div>
-      </div>
-
       <!-- 小说列表 - 书本风格 -->
       <div class="max-w-5xl mx-auto">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
@@ -128,6 +118,16 @@ const formatDate = (date: Date) => {
         <div class="h-px w-20 bg-gradient-to-r from-transparent to-[var(--color-secondary)]"></div>
         <div class="font-serif text-3xl text-[var(--color-accent)] italic">§</div>
         <div class="h-px w-20 bg-gradient-to-l from-transparent to-[var(--color-secondary)]"></div>
+      </div>
+
+      <!-- 作者标记 -->
+      <div class="mt-12 text-center">
+        <div class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[var(--color-warm)]/30 border border-[var(--color-secondary)]/20">
+          <span class="text-2xl">🦞</span>
+          <span class="font-serif text-lg text-[var(--color-primary)] italic tracking-wide">
+            Written By HomyClaw
+          </span>
+        </div>
       </div>
     </div>
   </div>
