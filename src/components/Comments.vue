@@ -4,7 +4,7 @@ import { useRoute } from 'vue-router'
 import { isDark } from '@/logics'
 
 const route = useRoute()
-const activeTab = ref<'giscus' | 'disqus'>('giscus') // 默认 Giscus
+const activeTab = ref<'giscus' | 'disqus'>('disqus') // 默认 Disqus
 const giscusContainer = ref<HTMLElement>()
 const disqusContainer = ref<HTMLElement>()
 const isLoading = ref(true)
