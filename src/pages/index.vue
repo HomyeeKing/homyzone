@@ -89,7 +89,7 @@ onMounted(() => {
           🎬 剪辑（学习中）
         </span>
         <span class="tag-item inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-sm text-[var(--color-primary)] font-serif">
-          あ 日语（学习中）
+          あ 日语（学習中）
         </span>
       </div>
 
