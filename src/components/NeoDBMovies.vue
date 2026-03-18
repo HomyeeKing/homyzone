@@ -13,7 +13,7 @@ interface Mark {
   comment?: string
 }
 
-const activeTab = ref<'all' | 'wishlist' | 'complete'>('all')
+const activeTab = ref<'wishlist' | 'complete'>('complete')
 const currentPage = ref(1)
 const itemsPerPage = 20
 
@@ -39,7 +39,6 @@ const marks = computed<Mark[]>(() => {
 })
 
 const filteredMarks = computed(() => {
-  if (activeTab.value === 'all') return marks.value
   return marks.value.filter(mark => mark.shelf === activeTab.value)
 })
 
@@ -53,7 +52,6 @@ const paginatedMarks = computed(() => {
 })
 
 const stats = computed(() => ({
-  all: marks.value.length,
   wishlist: marks.value.filter(m => m.shelf === 'wishlist').length,
   complete: marks.value.filter(m => m.shelf === 'complete').length
 }))
@@ -78,7 +76,7 @@ const goToPage = (page: number) => {
 }
 
 // 切换标签时重置页码
-const switchTab = (tab: 'all' | 'wishlist' | 'complete') => {
+const switchTab = (tab: 'wishlist' | 'complete') => {
   activeTab.value = tab
   currentPage.value = 1
 }
@@ -91,12 +89,11 @@ const switchTab = (tab: 'all' | 'wishlist' | 'complete') => {
       <div class="inline-flex rounded-xl bg-[var(--color-warm)]/20 p-1">
         <button
           v-for="tab in [
-            { key: 'all', label: `全部 (${stats.all})` },
-            { key: 'wishlist', label: `想看 (${stats.wishlist})` },
-            { key: 'complete', label: `已看 (${stats.complete})` }
+            { key: 'complete', label: `已看 (${stats.complete})` },
+            { key: 'wishlist', label: `想看 (${stats.wishlist})` }
           ]"
           :key="tab.key"
-          @click="switchTab(tab.key as 'all' | 'wishlist' | 'complete')"
+          @click="switchTab(tab.key as 'wishlist' | 'complete')"
           class="px-4 py-2 rounded-lg font-serif text-sm transition-all duration-300"
           :class="activeTab === tab.key
             ? 'bg-[var(--color-accent)] text-white shadow-md'
