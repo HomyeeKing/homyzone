@@ -46,6 +46,7 @@ export default {
       const newHeaders = new Headers(response.headers);
       newHeaders.set('Access-Control-Allow-Origin', '*');
       newHeaders.set('CF-Cache-Status', 'HIT');
+      newHeaders.set('Referrer-Policy', 'origin-when-cross-origin');
       
       return new Response(response.body, {
         status: response.status,
