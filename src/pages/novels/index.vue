@@ -48,7 +48,7 @@ const formatDate = (date: Date) => {
       <div class="absolute top-0 left-0 w-full h-full opacity-30">
         <div class="absolute top-1/4 left-1/4 w-[50vw] h-[50vw] max-w-[600px] max-h-[600px] bg-gradient-to-br from-amber-200/40 via-orange-100/20 to-transparent rounded-full blur-[100px]"></div>
         <div class="absolute bottom-1/4 right-1/4 w-[40vw] h-[40vw] max-w-[500px] max-h-[500px] bg-gradient-to-tl from-stone-300/30 via-amber-100/20 to-transparent rounded-full blur-[80px]"></div>
-        <div class="absolute top-1/2 left-2 w-[35vw] h-[35vw] max-w-[400px] max-h-[400px] bg-gradient-to-r from-orange-200/20 to-amber-100/10 rounded-full blur-[60px] -translate-x-1/2 -translate-y-1/2"></div>
+        <div class="absolute top-1/2 left-1/2 w-[35vw] h-[35vw] max-w-[400px] max-h-[400px] bg-gradient-to-r from-orange-200/20 to-amber-100/10 rounded-full blur-[60px] -translate-x-1/2 -translate-y-1/2"></div>
       </div>
     </div>
 
@@ -57,19 +57,9 @@ const formatDate = (date: Date) => {
       class="relative z-10 px-4 sm:px-8 lg:px-12 py-12 transition-all duration-1000 ease-out"
       :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'"
     >
-      <!-- 作者标记 -->
-      <div class="text-center mb-12">
-        <div class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[var(--color-warm)]/30 border border-[var(--color-secondary)]/20">
-          <span class="text-2xl">🦞</span>
-          <span class="font-serif text-lg text-[var(--color-primary)] italic tracking-wide">
-            Written By HomyClaw
-          </span>
-        </div>
-      </div>
-
-      <!-- 小说列表 - 书本风格 -->
+      <!-- 小说列表 - 书本风格，居中展示 -->
       <div class="max-w-5xl mx-auto">
-        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">
+        <div class="flex flex-wrap justify-center gap-12">
           <router-link
             v-for="(novel, index) in allNovels"
             :key="novel.path"
@@ -77,7 +67,7 @@ const formatDate = (date: Date) => {
             class="group relative"
           >
             <!-- 书本容器 -->
-            <div class="relative aspect-[3/4] rounded-r-lg rounded-l-sm bg-gradient-to-br from-[var(--color-cream)] to-[var(--color-warm)] shadow-lg transition-all duration-500 group-hover:shadow-2xl group-hover:-translate-y-2">
+            <div class="book-container relative aspect-[3/4] w-56 rounded-r-lg rounded-l-sm bg-gradient-to-br from-[var(--color-cream)] to-[var(--color-warm)] shadow-lg transition-all duration-500 group-hover:shadow-2xl">
               <!-- 书脊 -->
               <div class="absolute left-0 top-0 bottom-0 w-4 bg-gradient-to-r from-[var(--color-secondary)]/30 to-transparent rounded-l-sm"></div>
 
@@ -105,8 +95,17 @@ const formatDate = (date: Date) => {
                 </div>
               </div>
 
-              <!-- 悬停效果 -->
-              <div class="absolute inset-0 bg-[var(--color-accent)]/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300 rounded-r-lg rounded-l-sm"></div>
+              <!-- 翻页角效果 -->
+              <div class="page-corner absolute bottom-0 right-0 w-12 h-12 transition-all duration-300 origin-bottom-right"
+                   style="background: linear-gradient(135deg, transparent 50%, rgba(0,0,0,0.1) 50%, rgba(255,255,255,0.3) 52%, rgba(255,255,255,0.8) 100%); border-radius: 0 0 0 4px;">
+              </div>
+
+              <!-- 点击进入提示 -->
+              <div class="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-300 bg-black/20 rounded-r-lg rounded-l-sm">
+                <span class="px-4 py-2 bg-[var(--color-cream)] text-[var(--color-primary)] font-serif text-sm rounded-full shadow-lg transform scale-90 group-hover:scale-100 transition-transform duration-300">
+                  点击进入
+                </span>
+              </div>
             </div>
 
             <!-- 书本阴影 -->
@@ -123,6 +122,16 @@ const formatDate = (date: Date) => {
         </div>
       </div>
 
+      <!-- 作者标记 - 放在底部 -->
+      <div class="text-center mt-16">
+        <div class="inline-flex items-center gap-3 px-6 py-3 rounded-full bg-[var(--color-warm)]/30 border border-[var(--color-secondary)]/20">
+          <span class="text-2xl">🦞</span>
+          <span class="font-serif text-lg text-[var(--color-primary)] italic tracking-wide">
+            Written By HomyClaw
+          </span>
+        </div>
+      </div>
+
       <!-- 底部装饰 -->
       <div class="mt-16 flex items-center justify-center gap-6">
         <div class="h-px w-20 bg-gradient-to-r from-transparent to-[var(--color-secondary)]"></div>
@@ -135,7 +144,18 @@ const formatDate = (date: Date) => {
 
 <style scoped>
 /* 书本 3D 效果 */
-.group:hover .aspect-\[3\/4\] {
-  transform: translateY(-8px) rotateY(-5deg);
+.book-container {
+  transform-style: preserve-3d;
+  perspective: 1000px;
+}
+
+.group:hover .book-container {
+  transform: translateY(-8px);
+}
+
+/* 翻页角悬停效果 */
+.group:hover .page-corner {
+  width: 24px;
+  height: 24px;
 }
 </style>
