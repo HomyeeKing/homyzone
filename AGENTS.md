@@ -4,36 +4,47 @@
 
 **⚠️ IMPORTANT: After completing any code changes, you MUST run `npm run build` to verify there are no errors before considering the task complete.**
 
+### Script区分
+
+**`npm run build`** (本地/提交前使用)
+- 只运行 Vite SSG 构建
+- 不依赖 NeoDB Token
+- 用于验证代码语法和构建是否正常
+
+**`npm run build:prod`** (生产部署使用)
+- 先运行 `fetch-data` 获取 NeoDB 数据
+- 再运行 Vite SSG 构建
+- 需要 NeoDB Token（Netlify 环境变量中设置）
+
 ### Why This Matters
 
-The project uses a custom build process that:
-1. Fetches data from NeoDB API (`npm run fetch-data`)
-2. Builds the static site with Vite SSG
+The project has two build modes:
+1. **Local/Pre-commit**: Only validates code can build correctly
+2. **Production**: Fetches fresh data + builds site
 
-Errors in the build process (like syntax errors in `fetch-neodb-data.js`) will cause deployment failures on Netlify.
+Errors in the build process (like syntax errors in Vue files) will cause deployment failures on Netlify.
 
-### Build Command
+### Build Command (Local)
 
 ```bash
 npm run build
 ```
 
 This command:
-- Runs `fetch-neodb-data.js` to get latest data from NeoDB
-- Builds the production site
+- Builds the static site with Vite SSG
 - Validates all code and dependencies
+- Does NOT require NeoDB Token
 
 ### Pre-commit Hook
 
-A pre-commit hook is configured to check `fetch-neodb-data.js` syntax before each commit. However, this only catches syntax errors - the full build may still fail due to other issues.
+A pre-commit hook is configured to run `npm run build` before each commit. This ensures code can build correctly without requiring NeoDB Token.
 
 ### When to Run Build
 
 Run `npm run build` after:
-- ✅ Modifying any JavaScript/TypeScript files
+- ✅ Modifying any JavaScript/TypeScript/Vue files
 - ✅ Changing build scripts or configuration
 - ✅ Adding new dependencies
-- ✅ Modifying data fetching logic
 - ✅ Any changes that could affect the build process
 
 ### Success Criteria
@@ -50,3 +61,12 @@ If build fails:
 2. Fix the root cause
 3. Run `npm run build` again
 4. Only commit after successful build
+
+### Production Build
+
+For production deployment (handled by Netlify):
+```bash
+npm run build:prod
+```
+
+This fetches fresh NeoDB data and builds the site. Only run this if you have `VITE_NEODB_TOKEN` set.
