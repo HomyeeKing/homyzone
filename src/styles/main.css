@@ -47,6 +47,48 @@ body {
   overflow: auto;
 }
 
+/* 移动端优化 */
+@media (max-width: 640px) {
+  .prose {
+    font-size: 0.95rem;
+    line-height: 1.7;
+  }
+  
+  .prose h1 {
+    font-size: 1.75rem;
+    line-height: 1.3;
+  }
+  
+  .prose h2 {
+    font-size: 1.5rem;
+    line-height: 1.35;
+  }
+  
+  .prose h3 {
+    font-size: 1.25rem;
+    line-height: 1.4;
+  }
+  
+  .prose pre {
+    font-size: 0.8rem;
+    padding: 0.75rem;
+  }
+  
+  .prose code {
+    font-size: 0.8rem;
+  }
+  
+  .prose img {
+    max-width: 100%;
+    height: auto;
+  }
+  
+  .prose blockquote {
+    padding-left: 1rem;
+    margin-left: 0;
+  }
+}
+
 #nprogress {
   pointer-events: none;
 }

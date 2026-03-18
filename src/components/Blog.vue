@@ -16,17 +16,17 @@ useEventListener(window, 'hashchange', navigate)
 </script>
 
 <template>
-  <div class="w1/2 mx-auto">
-    <div v-if="frontmatter.display || frontmatter.title" class="prose mb-8">
-      <h1>
+  <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-12 max-w-4xl mx-auto">
+    <div v-if="frontmatter.display || frontmatter.title" class="prose mb-8 max-w-none">
+      <h1 class="text-2xl sm:text-3xl lg:text-4xl">
         {{ frontmatter.title }}
       </h1>
-      <p v-if="frontmatter.date" class="text-gray-300">
+      <p v-if="frontmatter.date" class="text-gray-300 text-sm sm:text-base">
         {{ `${fromDateString(frontmatter.date)} · ${frontmatter.duration} ` }}
       </p>
     </div>
-    <img v-if="frontmatter.hero_image" :src="frontmatter.hero_image" alt="hero_image" width="900" height="500"
-      class="h-70 w-1/1 mb-5" object="fill">
+    <img v-if="frontmatter.hero_image" :src="frontmatter.hero_image" alt="hero_image" 
+      class="w-full h-auto max-h-64 sm:max-h-80 lg:max-h-96 object-cover mb-5 rounded-lg">
 
     <slot />
 
