@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue'
 import { isDark } from '@/logics'
 import { useRoute } from 'vue-router'
+import BorderBeam from './BorderBeam.vue'
 
 const navLists = ['blogs', 'novels', 'movies', 'dramas', 'reading']
 const route = useRoute()
@@ -24,8 +25,14 @@ const closeMenu = () => {
 </script>
 
 <template>
-  <nav class="fixed top-0 left-0 right-0 z-50 transition-all duration-1000 ease-out font-serif bg-[var(--c-bg)]/95 dark:bg-[var(--c-bg)]/95 backdrop-blur-xl shadow-lg border-b border-[var(--color-warm)] dark:border-[var(--color-warm)]/30"
-        :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'">
+  <BorderBeam
+    :color="isDark ? '#d4b896' : '#c9a86c'"
+    :width="2"
+    :duration="6"
+    class="fixed top-0 left-0 right-0 z-50"
+  >
+    <nav class="transition-all duration-1000 ease-out font-serif bg-[var(--c-bg)]/95 dark:bg-[var(--c-bg)]/95 backdrop-blur-xl"
+          :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'">
     <div class="px-4 sm:px-6 py-3">
       <div class="max-w-6xl mx-auto">
         <div class="flex items-center justify-between">
@@ -122,6 +129,7 @@ const closeMenu = () => {
       </div>
     </div>
   </nav>
+  </BorderBeam>
 
   <!-- Mobile Drawer -->
   <transition
@@ -208,9 +216,6 @@ const closeMenu = () => {
       </div>
     </div>
   </transition>
-
-  <!-- Spacer for fixed nav -->
-  <div class="h-16 sm:h-20"></div>
 </template>
 
 <style scoped>
