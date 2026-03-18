@@ -97,7 +97,7 @@ onMounted(() => {
           <div class="flex flex-col items-center p-4 rounded-lg bg-gradient-to-br from-[var(--c-card)] to-[var(--c-bg)] border border-[var(--color-border)] hover:border-[var(--color-accent)] transition-all duration-300 hover:scale-105">
             <span class="text-3xl mb-2">あ</span>
             <span class="font-serif text-sm text-[var(--color-primary)]">日语</span>
-            <span class="text-xs text-[var(--color-muted)] italic">（学习中）</span>
+            <span class="text-xs text-[var(--color-muted)] italic">（学習中）</span>
           </div>
         </div>
       </Highlighter>
