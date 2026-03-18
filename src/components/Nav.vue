@@ -40,14 +40,14 @@ const closeMenu = () => {
           <div class="flex items-center gap-2">
             <router-link to="/" class="relative group">
               <!-- 手写签名 SVG -->
-              <svg 
-                class="h-10 sm:h-12 w-auto overflow-visible" 
-                viewBox="0 0 220 50" 
-                fill="none" 
+              <svg
+                class="h-10 sm:h-12 w-auto overflow-visible"
+                viewBox="0 0 280 60"
+                fill="none"
                 xmlns="http://www.w3.org/2000/svg"
               >
                 <defs>
-                  <linearGradient id="signature-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                  <linearGradient id="homyeeking-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
                     <stop offset="0%" style="stop-color:var(--color-accent);stop-opacity:1" />
                     <stop offset="50%" style="stop-color:var(--color-primary);stop-opacity:1" />
                     <stop offset="100%" style="stop-color:var(--color-secondary);stop-opacity:1" />
@@ -60,65 +60,130 @@ const closeMenu = () => {
                     </feMerge>
                   </filter>
                 </defs>
-                
-                <!-- 签名文字 - 使用 path 实现手写动画 -->
-                <path
-                  id="signature-path"
-                  d="M20 35 C 20 35, 25 20, 35 25 C 45 30, 40 40, 50 35 C 60 30, 55 20, 65 25 C 75 30, 70 40, 80 35 L 85 35 M 90 30 C 95 25, 100 25, 105 30 C 110 35, 105 40, 100 38 C 95 36, 95 32, 100 30 C 105 28, 110 30, 115 35 L 120 35 M 125 25 C 130 20, 140 20, 145 25 C 150 30, 145 38, 140 38 C 135 38, 135 30, 140 28 C 145 26, 150 28, 155 32 L 160 35 M 165 30 C 170 25, 180 25, 185 30 C 190 35, 185 40, 180 40 C 175 40, 175 32, 180 30 C 185 28, 190 30, 195 35"
-                  stroke="url(#signature-gradient)"
-                  stroke-width="3"
-                  fill="none"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  filter="url(#glow)"
-                  class="signature-animate"
-                />
-                
+
+                <!-- homyeeking - 手写艺术字体 SVG path (每个字母的波浪连笔) -->
+                <g filter="url(#glow)">
+                  <!-- h -->
+                  <path d="M15 38 L15 28 C15 22, 20 20, 25 22 C30 24, 30 28, 30 32 L30 38"
+                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
+                        stroke-linecap="round" class="letter-h"/>
+                  <!-- o -->
+                  <ellipse cx="42" cy="32" rx="6" ry="8"
+                           stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
+                           class="letter-o"/>
+                  <!-- m -->
+                  <path d="M55 38 L55 28 L62 35 L69 28 L76 38"
+                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
+                        stroke-linecap="round" stroke-linejoin="round" class="letter-m"/>
+                  <!-- y -->
+                  <path d="M83 28 L88 35 C92 40, 95 38, 98 35 C101 32, 101 28, 101 24"
+                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
+                        stroke-linecap="round" class="letter-y"/>
+                  <!-- e -->
+                  <path d="M108 32 C108 26, 115 24, 120 28 C124 31, 123 38, 115 38 C108 38, 105 32, 108 28 C111 25, 118 26, 120 30"
+                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
+                        stroke-linecap="round" class="letter-e"/>
+                  <!-- e (second) -->
+                  <path d="M127 32 C127 26, 134 24, 139 28 C143 31, 142 38, 134 38 C127 38, 124 32, 127 28 C130 25, 137 26, 139 30"
+                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
+                        stroke-linecap="round" class="letter-e2"/>
+                  <!-- k -->
+                  <path d="M146 22 L146 38 M146 30 L156 24 M146 32 L156 38"
+                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
+                        stroke-linecap="round" class="letter-k"/>
+                  <!-- i -->
+                  <line x1="163" y1="24" x2="163" y2="38"
+                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" stroke-linecap="round" class="letter-i"/>
+                  <circle cx="163" cy="20" r="2" fill="url(#homyeeking-gradient)" class="letter-i-dot"/>
+                  <!-- n -->
+                  <path d="M170 38 L170 28 C170 22, 180 22, 180 28 L180 38"
+                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
+                        stroke-linecap="round" class="letter-n"/>
+                  <!-- g -->
+                  <path d="M187 32 C187 26, 192 24, 197 26 C202 28, 202 34, 197 36 C192 38, 188 38, 185 35 L185 40"
+                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
+                        stroke-linecap="round" class="letter-g"/>
+                </g>
+
                 <!-- 装饰下划线 -->
-                <path
-                  d="M10 45 Q 110 50, 210 45"
+                <line
+                  x1="5"
+                  y1="48"
+                  x2="275"
+                  y2="48"
                   stroke="var(--color-accent)"
                   stroke-width="2"
-                  fill="none"
                   stroke-linecap="round"
                   class="underline-animate"
                   opacity="0.6"
                 />
               </svg>
-              
+
               <!-- CSS 动画样式 -->
               <style scoped>
-                .signature-animate {
-                  stroke-dasharray: 500;
-                  stroke-dashoffset: 500;
-                  animation: drawSignature 2.5s ease-out forwards;
+                .letter-h, .letter-o, .letter-m, .letter-y, .letter-e, .letter-e2, .letter-k, .letter-i, .letter-i-dot, .letter-n, .letter-g {
+                  stroke-dasharray: 100;
+                  stroke-dashoffset: 100;
+                  animation: drawLetter 0.3s ease-out forwards;
                 }
-                
+
+                .letter-h { animation-delay: 0.1s; }
+                .letter-o { animation-delay: 0.2s; }
+                .letter-m { animation-delay: 0.3s; }
+                .letter-y { animation-delay: 0.4s; }
+                .letter-e { animation-delay: 0.5s; }
+                .letter-e2 { animation-delay: 0.6s; }
+                .letter-k { animation-delay: 0.7s; }
+                .letter-i { animation-delay: 0.8s; }
+                .letter-i-dot { animation: dotAppear 0.3s ease-out 1s forwards; opacity: 0; }
+                .letter-n { animation-delay: 0.9s; }
+                .letter-g { animation-delay: 1s; }
+
                 .underline-animate {
                   stroke-dasharray: 300;
                   stroke-dashoffset: 300;
-                  animation: drawUnderline 1s ease-out 2s forwards;
+                  animation: drawUnderline 1s ease-out 1.5s forwards;
                 }
-                
-                @keyframes drawSignature {
+
+                @keyframes drawLetter {
                   to {
                     stroke-dashoffset: 0;
                   }
                 }
-                
+
                 @keyframes drawUnderline {
                   to {
                     stroke-dashoffset: 0;
                   }
                 }
-                
-                /* 悬停效果 - 重新播放动画 */
-                .group:hover .signature-animate {
-                  animation: drawSignature 2s ease-out forwards;
+
+                @keyframes dotAppear {
+                  to {
+                    opacity: 1;
+                  }
                 }
-                
+
+                /* 悬停效果 - 重新播放动画 */
+                .group:hover .letter-h, .group:hover .letter-o, .group:hover .letter-m,
+                .group:hover .letter-y, .group:hover .letter-e, .group:hover .letter-e2,
+                .group:hover .letter-k, .group:hover .letter-i, .group:hover .letter-n,
+                .group:hover .letter-g {
+                  animation: drawLetter 0.25s ease-out forwards;
+                }
+
+                .group:hover .letter-h { animation-delay: 0.05s; }
+                .group:hover .letter-o { animation-delay: 0.1s; }
+                .group:hover .letter-m { animation-delay: 0.15s; }
+                .group:hover .letter-y { animation-delay: 0.2s; }
+                .group:hover .letter-e { animation-delay: 0.25s; }
+                .group:hover .letter-e2 { animation-delay: 0.3s; }
+                .group:hover .letter-k { animation-delay: 0.35s; }
+                .group:hover .letter-i { animation-delay: 0.4s; }
+                .group:hover .letter-n { animation-delay: 0.45s; }
+                .group:hover .letter-g { animation-delay: 0.5s; }
+
                 .group:hover .underline-animate {
-                  animation: drawUnderline 0.8s ease-out 1.8s forwards;
+                  animation: drawUnderline 0.8s ease-out 1.3s forwards;
                 }
               </style>
             </router-link>
