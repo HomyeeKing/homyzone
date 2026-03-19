@@ -12,7 +12,9 @@ const navigate = () => {
     document.querySelector(location.hash)?.scrollIntoView({ behavior: 'smooth' })
 }
 
-useEventListener(window, 'hashchange', navigate)
+if (isClient) {
+  useEventListener(window, 'hashchange', navigate)
+}
 </script>
 
 <template>
