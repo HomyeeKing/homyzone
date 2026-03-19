@@ -135,7 +135,7 @@ const formatFullDate = (dateStr: string) => {
             <button v-for="f in ['all','year','month','week']" :key="f"
               @click="timeFilter = f as typeof timeFilter.value"
               class="px-4 py-1.5 rounded-full text-sm font-serif transition-all"
-              :class="timeFilter === f ? 'bg-[var(--color-accent)] text-white' : 'text-[var(--color-muted)] hover:text-[var(--color-primary)]'">
+              :class="timeFilter === f ? 'bg-[var(--color-accent)] text-[var(--color-primary)]' : 'text-[var(--color-muted)] hover:text-[var(--color-primary)]'">
               {{ f === 'all' ? '全部' : f === 'year' ? '今年' : f === 'month' ? '本月' : '本周' }}
             </button>
           </div>
