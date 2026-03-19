@@ -27,8 +27,8 @@ const filteredPosts = computed(() => {
         const monthAgo = new Date(now.getFullYear(), now.getMonth() - 1, now.getDate());
         return postDate >= monthAgo;
       case 'year':
-        const yearAgo = new Date(now.getFullYear() - 1, now.getMonth(), now.getDate());
-        return postDate >= yearAgo;
+        // 只显示当前年份的文章
+        return postDate.getFullYear() === now.getFullYear();
       default:
         return true;
     }
