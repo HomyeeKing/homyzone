@@ -120,12 +120,6 @@ const formatFullDate = (dateStr: string) => {
 
     <div class="relative px-4 sm:px-8 lg:px-12 py-8 transition-all duration-1000 ease-out"
          :class="isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-10'">
-      
-      <!-- 标题 -->
-      <div class="text-center mb-8">
-        <h1 class="font-serif text-4xl md:text-5xl text-[var(--color-primary)] mb-2">Zone</h1>
-        <p class="font-serif text-sm text-[var(--color-muted)] tracking-widest">记录思考与感悟</p>
-      </div>
 
       <!-- 控制栏 -->
       <div class="max-w-6xl mx-auto mb-8">
