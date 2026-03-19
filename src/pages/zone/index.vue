@@ -144,7 +144,7 @@ const formatFullDate = (dateStr: string) => {
           <div class="flex items-center gap-2">
             <button @click="viewMode = 'sticky'"
               class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all"
-              :class="viewMode === 'sticky' ? 'bg-[var(--color-accent)]/10 text-[var(--color-accent)]' : 'text-[var(--color-muted)]'">
+              :class="viewMode === 'sticky' ? 'bg-[var(--color-accent)]/20 text-[var(--color-primary)]' : 'text-[var(--color-muted)] hover:text-[var(--color-primary)]'">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <rect x="3" y="3" width="8" height="8" rx="1"/><rect x="13" y="3" width="8" height="8" rx="1"/>
                 <rect x="3" y="13" width="8" height="8" rx="1"/><rect x="13" y="13" width="8" height="8" rx="1"/>
@@ -153,7 +153,7 @@ const formatFullDate = (dateStr: string) => {
             </button>
             <button @click="viewMode = 'card'"
               class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all"
-              :class="viewMode === 'card' ? 'bg-[var(--color-accent)]/10 text-[var(--color-accent)]' : 'text-[var(--color-muted)]'">
+              :class="viewMode === 'card' ? 'bg-[var(--color-accent)]/20 text-[var(--color-primary)]' : 'text-[var(--color-muted)] hover:text-[var(--color-primary)]'">
               <svg class="w-4 h-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
                 <rect x="4" y="4" width="16" height="16" rx="2"/><line x1="4" y1="9" x2="20" y2="9"/>
               </svg>
