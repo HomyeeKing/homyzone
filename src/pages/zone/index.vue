@@ -2,6 +2,13 @@
 import { ref, onMounted, computed } from 'vue';
 import posts from './posts.json'
 import Comments from '@/components/Comments.vue';
+import MarkdownIt from 'markdown-it';
+
+const md = new MarkdownIt({
+  html: true,
+  linkify: true,
+  typographer: true,
+});
 
 const isVisible = ref(false);
 const viewMode = ref<'sticky' | 'card'>('sticky');
@@ -217,16 +224,14 @@ const formatFullDate = (dateStr: string) => {
 
           <div class="space-y-3">
             <div v-for="(post, index) in groupedPosts[year]" :key="index"
-              class="group flex items-start gap-4 p-4 rounded-xl bg-[var(--color-warm)]/30 hover:bg-[var(--color-warm)]/50 transition-all cursor-pointer">
-              <!-- 日期 -->
-              <div class="flex-shrink-0 w-16 text-center">
-                <div class="text-xs text-[var(--color-muted)]">{{ formatFullDate(post.date) }}</div>
+              class="group p-4 rounded-xl bg-[var(--color-warm)]/30 hover:bg-[var(--color-warm)]/50 transition-all cursor-pointer">
+              <!-- 头部：日期和标题 -->
+              <div class="flex items-center gap-3 mb-2">
+                <span class="text-xs text-[var(--color-muted)] font-serif">{{ formatFullDate(post.date) }}</span>
+                <h3 class="font-serif text-base font-medium text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors">{{ post.title }}</h3>
               </div>
-              <!-- 内容 -->
-              <div class="flex-1 min-w-0">
-                <h3 class="font-serif text-base font-medium text-[var(--color-primary)] group-hover:text-[var(--color-accent)] transition-colors line-clamp-1">{{ post.title }}</h3>
-                <p class="text-sm text-[var(--color-muted)] line-clamp-2 mt-1">{{ post.content }}</p>
-              </div>
+              <!-- 内容 - 支持 Markdown -->
+              <div class="prose prose-sm dark:prose-invert max-w-none text-[var(--color-muted)]" v-html="md.render(post.content)"></div>
             </div>
           </div>
         </div>
