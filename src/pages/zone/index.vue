@@ -11,6 +11,11 @@ onMounted(() => {
   setTimeout(() => {
     isVisible.value = true;
   }, 100);
+  
+  // 移动端默认使用列表视图
+  if (typeof window !== 'undefined' && window.innerWidth < 768) {
+    viewMode.value = 'card';
+  }
 });
 
 // 根据时间筛选过滤文章
@@ -166,9 +171,9 @@ const formatFullDate = (dateStr: string) => {
           </div>
 
           <!-- 随意便签墙 - 使用 flex wrap 实现错落布局 -->
-          <div class="flex flex-wrap justify-center md:justify-start gap-6 md:gap-8 p-4">
+          <div class="flex flex-wrap justify-center lg:justify-start gap-6 md:gap-8 p-4">
             <div v-for="(post, index) in groupedPosts[year]" :key="index"
-              class="group relative w-[160px] sm:w-[180px] p-4 cursor-pointer transition-all duration-300 hover:z-10"
+              class="group relative w-[200px] p-4 cursor-pointer transition-all duration-300 hover:z-10"
               :style="{
                 backgroundColor: getStickyColor(index).bg,
                 transform: `rotate(${getRandomStyle(index).rotation}deg) translate(${getRandomStyle(index).xOffset}px, ${getRandomStyle(index).yOffset}px)`,
