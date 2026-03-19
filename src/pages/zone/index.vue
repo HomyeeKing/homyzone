@@ -189,11 +189,11 @@ const formatFullDate = (dateStr: string) => {
                   {{ formatShortDate(post.date) }}
                 </div>
                 <!-- 标题 -->
-                <h3 class="font-serif text-sm font-medium text-gray-800 dark:text-gray-800 mb-2 line-clamp-2 leading-tight">
+                <h3 class="font-serif text-sm font-medium text-gray-800 dark:text-gray-800 mb-2 leading-tight">
                   {{ post.title }}
                 </h3>
                 <!-- 内容预览 -->
-                <p class="text-xs text-gray-600 dark:text-gray-600 leading-relaxed line-clamp-4">
+                <p class="text-xs text-gray-600 dark:text-gray-600 leading-relaxed">
                   {{ post.content }}
                 </p>
               </div>
