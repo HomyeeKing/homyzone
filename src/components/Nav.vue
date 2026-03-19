@@ -3,8 +3,16 @@ import { ref, onMounted } from 'vue'
 import { isDark } from '@/logics'
 import { useRoute } from 'vue-router'
 import BorderBeam from './BorderBeam.vue'
+import Logo from './Logo.vue'
 
-const navLists = ['zone', 'blogs', 'novels', 'movies', 'dramas', 'reading']
+const navLists = [
+  { key: 'zone', label: '碎碎念' },
+  { key: 'blogs', label: '博客' },
+  { key: 'novels', label: '小说' },
+  { key: 'movies', label: '电影' },
+  { key: 'dramas', label: '剧集' },
+  { key: 'reading', label: '阅读' },
+]
 const route = useRoute()
 const isVisible = ref(false)
 const isMenuOpen = ref(false)
@@ -36,88 +44,10 @@ const closeMenu = () => {
     <div class="px-4 sm:px-6 py-3">
       <div class="max-w-6xl mx-auto">
         <div class="flex items-center justify-between">
-          <!-- Logo/Brand - 手写艺术签名 -->
+          <!-- Logo/Brand - 手写衬线体签名 -->
           <div class="flex items-center gap-2">
             <router-link to="/" class="relative group">
-              <!-- 手写签名 SVG -->
-              <svg
-                class="h-10 sm:h-12 w-auto overflow-visible"
-                viewBox="0 0 280 60"
-                fill="none"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <defs>
-                  <linearGradient id="homyeeking-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                    <stop offset="0%" style="stop-color:var(--color-accent);stop-opacity:1" />
-                    <stop offset="50%" style="stop-color:var(--color-primary);stop-opacity:1" />
-                    <stop offset="100%" style="stop-color:var(--color-secondary);stop-opacity:1" />
-                  </linearGradient>
-                  <filter id="glow">
-                    <feGaussianBlur stdDeviation="2" result="coloredBlur"/>
-                    <feMerge>
-                      <feMergeNode in="coloredBlur"/>
-                      <feMergeNode in="SourceGraphic"/>
-                    </feMerge>
-                  </filter>
-                </defs>
-
-                <!-- homyeeking - 手写艺术字体 SVG path (每个字母的波浪连笔) -->
-                <g filter="url(#glow)">
-                  <!-- h -->
-                  <path d="M15 38 L15 28 C15 22, 20 20, 25 22 C30 24, 30 28, 30 32 L30 38"
-                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
-                        stroke-linecap="round" class="letter-h"/>
-                  <!-- o -->
-                  <ellipse cx="42" cy="32" rx="6" ry="8"
-                           stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
-                           class="letter-o"/>
-                  <!-- m -->
-                  <path d="M55 38 L55 28 L62 35 L69 28 L76 38"
-                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
-                        stroke-linecap="round" stroke-linejoin="round" class="letter-m"/>
-                  <!-- y -->
-                  <path d="M83 28 L88 35 C92 40, 95 38, 98 35 C101 32, 101 28, 101 24"
-                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
-                        stroke-linecap="round" class="letter-y"/>
-                  <!-- e -->
-                  <path d="M108 32 C108 26, 115 24, 120 28 C124 31, 123 38, 115 38 C108 38, 105 32, 108 28 C111 25, 118 26, 120 30"
-                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
-                        stroke-linecap="round" class="letter-e"/>
-                  <!-- e (second) -->
-                  <path d="M127 32 C127 26, 134 24, 139 28 C143 31, 142 38, 134 38 C127 38, 124 32, 127 28 C130 25, 137 26, 139 30"
-                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
-                        stroke-linecap="round" class="letter-e2"/>
-                  <!-- k -->
-                  <path d="M146 22 L146 38 M146 30 L156 24 M146 32 L156 38"
-                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
-                        stroke-linecap="round" class="letter-k"/>
-                  <!-- i -->
-                  <line x1="163" y1="24" x2="163" y2="38"
-                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" stroke-linecap="round" class="letter-i"/>
-                  <circle cx="163" cy="20" r="2" fill="url(#homyeeking-gradient)" class="letter-i-dot"/>
-                  <!-- n -->
-                  <path d="M170 38 L170 28 C170 22, 180 22, 180 28 L180 38"
-                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
-                        stroke-linecap="round" class="letter-n"/>
-                  <!-- g -->
-                  <path d="M187 32 C187 26, 192 24, 197 26 C202 28, 202 34, 197 36 C192 38, 188 38, 185 35 L185 40"
-                        stroke="url(#homyeeking-gradient)" stroke-width="2.5" fill="none"
-                        stroke-linecap="round" class="letter-g"/>
-                </g>
-
-                <!-- 装饰下划线 -->
-                <line
-                  x1="5"
-                  y1="48"
-                  x2="275"
-                  y2="48"
-                  stroke="var(--color-accent)"
-                  stroke-width="2"
-                  stroke-linecap="round"
-                  class="underline-animate"
-                  opacity="0.6"
-                />
-              </svg>
+              <Logo />
             </router-link>
           </div>
 
@@ -125,14 +55,14 @@ const closeMenu = () => {
           <div class="hidden md:flex items-center justify-center gap-1">
             <router-link
               v-for="nav in navLists"
-              :key="nav"
-              :to="`/${nav}`"
-              class="relative px-3 py-2 text-sm font-serif font-medium text-[var(--color-muted)] rounded-lg transition-all duration-300 hover:text-[var(--color-primary)] tracking-wide uppercase"
-              :class="route.path === `/${nav}` ? 'text-[var(--color-primary)]' : ''"
+              :key="nav.key"
+              :to="`/${nav.key}`"
+              class="relative px-3 py-2 text-sm font-serif font-medium text-[var(--color-muted)] rounded-lg transition-all duration-300 hover:text-[var(--color-primary)] tracking-wide"
+              :class="route.path === `/${nav.key}` ? 'text-[var(--color-primary)]' : ''"
             >
-              <span class="relative z-10">{{ nav }}</span>
+              <span class="relative z-10">{{ nav.label }}</span>
               <div
-                v-if="route.path === `/${nav}`"
+                v-if="route.path === `/${nav.key}`"
                 class="absolute inset-0 bg-[var(--color-accent)]/10 rounded-lg"
               ></div>
             </router-link>
@@ -239,13 +169,13 @@ const closeMenu = () => {
           <div class="space-y-2">
             <router-link
               v-for="nav in navLists"
-              :key="nav"
-              :to="`/${nav}`"
+              :key="nav.key"
+              :to="`/${nav.key}`"
               @click="closeMenu"
               class="block px-4 py-3 rounded-xl font-serif text-lg text-[var(--color-primary)] dark:text-[var(--color-secondary)] hover:bg-[var(--color-warm)] dark:hover:bg-[var(--color-warm)]/20 transition-all duration-300"
-              :class="route.path === `/${nav}` ? 'bg-[var(--color-accent)]/10 text-[var(--color-accent)] dark:text-[var(--color-accent)]' : ''"
+              :class="route.path === `/${nav.key}` ? 'bg-[var(--color-accent)]/10 text-[var(--color-accent)] dark:text-[var(--color-accent)]' : ''"
             >
-              {{ nav }}
+              {{ nav.label }}
             </router-link>
           </div>
 
@@ -289,69 +219,42 @@ const closeMenu = () => {
 </template>
 
 <style scoped>
-/* Nav styles */
-.letter-h, .letter-o, .letter-m, .letter-y, .letter-e, .letter-e2, .letter-k, .letter-i, .letter-i-dot, .letter-n, .letter-g {
-  stroke-dasharray: 100;
-  stroke-dashoffset: 100;
-  animation: drawLetter 0.3s ease-out forwards;
+/* Logo 悬停时重新播放动画 */
+.group:hover :deep(.letter-h),
+.group:hover :deep(.letter-o),
+.group:hover :deep(.letter-m),
+.group:hover :deep(.letter-y),
+.group:hover :deep(.letter-e),
+.group:hover :deep(.letter-e2),
+.group:hover :deep(.letter-k),
+.group:hover :deep(.letter-i),
+.group:hover :deep(.letter-n),
+.group:hover :deep(.letter-g) {
+  animation: drawLetter 0.5s ease-out forwards;
 }
 
-.letter-h { animation-delay: 0.1s; }
-.letter-o { animation-delay: 0.2s; }
-.letter-m { animation-delay: 0.3s; }
-.letter-y { animation-delay: 0.4s; }
-.letter-e { animation-delay: 0.5s; }
-.letter-e2 { animation-delay: 0.6s; }
-.letter-k { animation-delay: 0.7s; }
-.letter-i { animation-delay: 0.8s; }
-.letter-i-dot { animation: dotAppear 0.3s ease-out 1s forwards; opacity: 0; }
-.letter-n { animation-delay: 0.9s; }
-.letter-g { animation-delay: 1s; }
+.group:hover :deep(.letter-h) { animation-delay: 0.05s; }
+.group:hover :deep(.letter-o) { animation-delay: 0.1s; }
+.group:hover :deep(.letter-m) { animation-delay: 0.15s; }
+.group:hover :deep(.letter-y) { animation-delay: 0.2s; }
+.group:hover :deep(.letter-e) { animation-delay: 0.25s; }
+.group:hover :deep(.letter-e2) { animation-delay: 0.3s; }
+.group:hover :deep(.letter-k) { animation-delay: 0.35s; }
+.group:hover :deep(.letter-i) { animation-delay: 0.4s; }
+.group:hover :deep(.letter-n) { animation-delay: 0.45s; }
+.group:hover :deep(.letter-g) { animation-delay: 0.5s; }
 
-.underline-animate {
-  stroke-dasharray: 300;
-  stroke-dashoffset: 300;
-  animation: drawUnderline 1s ease-out 1.5s forwards;
+.group:hover :deep(.underline-draw) {
+  animation: drawUnderline 0.8s ease-out 0.8s forwards;
 }
 
 @keyframes drawLetter {
-  to {
-    stroke-dashoffset: 0;
-  }
+  from { stroke-dashoffset: 200; }
+  to { stroke-dashoffset: 0; }
 }
 
 @keyframes drawUnderline {
-  to {
-    stroke-dashoffset: 0;
-  }
-}
-
-@keyframes dotAppear {
-  to {
-    opacity: 1;
-  }
-}
-
-/* 悬停效果 - 重新播放动画 */
-.group:hover .letter-h, .group:hover .letter-o, .group:hover .letter-m,
-.group:hover .letter-y, .group:hover .letter-e, .group:hover .letter-e2,
-.group:hover .letter-k, .group:hover .letter-i, .group:hover .letter-n,
-.group:hover .letter-g {
-  animation: drawLetter 0.25s ease-out forwards;
-}
-
-.group:hover .letter-h { animation-delay: 0.05s; }
-.group:hover .letter-o { animation-delay: 0.1s; }
-.group:hover .letter-m { animation-delay: 0.15s; }
-.group:hover .letter-y { animation-delay: 0.2s; }
-.group:hover .letter-e { animation-delay: 0.25s; }
-.group:hover .letter-e2 { animation-delay: 0.3s; }
-.group:hover .letter-k { animation-delay: 0.35s; }
-.group:hover .letter-i { animation-delay: 0.4s; }
-.group:hover .letter-n { animation-delay: 0.45s; }
-.group:hover .letter-g { animation-delay: 0.5s; }
-
-.group:hover .underline-animate {
-  animation: drawUnderline 0.8s ease-out 1.3s forwards;
+  from { stroke-dashoffset: 500; }
+  to { stroke-dashoffset: 0; }
 }
 </style>
