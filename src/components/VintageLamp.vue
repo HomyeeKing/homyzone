@@ -46,7 +46,7 @@ const handleClick = () => {
 <template>
   <div 
     class="fixed bottom-2 sm:bottom-4 right-2 sm:right-4 z-50 cursor-pointer transition-transform duration-300 hover:scale-105" 
-    :style="{ width: isMobile.value ? '100px' : '150px', height: isMobile.value ? '140px' : '210px' }"
+    :style="{ width: isMobile ? '100px' : '150px', height: isMobile ? '140px' : '210px' }"
     @click="toggleTheme"
     title="点击切换主题"
   >
