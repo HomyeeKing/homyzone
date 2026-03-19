@@ -124,8 +124,8 @@ const formatFullDate = (dateStr: string) => {
       <!-- 控制栏 -->
       <div class="max-w-6xl mx-auto mb-8">
         <div class="flex flex-col sm:flex-row items-center justify-between gap-4">
-          <!-- 时间筛选 -->
-          <div class="flex items-center gap-1 bg-[var(--color-warm)]/30 rounded-full p-1">
+          <!-- 时间筛选 - 只在便签模式下显示 -->
+          <div v-if="viewMode === 'sticky'" class="flex items-center gap-1 bg-[var(--color-warm)]/30 rounded-full p-1">
             <button v-for="f in ['all','year','month','week']" :key="f"
               @click="timeFilter = f as typeof timeFilter.value"
               class="px-4 py-1.5 rounded-full text-sm font-serif transition-all"
@@ -135,7 +135,7 @@ const formatFullDate = (dateStr: string) => {
           </div>
 
           <!-- 视图切换 -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2" :class="viewMode === 'card' ? 'ml-auto' : ''">
             <button @click="viewMode = 'sticky'"
               class="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all"
               :class="viewMode === 'sticky' ? 'bg-[var(--color-accent)]/20 text-[var(--color-primary)]' : 'text-[var(--color-muted)] hover:text-[var(--color-primary)]'">
