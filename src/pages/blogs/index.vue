@@ -17,9 +17,9 @@ const allPosts = computed(() => {
     .getRoutes()
     .filter((i) => !i.meta.frontmatter?.hidden)
     .filter((i) => !i.meta.frontmatter?.isCategory)
-    .filter((i) => !i.path.endsWith('.html'))
     .filter((i) => i.path.startsWith('/blogs/') && i.path !== '/blogs')
     .filter((i) => !i.path.includes('/novels'))
+    .filter((i) => !i.path.includes('/.'))
     .map((route) => ({
       ...route,
       date: route.meta.frontmatter?.date
