@@ -56,8 +56,8 @@ const adjacentPosts = computed(() => {
 
 <template>
   <div class="w-full px-4 sm:px-6 lg:px-8 xl:px-12 max-w-4xl mx-auto">
-    <!-- 只在 display 不为 false 时显示标题 -->
-    <div v-if="frontmatter.display !== false && frontmatter.title" class="prose mb-8 max-w-none">
+    <!-- 统一显示 frontmatter 标题 -->
+    <div v-if="frontmatter.title" class="prose mb-8 max-w-none">
       <h1 class="text-2xl sm:text-3xl lg:text-4xl">
         {{ frontmatter.title }}
       </h1>
