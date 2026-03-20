@@ -5,8 +5,6 @@ lang: zh
 duration: 3min
 ---
 
-# 如何写好 Agent Skill 的 Description
-
 > 参考：https://agentskills.io/skill-creation/optimizing-descriptions
 
 ## 核心原则
