@@ -13,6 +13,7 @@ onMounted(() => {
 
 // 获取所有文章（非分类页面，排除 novels）
 const allPosts = computed(() => {
+  const seen = new Set<string>();
   const posts = router
     .getRoutes()
     .filter((i) => !i.meta.frontmatter?.hidden)
@@ -20,6 +21,15 @@ const allPosts = computed(() => {
     .filter((i) => i.path.startsWith('/blogs/') && i.path !== '/blogs')
     .filter((i) => !i.path.includes('/novels'))
     .filter((i) => !i.path.includes('/.'))
+    .filter((i) => {
+      // 去重：基于路径，忽略 .html 后缀
+      const normalizedPath = i.path.replace(/\.html$/, '');
+      if (seen.has(normalizedPath)) {
+        return false;
+      }
+      seen.add(normalizedPath);
+      return true;
+    })
     .map((route) => ({
       ...route,
       date: route.meta.frontmatter?.date
