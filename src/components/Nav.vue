@@ -6,7 +6,7 @@ import BorderBeam from './BorderBeam.vue'
 import Logo from './Logo.vue'
 
 const navLists = [
-  { key: 'zone', label: '碎碎念' },
+  // { key: 'zone', label: '碎碎念' }, // 已隐藏
   { key: 'blogs', label: '博客' },
   { key: 'novels', label: '小说' },
   { key: 'movies', label: '电影' },
