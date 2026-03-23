@@ -1,4 +1,9 @@
-# OpenCLI 深度解析：如何将任意网站变成 CLI 工具
+---
+title: OpenCLI 深度解析：如何将任意网站变成 CLI 工具
+date: 2026-03-23 17:25:00
+lang: zh
+duration: 15min
+---
 
 > 项目地址：https://github.com/jackwener/opencli
 

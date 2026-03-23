@@ -1,4 +1,9 @@
-# ACP：Agent Computer Protocol - AI 代理与计算机的通用语言
+---
+title: ACP：Agent Computer Protocol - AI 代理与计算机的通用语言
+date: 2026-03-23 23:06:00
+lang: zh
+duration: 12min
+---
 
 > 让 AI 像人类一样使用计算机的协议标准
 
