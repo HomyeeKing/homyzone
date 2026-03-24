@@ -1,323 +1,312 @@
 ---
-title: ACP：Agent Computer Protocol - AI 代理与计算机的通用语言
-date: 2026-03-23 23:06:00
+title: ACP：Agent Communication Protocol - AI Agent 互操作性的开放标准
+date: 2026-03-24
 lang: zh
-duration: 12min
+duration: 10min
 ---
 
-> 让 AI 像人类一样使用计算机的协议标准
+> 由 Linux Foundation 主导的开放标准，让 AI Agent 能够跨框架、跨组织无缝协作
 
 ## 什么是 ACP？
 
-**ACP (Agent Computer Protocol)** 是一种开放协议标准，定义了 AI Agent 如何与计算机系统进行安全、可控的交互。它解决了 AI 从"对话"到"行动"的关键鸿沟。
+**ACP (Agent Communication Protocol)** 是一个开放的协议标准，用于解决 AI Agent 之间的互操作性挑战。它允许不同框架、不同团队构建的 Agent 通过标准化的 RESTful API 进行通信。
 
-### 核心定位
+ACP 由 [BeeAI](https://github.com/i-am-bee) 主导开发，作为 Linux Foundation 下的开放标准，采用透明、社区驱动的治理模式。
+
+## ACP 解决了什么问题？
+
+### 问题 1：Agent 孤岛
+
+现代 AI Agent 通常在不同的框架中独立构建，导致：
+- 每个框架有自己的通信模式和 API
+- Agent 之间难以互相发现和协作
+- 跨团队、跨组织的 Agent 集成成本高昂
+
+### 问题 2：碎片化的生态系统
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                     传统 AI 交互                              │
-│  用户 ←→ AI (纯文本对话)                                      │
-│       只能回答问题，无法执行操作                                │
-└─────────────────────────────────────────────────────────────┘
-                              ↓
-┌─────────────────────────────────────────────────────────────┐
-│                     ACP 赋能的 AI                            │
-│  用户 ←→ AI ←→ ACP ←→ 计算机系统                               │
-│       理解意图 → 安全执行 → 返回结果                           │
+│                    没有 ACP 的世界                           │
+├─────────────────────────────────────────────────────────────┤
+│  Framework A → Agent A₁, Agent A₂ (私有协议)                 │
+│  Framework B → Agent B₁, Agent B₂ (私有协议)                 │
+│  Framework C → Agent C₁, Agent C₂ (私有协议)                 │
+│                                                             │
+│  Agent A₁ 无法与 Agent B₁ 通信 ❌                             │
+│  需要为每个组合编写自定义集成 ❌                              │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-## 解决什么场景的问题？
+### 问题 3：开发者体验不一致
 
-### 1. AI 想要操作计算机，但缺乏标准接口
-
-**场景**：用户说"帮我整理桌面上的截图文件"
-
-**传统方式**：
-- AI："抱歉，我无法访问您的文件系统"
-- 或需要复杂的自定义集成
-
-**ACP 方式**：
-- AI 通过 ACP 调用文件系统工具
-- 扫描桌面 → 识别截图 → 创建文件夹 → 移动文件
-- 全程自动化，用户只需一句话
-
-### 2. 安全性与可控性的平衡
-
-**场景**：AI 需要执行 shell 命令
-
-**传统方式**：
-- 完全开放：危险，AI 可能误删文件
-- 完全封闭：AI 无法帮助解决问题
-
-**ACP 方式**：
-- 权限分级：read-only → write → execute
-- 用户确认：敏感操作需人工授权
-- 审计日志：所有操作可追溯
-
-### 3. 跨平台、跨工具的统一协议
-
-**场景**：同一个 AI 需要在不同环境工作
-
-| 环境 | 传统方式 | ACP 方式 |
-|------|----------|----------|
-| VSCode | 写插件 | 统一协议 |
-| Terminal | 写脚本 | 统一协议 |
-| Docker | 写 Dockerfile | 统一协议 |
-| 浏览器 | 写扩展 | 统一协议 |
-
-**ACP** 提供统一的抽象层，AI 只需学习一套协议。
+- 每个框架有自己的模式和抽象
+- 学习曲线陡峭，迁移成本高
+- 难以构建可复用的 Agent 组件
 
 ## ACP 如何解决这些问题？
 
-### 核心架构
+### 核心方案：标准化 REST API
+
+ACP 使用简单、定义良好的 RESTful 端点进行通信，而不是需要 specialized 客户端的协议（如 JSON-RPC）。
 
 ```
 ┌─────────────────────────────────────────────────────────────┐
-│                      ACP 协议栈                               │
+│                    ACP 赋能的世界                            │
 ├─────────────────────────────────────────────────────────────┤
-│  Layer 4: Application (应用层)                               │
-│           - 文件操作、代码编辑、浏览器控制                      │
-├─────────────────────────────────────────────────────────────┤
-│  Layer 3: Session (会话层)                                   │
-│           - 状态管理、上下文保持、多轮对话                      │
-├─────────────────────────────────────────────────────────────┤
-│  Layer 2: Security (安全层)                                  │
-│           - 权限验证、操作审计、沙箱隔离                        │
-├─────────────────────────────────────────────────────────────┤
-│  Layer 1: Transport (传输层)                                 │
-│           - WebSocket / HTTP / STDIO                         │
+│  Framework A → Agent A₁ ──┐                                 │
+│  Framework B → Agent B₁ ──┼──→ ACP REST API → 互操作 ✅      │
+│  Framework C → Agent C₁ ──┘                                 │
+│                                                             │
+│  任何 Agent 可以与任何其他 Agent 通信                          │
+│  统一的消息格式，支持所有模态                                │
 └─────────────────────────────────────────────────────────────┘
 ```
 
-### 关键机制
+### 关键特性
 
-#### 1. Tool Schema 定义
+| 特性 | 说明 |
+|------|------|
+| **REST 通信** | 使用标准 HTTP 端点，可用 curl/Postman 直接调用 |
+| **全模态支持** | 通过 MIME 类型识别内容，支持文本、图片、音频、视频等 |
+| **同步/异步** | 主要为异步设计（处理长任务），也支持同步 |
+| **流式传输** | 支持 streaming 响应，适合实时交互 |
+| **离线发现** | Agent 元数据可嵌入分发包，支持离线环境发现 |
+| **无需 SDK** | 可直接用 HTTP 工具调用，官方提供 Python/TS SDK |
 
-每个工具都有标准化的 JSON Schema 定义：
+### 核心架构组件
 
+```
+┌─────────────────────────────────────────────────────────────┐
+│                      ACP 架构                                │
+├─────────────────────────────────────────────────────────────┤
+│                                                             │
+│  ┌─────────────┐      ┌─────────────┐      ┌─────────────┐ │
+│  │   Client    │ ───→ │   Server    │ ←──→ │   Agent     │ │
+│  │ (调用方)    │ HTTP │ (ACP 端点)  │      │ (业务逻辑)  │ │
+│  └─────────────┘      └─────────────┘      └─────────────┘ │
+│                                                             │
+│  核心端点:                                                   │
+│  - GET  /agents          - 列出可用 Agent                    │
+│  - POST /agents/:name    - 与 Agent 交互                     │
+│  - GET  /agents/:name    - 获取 Agent 元数据                 │
+│                                                             │
+└─────────────────────────────────────────────────────────────┘
+```
+
+## 如何使用 ACP？
+
+### 方式 1：使用 HTTP 工具直接调用
+
+无需 SDK，使用标准 HTTP 工具即可：
+
+```bash
+# 1. 获取 Agent 列表
+curl http://localhost:8000/agents
+
+# 2. 获取特定 Agent 的元数据
+curl http://localhost:8000/agents/chat
+
+# 3. 向 Agent 发送消息
+curl -X POST http://localhost:8000/agents/chat/run \
+  -H "Content-Type: application/json" \
+  -d '{"message": "你好，请帮我分析这份数据"}'
+```
+
+### 方式 2：使用官方 SDK
+
+ACP 提供 Python 和 TypeScript SDK：
+
+**Python SDK:**
+```python
+from acp import AgentClient
+
+# 连接到 ACP Server
+client = AgentClient("http://localhost:8000")
+
+# 获取可用 Agent 列表
+agents = client.list_agents()
+
+# 与 Agent 交互
+agent = client.get_agent("chat")
+response = agent.run(message="你好，请帮我分析这份数据")
+print(response)
+```
+
+**TypeScript SDK:**
 ```typescript
-// 文件读取工具示例
+import { AgentClient } from '@i-am-bee/acp';
+
+const client = new AgentClient('http://localhost:8000');
+
+// 获取 Agent 列表
+const agents = await client.listAgents();
+
+// 运行 Agent
+const response = await client.runAgent('chat', {
+  message: '你好，请帮我分析这份数据'
+});
+```
+
+### ACP Server 示例
+
+使用 BeeAI 快速搭建 ACP Server：
+
+```python
+from fastapi import FastAPI
+from acp.server import ACPServer
+from acp.agent import Agent
+
+app = FastAPI()
+acp = ACPServer(app)
+
+# 定义 Agent
+chat_agent = Agent(
+    name="chat",
+    description="Conversational agent with memory",
+    run=lambda message: f"收到：{message}",
+    input_content_types=["text/plain"],
+    output_content_types=["text/plain"],
+    metadata={
+        "framework": "BeeAI",
+        "capabilities": [{"name": "Conversational AI", "description": "Handles multi-turn conversations"}],
+        "tags": ["Chat"],
+        "license": "Apache-2.0"
+    }
+)
+
+# 注册 Agent
+acp.register(chat_agent)
+
+# 启动服务
+# uvicorn main:app --host 0.0.0.0 --port 8000
+```
+
+## Showcase：多 Agent 协作场景
+
+### 场景：自动化内容创作工作流
+
+假设有一个内容创作需求，需要多个专业 Agent 协作：
+
+```
+┌─────────────────────────────────────────────────────────────────┐
+│                    内容创作工作流                                │
+├─────────────────────────────────────────────────────────────────┤
+│                                                                 │
+│  用户请求 → "写一篇关于 AI 安全的技术文章"                        │
+│                                                                 │
+│       ↓                                                          │
+│  ┌─────────────────┐                                            │
+│  │  研究 Agent     │ - 搜索最新 AI 安全研究                        │
+│  │  (research)     │ - 收集相关论文和案例                        │
+│  └────────┬────────┘                                            │
+│           ↓                                                      │
+│  ┌─────────────────┐                                            │
+│  │  写作 Agent     │ - 基于研究结果撰写文章                      │
+│  │  (writer)       │ - 确保技术准确性和可读性                    │
+│  └────────┬────────┘                                            │
+│           ↓                                                      │
+│  ┌─────────────────┐                                            │
+│  │  SEO Agent      │ - 优化关键词和结构                         │
+│  │  (seo)          │ - 提升搜索引擎排名潜力                      │
+│  └────────┬────────┘                                            │
+│           ↓                                                      │
+│  输出：完整的技术文章                                            │
+│                                                                 │
+└─────────────────────────────────────────────────────────────────┘
+```
+
+### 代码实现
+
+```python
+from acp import AgentClient
+
+client = AgentClient("http://localhost:8000")
+
+# 1. 研究阶段
+research_result = client.run_agent("research", {
+    "topic": "AI safety best practices",
+    "depth": "comprehensive"
+})
+
+# 2. 写作阶段
+draft = client.run_agent("writer", {
+    "research": research_result,
+    "target_length": 3000,
+    "audience": "technical"
+})
+
+# 3. SEO 优化
+final_article = client.run_agent("seo", {
+    "content": draft,
+    "keywords": ["AI safety", "machine learning", "best practices"]
+})
+
+print(final_article)
+```
+
+### Agent 元数据示例
+
+ACP 返回的 Agent 信息包含丰富的元数据：
+
+```json
 {
-  name: "read_file",
-  description: "读取文件内容",
-  parameters: {
-    type: "object",
-    properties: {
-      path: {
-        type: "string",
-        description: "文件路径"
-      },
-      limit: {
-        type: "number",
-        description: "读取行数限制",
-        default: 100
-      }
+  "name": "chat",
+  "description": "Conversational agent with memory, supporting real-time search, Wikipedia lookups, and weather updates",
+  "input_content_types": ["text/plain"],
+  "output_content_types": ["text/plain"],
+  "metadata": {
+    "framework": "BeeAI",
+    "capabilities": [
+      {"name": "Conversational AI", "description": "Handles multi-turn conversations with memory"},
+      {"name": "Tool Integration", "description": "Search, Wikipedia, Weather APIs"}
+    ],
+    "domains": ["general"],
+    "tags": ["Chat", "Assistant"],
+    "license": "Apache-2.0",
+    "author": {
+      "name": "John Smith",
+      "email": "jsmith@example.com"
     },
-    required: ["path"]
-  },
-  // 安全元数据
-  security: {
-    level: "read-only",
-    allowedPaths: ["/home/user/workspace/*"],
-    blockedPaths: ["/etc/*", "~/.ssh/*"]
+    "dependencies": [
+      {"type": "tool", "name": "weather"}
+    ]
   }
 }
-```
-
-#### 2. 请求-响应模型
-
-```typescript
-// AI 发送请求
-interface ACPRequest {
-  id: string;
-  tool: string;
-  params: Record<string, unknown>;
-  context?: {
-    sessionId: string;
-    permissions: string[];
-  };
-}
-
-// 系统返回结果
-interface ACPResponse {
-  id: string;
-  status: "success" | "error" | "pending";
-  result?: unknown;
-  error?: {
-    code: string;
-    message: string;
-    details?: unknown;
-  };
-  // 审计信息
-  audit: {
-    timestamp: string;
-    duration: number;
-    userApproved?: boolean;
-  };
-}
-```
-
-#### 3. 权限与安全模型
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    权限层级                                   │
-├─────────────────────────────────────────────────────────────┤
-│  Level 1: Observer (观察员)                                  │
-│           - 只能读取文件、查看状态                              │
-│           - 无需用户确认                                       │
-├─────────────────────────────────────────────────────────────┤
-│  Level 2: Assistant (助手)                                   │
-│           - 可以编辑文件、运行只读命令                          │
-│           - 敏感操作需用户确认                                  │
-├─────────────────────────────────────────────────────────────┤
-│  Level 3: Operator (操作员)                                  │
-│           - 可以执行写操作、运行脚本                            │
-│           - 所有执行操作需用户确认                              │
-├─────────────────────────────────────────────────────────────┤
-│  Level 4: Administrator (管理员)                              │
-│           - 完整系统访问权限                                   │
-│           - 需要显式授权 + 二次确认                             │
-└─────────────────────────────────────────────────────────────┘
-```
-
-## Showcase：ACP 实战场景
-
-### 场景 1：智能代码助手
-
-**用户需求**："帮我重构这个函数，提取重复的代码"
-
-```mermaid
-sequenceDiagram
-    participant User
-    participant AI
-    participant ACP
-    participant FS as File System
-    
-    User->>AI: "重构 utils.ts 中的 formatDate 函数"
-    AI->>ACP: read_file({path: "src/utils.ts"})
-    ACP->>FS: 读取文件
-    FS-->>ACP: 返回内容
-    ACP-->>AI: 文件内容
-    AI->>AI: 分析代码，识别重复逻辑
-    AI->>ACP: write_file({path: "src/utils.ts", content: "..."})
-    ACP->>User: "即将修改 src/utils.ts，确认吗？"
-    User->>ACP: 确认
-    ACP->>FS: 写入文件
-    FS-->>ACP: 成功
-    ACP-->>AI: 完成
-    AI-->>User: "重构完成！提取了 3 个重复函数到 helpers.ts"
-```
-
-### 场景 2：自动化运维
-
-**用户需求**："检查服务器状态，如果有问题就重启服务"
-
-```typescript
-// AI 通过 ACP 执行
-const result = await acp.execute({
-  tool: "ssh_exec",
-  params: {
-    host: "prod-server-01",
-    command: "systemctl status nginx",
-    timeout: 30000
-  }
-});
-
-if (result.status === "failed") {
-  // AI 分析后决定重启
-  await acp.execute({
-    tool: "ssh_exec",
-    params: {
-      host: "prod-server-01",
-      command: "sudo systemctl restart nginx",
-      requireApproval: true // 需要用户确认
-    }
-  });
-}
-```
-
-### 场景 3：浏览器自动化
-
-**用户需求**："帮我从 Twitter 导出最近一周的点赞记录"
-
-```typescript
-// AI 通过 ACP 控制浏览器
-await acp.browser.open("https://twitter.com");
-await acp.browser.click('[data-testid="AppTabBar_Profile_Link"]');
-await acp.browser.click('[data-testid="ProfileTabBar_Likes"]');
-
-// 滚动并收集数据
-const likes = [];
-for (let i = 0; i < 10; i++) {
-  const tweets = await acp.browser.extract({
-    selector: '[data-testid="tweet"]',
-    fields: {
-      text: '.tweet-text',
-      author: '.username',
-      date: 'time'
-    }
-  });
-  likes.push(...tweets);
-  await acp.browser.scroll({ direction: "down", amount: 800 });
-}
-
-// 导出为 CSV
-await acp.write_file({
-  path: "~/twitter_likes.csv",
-  content: convertToCSV(likes)
-});
 ```
 
 ## ACP 与现有方案对比
 
-| 特性 | MCP (Anthropic) | ACP (OpenClaw) | Function Calling |
-|------|-----------------|----------------|------------------|
-| **定位** | 上下文协议 | 计算机交互协议 | LLM 功能调用 |
-| **范围** | 对话上下文管理 | 系统资源访问 | 特定函数调用 |
-| **安全** | 基础权限 | 分层权限 + 审计 | 依赖实现 |
-| **跨平台** | 需适配 | 原生支持 | 需适配 |
-| **生态** | Anthropic 主推 | 开放标准 | 各厂商独立 |
+| 特性 | MCP | ACP |
+|------|-----|-----|
+| **定位** | 模型上下文协议 | Agent 通信协议 |
+| **通信方式** | JSON-RPC | RESTful HTTP |
+| **主要场景** | 为 LLM 提供外部工具/数据 | Agent 间互操作 |
+| **治理模式** | Anthropic 主导 | Linux Foundation 开放标准 |
+| **SDK** | 多种语言 | Python, TypeScript |
 
 ## 未来展望
 
-### 标准化进程
+ACP 正在快速发展中，未来方向包括：
 
-ACP 正在向开放标准演进：
-- **Tool Registry**：统一的工具注册中心
-- **Security Spec**：安全审计标准
-- **Multi-Agent**：多代理协作协议
-
-### 生态建设
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    ACP 生态愿景                              │
-├─────────────────────────────────────────────────────────────┤
-│  🛠️  Tool Registry (工具市场)                               │
-│     数千个标准化工具，即插即用                                 │
-├─────────────────────────────────────────────────────────────┤
-│  🔒  Security Framework (安全框架)                           │
-│     企业级权限管理、审计合规                                   │
-├─────────────────────────────────────────────────────────────┤
-│  🤖  Agent Marketplace (代理市场)                            │
-│     专业领域 AI 代理，开箱即用                                 │
-├─────────────────────────────────────────────────────────────┤
-│  🌐  Universal Connector (通用连接器)                        │
-│     连接一切：数据库、API、IoT 设备、云服务                    │
-└─────────────────────────────────────────────────────────────┘
-```
+- **Tool Registry**：统一的工具注册和发现中心
+- **安全框架**：企业级权限管理和审计合规
+- **多 Agent 编排**：复杂工作流的标准化
+- **跨组织协作**：企业间 Agent 安全通信协议
 
 ## 结语
 
-ACP 不仅是一个协议，更是 AI 从"对话"走向"行动"的关键基础设施。它让 AI 能够像人类一样使用计算机，同时保持安全、可控、可审计。
+ACP 通过提供标准化的 RESTful 通信协议，解决了 AI Agent 互操作性的核心挑战：
 
-随着 AI Agent 的普及，ACP 将成为连接 AI 与数字世界的标准接口，让"AI 助手"真正成为"AI 代理"。
+1. **降低集成成本**：一次实现 ACP，与所有兼容 Agent 互操作
+2. **促进生态繁荣**：开放标准，社区驱动，避免厂商锁定
+3. **加速创新**：开发者专注于 Agent 能力，而非集成细节
+
+随着 AI Agent 的普及，ACP 将成为连接智能系统的通用语言。
 
 ---
 
 **相关资源**
-- OpenClaw 文档: https://docs.openclaw.ai
-- ACP 协议规范: https://github.com/openclaw/acp
-- 示例代码: https://github.com/openclaw/acp-examples
+- 官方文档：https://agentcommunicationprotocol.dev
+- GitHub: https://github.com/i-am-bee/acp
+- Python SDK: https://github.com/i-am-bee/acp/tree/main/python
+- TypeScript SDK: https://github.com/i-am-bee/acp/tree/main/typescript
