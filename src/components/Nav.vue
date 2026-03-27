@@ -6,7 +6,6 @@ import BorderBeam from './BorderBeam.vue'
 import Logo from './Logo.vue'
 
 const navLists = [
-  { key: 'zone', label: '碎碎念' },
   { key: 'blogs', label: '博客' },
   { key: 'novels', label: '小说' },
   { key: 'movies', label: '电影' },
@@ -45,14 +44,14 @@ const closeMenu = () => {
       <div class="max-w-6xl mx-auto">
         <div class="flex items-center justify-between">
           <!-- Logo/Brand - 手写衬线体签名 -->
-          <div class="flex items-center gap-2">
+          <div class="flex items-center gap-2 flex-1">
             <router-link to="/" class="relative group">
               <Logo />
             </router-link>
           </div>
 
           <!-- Desktop Navigation -->
-          <div class="hidden md:flex items-center justify-center gap-1">
+          <div class="hidden md:flex items-center justify-center gap-1 flex-1">
             <router-link
               v-for="nav in navLists"
               :key="nav.key"
@@ -69,7 +68,7 @@ const closeMenu = () => {
           </div>
 
           <!-- Right Icons + Mobile Menu Button -->
-          <div class="flex items-center gap-1 sm:gap-2">
+          <div class="flex items-center gap-1 sm:gap-2 flex-1 justify-end">
             <!-- Desktop Icons -->
             <router-link
               to="/"

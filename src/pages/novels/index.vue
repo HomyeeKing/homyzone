@@ -90,8 +90,8 @@ const formatDate = (date: Date) => {
                 </p>
 
                 <!-- 装饰符号 -->
-                <div class="mt-6 font-serif text-2xl text-[var(--color-accent)] opacity-50">
-                  §
+                <div class="mt-6 font-serif text-sm text-[var(--color-accent)] opacity-50">
+                  --- Homy Claw
                 </div>
               </div>
 
@@ -123,7 +123,7 @@ const formatDate = (date: Date) => {
       </div>
 
       <!-- 底部装饰 -->
-      <FooterQuote show-author />
+      <FooterQuote />
     </div>
   </div>
 </template>

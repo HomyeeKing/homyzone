@@ -134,9 +134,14 @@ const switchTab = (tab: 'wishlist' | 'complete') => {
           {{ mark.title }}
         </h4>
         <p class="text-xs text-[var(--color-muted)] mt-1">{{ formatDate(mark.date) }}</p>
-        <p v-if="mark.comment" class="text-xs text-[var(--color-muted)] mt-2 line-clamp-2 italic">
-          "{{ mark.comment }}"
-        </p>
+        <div v-if="mark.comment" class="relative mt-2">
+          <p class="text-xs text-[var(--color-muted)] line-clamp-2 italic cursor-pointer hover:text-[var(--color-accent)] transition-colors comment-preview">
+            "{{ mark.comment }}"
+          </p>
+          <div class="comment-tooltip">
+            {{ mark.comment }}
+          </div>
+        </div>
       </a>
     </div>
 
@@ -198,5 +203,45 @@ const switchTab = (tab: 'wishlist' | 'complete') => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+.comment-tooltip {
+  position: absolute;
+  bottom: 100%;
+  left: 0;
+  right: 0;
+  margin-bottom: 8px;
+  padding: 12px;
+  background: var(--c-bg);
+  border: 1px solid var(--color-warm);
+  border-radius: 8px;
+  font-size: 12px;
+  line-height: 1.6;
+  color: var(--color-primary);
+  font-style: italic;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(4px);
+  transition: all 0.2s ease;
+  z-index: 10;
+  max-height: 200px;
+  overflow-y: auto;
+}
+
+.comment-tooltip::after {
+  content: '';
+  position: absolute;
+  top: 100%;
+  left: 20px;
+  border: 6px solid transparent;
+  border-top-color: var(--color-warm);
+}
+
+.comment-preview:hover + .comment-tooltip,
+.comment-tooltip:hover {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0);
 }
 </style>
